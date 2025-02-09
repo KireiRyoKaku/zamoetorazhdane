@@ -1,0 +1,191 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@font-face {
+  font-family: "MakLight";
+  src: url("./assets/fonts/Mak/Web/MAK-bold.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  color: white;
+}
+
+@font-face {
+  font-family: "Hitch Hike";
+  src: url("./assets/fonts/HItchHike/Hitch-hike.otf") format("opentype"); /* Add your font source here */
+  font-weight: normal;
+  font-style: normal;
+  color: white;
+}
+
+@font-face {
+  font-family: "Peace Sans";
+  src: url("./assets/fonts/PeaceSans/PeaceSans.otf") format("opentype"); /* Add your font source here */
+  font-weight: normal;
+  font-style: normal;
+  color: white;
+}
+@font-face {
+  font-family: "Montserrat";
+  src: url("./assets/fonts/Monserat/Montserrat-Italic-VariableFont_wght.ttf")
+    format("opentype"); /* Add your font source here */
+  font-weight: normal;
+  font-style: normal;
+  color: white;
+}
+
+@font-face {
+  font-family: "Playfair-Display";
+  src: url("./assets/fonts/PlayfairLIght/Montserrat,Playfair_Display/Playfair_Display/PlayfairDisplay-VariableFont_wght.ttf")
+    format("opentype"); /* Add your font source here */
+  font-weight: normal;
+  font-style: normal;
+  color: white;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 10%;
+  }
+}
+
+.fade-in {
+  animation: fade-in 5s ease-in-out;
+}
+
+.background-logo {
+  background-image: url("./assets/pictures/background-logo.png");
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  font-family: "MakLight", sans-serif;
+  background-color: #375241;
+}
+
+.custom-h2-style {
+  font-family: "Hitch Hike", sans-serif;
+  color: white;
+}
+
+.dropdown-menu button {
+  background-color: rgb(170, 161, 34);
+  border: none;
+  padding: 5px 10px;
+  font-size: 1rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.dropdown-menu button:hover {
+  background-color: #e0e0e0;
+}
+
+.back-button-test {
+  font-family: "Peace Sans", sans-serif;
+  color: #375241;
+  font-size: 1.5rem;
+}
+.dropdown-menu {
+  font-family: "Peace Sans", sans-serif;
+  position: relative;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: transparent;
+  opacity: 1;
+  padding: 10px;
+  border-radius: 0;
+}
+
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.duration-300 {
+  transition-duration: 300ms;
+}
+
+.calendar-header {
+  display: flex;
+}
+
+.calendar-cell {
+  padding: 0.5rem; /* Adjust the padding as needed */
+  font-size: 1.25rem;
+  line-height: 1.75rem /* 28px */;
+}
+
+.calendar-cell:active {
+  background-color: #dede4d !important;
+  cursor: pointer;
+  color: black;
+  border-radius: 50%;
+  transform: scale(0.5); /* Shrinks to 80% of its size */
+}
+.calendar-cell.highlighted {
+  background-color: #375241; /* Or any other desired style */
+  cursor: pointer;
+  color: white;
+  border-radius: 50%;
+  transform: scale(0.8); /* Shrinks to 80% of its size */
+}
+.calendar-cell.special {
+  background-color: #9caeef; /* Or any other desired style */
+  cursor: pointer;
+  color: white;
+  border-radius: 50%;
+  transform: scale(0.8); /* Shrinks to 80% of its size */
+}
+
+.calendar-cell:hover {
+  background-color: rgba(0, 0, 0, 0.5); /* Subtle background darkening */
+  cursor: pointer;
+  color: white;
+  border-radius: 50%;
+  transform: scale(0.8); /* Shrinks to 80% of its size */
+}
+
+.enlist-button {
+  font-family: "Peace Sans", sans-serif;
+  color: white;
+  background-color: #06a4ff;
+  font-size: 1.5rem;
+  width: 100%;
+  border: solid;
+  border-color: white;
+  border-radius: 0.25rem /* 4px */;
+}
+
+.enlist-button:hover {
+  font-family: "Peace Sans", sans-serif;
+  color: #06a4ff;
+  background-color: white;
+  font-size: 1.5rem;
+  width: 100%;
+  border: solid;
+  border-color: #06a4ff;
+  border-radius: 0.25rem /* 4px */;
+}
+
+.enlist-button:active {
+  font-family: "Peace Sans", sans-serif;
+  color: white;
+  background-color: #91d5ff;
+  font-size: 1.5rem;
+  width: 100%;
+  border: solid;
+  border-color: #06a4ff;
+  border-radius: 0.25rem /* 4px */;
+}
