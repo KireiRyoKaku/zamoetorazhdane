@@ -4,10 +4,20 @@
 
 @font-face {
   font-family: "MakLight";
-  src: url("./assets/fonts/Mak/Web/MAK-bold.woff") format("woff");
-  font-weight: normal;
+  src: url("./assets/fonts/Mak/MAK-bold.woff") format("woff");
+  font-weight: normal; /* Enforce heavy weight */
   font-style: normal;
-  color: white;
+  font-display: swap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Add specific mobile optimization */
+@media screen and (max-width: 768px) {
+  .font-MakLight {
+    font-weight: 900 !important;
+    letter-spacing: 100px; /* Slight letter spacing adjustment for mobile */
+  }
 }
 
 @font-face {
@@ -15,32 +25,12 @@
   src: url("./assets/fonts/HItchHike/Hitch-hike.otf") format("opentype"); /* Add your font source here */
   font-weight: normal;
   font-style: normal;
-  color: white;
 }
 
-@font-face {
-  font-family: "Peace Sans";
-  src: url("./assets/fonts/PeaceSans/PeaceSans.otf") format("opentype"); /* Add your font source here */
-  font-weight: normal;
-  font-style: normal;
-  color: white;
-}
-@font-face {
-  font-family: "Montserrat";
-  src: url("./assets/fonts/Monserat/Montserrat-Italic-VariableFont_wght.ttf")
-    format("opentype"); /* Add your font source here */
-  font-weight: normal;
-  font-style: normal;
-  color: white;
-}
-
-@font-face {
-  font-family: "Playfair-Display";
-  src: url("./assets/fonts/PlayfairLIght/Montserrat,Playfair_Display/Playfair_Display/PlayfairDisplay-VariableFont_wght.ttf")
-    format("opentype"); /* Add your font source here */
-  font-weight: normal;
-  font-style: normal;
-  color: white;
+/* Add the new font utility classes */
+.font-playfair-sc {
+  font-family: "Playfair Display SC", serif;
+  font-weight: 900;
 }
 
 @keyframes fade-in {
@@ -57,7 +47,7 @@
 }
 
 .background-logo {
-  background-image: url("./assets/pictures/background-logo.png");
+  background-image: url("./assets/pictures/logo-and-text-white-outline.png");
   background-repeat: no-repeat;
   background-size: 100%;
   background-position: center;
@@ -69,35 +59,21 @@
 }
 
 body {
-  font-family: "MakLight", sans-serif;
-  background-color: #375241;
+  font-family: "Yanone Kaffeesatz", sans-serif;
+  @apply bg-bodyBackground transition-colors duration-300;
 }
 
 .custom-h2-style {
   font-family: "Hitch Hike", sans-serif;
-  color: white;
-}
-
-.dropdown-menu button {
-  background-color: rgb(170, 161, 34);
-  border: none;
-  padding: 5px 10px;
-  font-size: 1rem;
-  color: #333;
-  cursor: pointer;
+  @apply text-white;
 }
 
 .dropdown-menu button:hover {
   background-color: #e0e0e0;
 }
 
-.back-button-test {
-  font-family: "Peace Sans", sans-serif;
-  color: #375241;
-  font-size: 1.5rem;
-}
 .dropdown-menu {
-  font-family: "Peace Sans", sans-serif;
+  font-family: "Playfair-Display";
   position: relative;
   top: 100%;
   left: 0;
@@ -106,6 +82,16 @@ body {
   opacity: 1;
   padding: 10px;
   border-radius: 0;
+}
+
+.dropdown-menu button {
+  @apply bg-moetoRazhdaneYellow;
+  border: none;
+  padding: 5px 10px;
+  font-size: 2rem;
+  cursor: pointer;
+  border-style: solid;
+  @apply border-moetoRazhdaneDarkGreen text-moetoRazhdaneDarkGreen;
 }
 
 .transition-all {
@@ -128,64 +114,136 @@ body {
 }
 
 .calendar-cell:active {
-  background-color: #dede4d !important;
+  @apply bg-moetoRazhdaneYellow;
   cursor: pointer;
   color: black;
   border-radius: 50%;
   transform: scale(0.5); /* Shrinks to 80% of its size */
 }
-.calendar-cell.highlighted {
-  background-color: #375241; /* Or any other desired style */
+
+.calendar-cell.highlightedPast {
+  @apply bg-black;
   cursor: pointer;
-  color: white;
+  @apply text-moetoRazhdaneWhite;
+  border-radius: 50%;
+  transform: scale(0.8); /* Shrinks to 80% of its size */
+}
+
+.calendar-cell.highlightedPlovdiv {
+  @apply bg-moetoRazhdaneDarkGreen;
+  cursor: pointer;
+  @apply text-moetoRazhdaneWhite;
+  border-radius: 50%;
+  transform: scale(0.8); /* Shrinks to 80% of its size */
+}
+
+.calendar-cell.highlightedSofia {
+  @apply bg-moetoRazhdaneLightGreen;
+  cursor: pointer;
+  @apply text-moetoRazhdaneWhite;
   border-radius: 50%;
   transform: scale(0.8); /* Shrinks to 80% of its size */
 }
 .calendar-cell.special {
-  background-color: #9caeef; /* Or any other desired style */
+  @apply bg-moetoRazhdanePurple;
   cursor: pointer;
-  color: white;
+  @apply text-moetoRazhdaneWhite;
   border-radius: 50%;
   transform: scale(0.8); /* Shrinks to 80% of its size */
 }
-
 .calendar-cell:hover {
   background-color: rgba(0, 0, 0, 0.5); /* Subtle background darkening */
   cursor: pointer;
-  color: white;
+  @apply bg-black text-moetoRazhdaneWhite;
   border-radius: 50%;
   transform: scale(0.8); /* Shrinks to 80% of its size */
 }
 
-.enlist-button {
-  font-family: "Peace Sans", sans-serif;
-  color: white;
-  background-color: #06a4ff;
-  font-size: 1.5rem;
-  width: 100%;
-  border: solid;
-  border-color: white;
-  border-radius: 0.25rem /* 4px */;
+.calendar-cell.cursor-pointer:hover {
+  opacity: 0.8;
+  transform: scale(1.1);
+  transition: all 0.2s ease-in-out;
 }
 
-.enlist-button:hover {
-  font-family: "Peace Sans", sans-serif;
-  color: #06a4ff;
-  background-color: white;
-  font-size: 1.5rem;
-  width: 100%;
-  border: solid;
-  border-color: #06a4ff;
-  border-radius: 0.25rem /* 4px */;
+.event-box {
+  transition: transform 0.2s ease-out;
 }
 
-.enlist-button:active {
-  font-family: "Peace Sans", sans-serif;
-  color: white;
-  background-color: #91d5ff;
-  font-size: 1.5rem;
-  width: 100%;
-  border: solid;
-  border-color: #06a4ff;
-  border-radius: 0.25rem /* 4px */;
+.event-box:hover {
+  transform: translateY(-2px);
+}
+
+.event-box .preview-text {
+  position: relative;
+  overflow: hidden;
+}
+
+.perspective-2000 {
+  perspective: 2000px;
+  transform-style: preserve-3d;
+}
+
+.slick-prev,
+.slick-next {
+  font-size: 0 !important; /* Hide text content */
+  line-height: 0;
+  position: absolute;
+  top: 50%;
+  display: block;
+  width: 10px;
+  height: 40px;
+  padding: 0;
+  transform: translate(0, -50%);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: transparent;
+  z-index: 1;
+  left: -45px;
+  right: -45px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  font-size: 40px;
+  @apply text-moetoRazhdaneLightGreen;
+  opacity: 0.75;
+  transition: opacity 0.3s ease;
+}
+
+.slick-prev:hover:before,
+.slick-next:hover:before {
+  opacity: 1;
+}
+
+.team-member {
+  border-radius: 50% / 25%;
+  background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 1024px) {
+  .team-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  .team-member:nth-child(3n + 1) {
+    transform: translateY(0);
+  }
+  .team-member:nth-child(3n + 2) {
+    transform: translateY(33%);
+  }
+  .team-member:nth-child(3n + 3) {
+    transform: translateY(66%);
+  }
+}
+
+@media (max-width: 360px) {
+  .team-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
 }
