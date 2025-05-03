@@ -6,5 +6,6 @@ export default defineConfig({
   base: "/zamoetorazhdane/",
   server: {
     port: 5173,
+    host: "192.168.0.142",
   },
 });
