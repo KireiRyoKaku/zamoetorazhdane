@@ -3,18 +3,25 @@ export const content = ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"];
 export const theme = {
   extend: {
     colors: {
-      moetoRazhdanePurple: "#9CAEEF",
-      moetoRazhdaneDarkGreen: "#375241",
+      moetoRazhdanePurple: "#beb46d",
+      moetoRazhdaneDarkGreen: "#626F47",
+      moetoRazhdaneLightGreen: "#A4B465",
+      moetoRazhdaneYellow: "#FFCF50",
+      moetoRazhdaneWhite: "#FEFAE0",
+      bodyBackground: {
+        DEFAULT: "#626F47", // default color
+      },
     },
     fontFamily: {
       makLight: ["MakLight", "sans-serif"],
       hitchHike: ["Hitch Hike", "sans-serif"],
-      peaceSans: ["Peace Sans", "sans-serif"],
-      montserrat: ["Montserrat", "sans-serif"],
       playfairDisplay: ["Playfair-Display", "sans-serif"],
+      playfairDisplaySc: ['"Playfair Display SC"', "serif"],
+      yanoneKaffeesatz: ['"Yanone Kaffeesatz"', "sans-serif"],
     },
     screens: {
-      sm: "640px",
+      xs: "320px",
+      sm: "360px",
       md: "768px",
       lg: "1024px",
       xl: "1280px",
@@ -24,7 +31,10 @@ export const theme = {
       full: "100%",
     },
     dropShadow: {
-      "2xl": "0.75rem 0.5rem #375241",
+      "2xl": "0.75rem 0.5rem #4e5f4c",
+    },
+    fontSize: {
+      "2.5xl": "1.70rem",
     },
   },
 };
