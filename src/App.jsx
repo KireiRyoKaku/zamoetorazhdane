@@ -1,29 +1,36 @@
-import Background from "./Background";
-import TitleAndMenu from "./TitleAndMenu";
-import Events from "./Events";
+import Program from "./Program";
 import About from "./About";
+import Events from "./EventsNew";
+import Partners from "./Partners";
+import Team from "./Team";
+import Title from "./Title";
 import SubscribeAndPay from "./SubscribeAndPay";
+import PopupMenu from "./PopupMenu";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
+import CookieConsent from "./CookieConsent";
 
-function App() {
+const App = () => {
   return (
-    <>
-      <div className="flex min-h-screen flex-col justify-center text-center">
-        <Background />
-        <Router>
-          <Routes>
-            <Route path="/" element={<TitleAndMenu />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/program" element={<Events />} />
-            <Route
-              path="/subscribe-and-pay/:eventId"
-              element={<SubscribeAndPay />}
-            />
-          </Routes>
-        </Router>
+    <Router>
+      <div className="relative min-h-screen">
+        <Routes>
+          <Route path="/" element={<Title />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/program" element={<Program />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/events/:eventId" element={<Events />} />{" "}
+          <Route path="/partners" element={<Partners />} />
+          <Route path="/team" element={<Team />} />
+          <Route
+            path="/subscribe-and-pay/:eventId"
+            element={<SubscribeAndPay />}
+          />
+        </Routes>
+        <PopupMenu />
+        <CookieConsent />
       </div>
-    </>
+    </Router>
   );
-}
+};
 
 export default App;
