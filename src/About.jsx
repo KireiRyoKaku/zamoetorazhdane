@@ -67,10 +67,10 @@ const About = ({ onClose }) => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="fixed z-50 flex px-5 pt-7">
+      <div className="fixed z-50 flex items-center justify-center px-5 pt-7 md:inset-0">
         {/* Updated spacing */}
         <div
-          className={`h-[calc(100dvh-125px)] w-full max-w-3xl transform overflow-y-auto rounded-lg bg-slate-50 p-8 text-left font-yanoneKaffeesatz text-xl font-light transition-all duration-300 ease-in-out ${
+          className={`h-[calc(100dvh-125px)] w-full max-w-3xl transform overflow-y-auto rounded-lg bg-slate-50 p-8 text-left font-yanoneKaffeesatz text-xl font-light transition-all duration-300 ease-in-out md:h-[calc(100dvh-580px)] ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           }`}
           ref={contentRef}
@@ -79,19 +79,21 @@ const About = ({ onClose }) => {
             <img
               src={logoImage}
               alt="За моето раждане лого"
-              className="h-24 w-auto object-contain"
+              className="h-24 w-auto object-contain md:h-28 lg:h-32 xl:h-36 2xl:h-40"
             />
           </div>
           <div className="relative">
             <h3>
+              <div className="mb-1 flex justify-center">
+                <span className="font-makLight text-2xl md:text-3xl lg:text-6xl">
+                  &quot;за моето раждане&quot;
+                </span>
+              </div>
               <p
                 ref={(el) => (elementsRef.current[0] = el)}
                 className="para1 opacity-0 transition-opacity duration-1000 ease-in-out"
               >
-                <span className="font-makLight text-2xl">
-                  &quot;за моето раждане&quot;
-                </span>{" "}
-                <br />е инициатива от и за майки в Пловдив и София, водена от
+                е инициатива от и за майки в Пловдив и София, водена от
                 <b>
                   {" "}
                   специалисти по кърмене, детски сън, детско развитие, физическо
@@ -136,7 +138,7 @@ const About = ({ onClose }) => {
           </div>
 
           {showScrollDownMessage && (
-            <div className="absolute bottom-0 left-0 h-56 w-full bg-gradient-to-t from-slate-50 to-transparent p-8 text-center text-gray-500 transition-opacity duration-500 ease-in-out"></div>
+            <div className="absolute bottom-0 left-0 h-16 w-full bg-gradient-to-t from-slate-50 to-transparent p-8 text-center text-gray-500 transition-opacity duration-500 ease-in-out"></div>
           )}
         </div>
       </div>
