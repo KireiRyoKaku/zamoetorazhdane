@@ -40,7 +40,7 @@ const EventsNew = ({ onClose }) => {
       title: "Време за мама",
       // Wrap image in a div to control size consistently
       icon: (
-        <div className="flex h-32 w-32 items-center justify-center">
+        <div className="flex h-32 w-32 items-center justify-center md:h-52 md:w-52">
           <img
             src={icon1 || "/assets/pictures/icons/icon1.png"}
             alt="Време за мама"
@@ -49,7 +49,7 @@ const EventsNew = ({ onClose }) => {
               // Fallback to icon component if image fails to load
               e.target.style.display = "none";
               e.target.parentNode.innerHTML =
-                '<svg class="text-6xl text-moetoRazhdanePurple"><MdOutlineSelfImprovement /></svg>';
+                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-moetoRazhdanePurple"><MdOutlineSelfImprovement /></svg>';
             }}
           />
         </div>
@@ -62,7 +62,7 @@ const EventsNew = ({ onClose }) => {
       id: 2,
       title: "Майчински кръг",
       icon: (
-        <div className="flex h-32 w-32 items-center justify-center">
+        <div className="flex h-32 w-32 items-center justify-center md:h-52 md:w-52">
           <img
             src={icon2 || "/assets/pictures/icons/icon2.png"}
             alt="Майчински кръг"
@@ -70,7 +70,7 @@ const EventsNew = ({ onClose }) => {
             onError={(e) => {
               e.target.style.display = "none";
               e.target.parentNode.innerHTML =
-                '<svg class="text-6xl text-moetoRazhdaneGreen"><FaPeopleGroup /></svg>';
+                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-moetoRazhdaneGreen"><FaPeopleGroup /></svg>';
             }}
           />
         </div>
@@ -84,16 +84,16 @@ const EventsNew = ({ onClose }) => {
       title: "Специални събития",
       // Already using React Icon - just ensure consistent sizing
       icon: (
-        <div className="flex h-32 w-32 items-center justify-center">
+        <div className="flex h-32 w-32 items-center justify-center md:h-52 md:w-52">
           <img
             src={icon3 || "/assets/pictures/icons/icon3.png"}
-            alt="Време за мама"
+            alt="Специални събития"
             className="h-full w-auto object-contain"
             onError={(e) => {
               // Fallback to icon component if image fails to load
               e.target.style.display = "none";
               e.target.parentNode.innerHTML =
-                '<svg class="text-6xl text-moetoRazhdanePurple"><MdOutlineSelfImprovement /></svg>';
+                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-moetoRazhdanePurple"><MdOutlineSelfImprovement /></svg>';
             }}
           />
         </div>
@@ -200,7 +200,7 @@ const EventsNew = ({ onClose }) => {
   const card = eventCards[activeIndex];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-auto bg-white">
+    <div className="fixed inset-0 z-50 overflow-auto bg-white md:flex md:items-center md:justify-center">
       <div className="mx-auto max-w-6xl px-8 pb-4 pt-8 sm:px-6 lg:px-8">
         {/* Navigation header with arrow buttons */}
         <div
