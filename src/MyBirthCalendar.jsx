@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import SubscribeAndPay from "./SubscribeAndPay";
 import { useNavigate, useLocation } from "react-router-dom";
-import calBgImage from "../public/assets/pictures/logo-and-text-green-outline.png";
+import calBgImage from "./assets/pictures/logo-and-text-green-outline.png";
 
 import {
   FaCalendarAlt,

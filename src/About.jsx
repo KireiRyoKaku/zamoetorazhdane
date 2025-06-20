@@ -1,8 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import logoImage from "../public/assets/pictures/logo-green-outline.png";
-import Team from "./Team";
+import logoImage from "./assets/pictures/logo-green-outline.png";
 
 const About = ({ onClose = () => {} }) => {
   const navigate = useNavigate();

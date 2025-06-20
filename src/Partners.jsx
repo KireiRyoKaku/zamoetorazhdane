@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import sgusheniImage from "../public/assets/pictures/partners/sgusheni-logo-H.png";
-import bendidaImage from "../public/assets/pictures/partners/bendida.png";
-import svetlanaImage from "../public/assets/pictures/partners/svetlana nencheva.png";
-import nutrimamaImage from "../public/assets/pictures/partners/nutrimama.png";
-import pekarnatanadaniImage from "../public/assets/pictures/partners/pekarnata na Dani.png";
-import lekanoshtmilozaicheImage from "../public/assets/pictures/partners/lekanosht.png";
-import greenrevoluciaImage from "../public/assets/pictures/partners/green revolucia.png";
+import sgusheniImage from "./assets/pictures/partners/sgusheni-logo-H.png";
+import bendidaImage from "./assets/pictures/partners/bendida.png";
+import svetlanaImage from "./assets/pictures/partners/svetlana nencheva.png";
+import nutrimamaImage from "./assets/pictures/partners/nutrimama.png";
+import pekarnatanadaniImage from "./assets/pictures/partners/pekarnata na Dani.png";
+import lekanoshtmilozaicheImage from "./assets/pictures/partners/lekanosht.png";
+import greenrevoluciaImage from "./assets/pictures/partners/green revolucia.png";
 import { FaGlobe, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 
 // Single Partner Card Component

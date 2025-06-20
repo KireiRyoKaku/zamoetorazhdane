@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import aneliaImage from "/public/assets/pictures/good/anelia-good-ench.png";
-import galitaImage from "/public/assets/pictures/good/galita-good-ench.png";
-import katyaImage from "/public/assets/pictures/good/katya-good-ench.png";
-import stelaImage from "/public/assets/pictures/good/stela-good.png";
+import aneliaImage from "./assets/pictures/good/anelia-good-ench.png";
+import galitaImage from "./assets/pictures/good/galita-good-ench.png";
+import katyaImage from "./assets/pictures/good/katya-good-ench.png";
+import stelaImage from "./assets/pictures/good/stela-good.png";
 import { FaInstagram, FaFacebook, FaGlobe, FaViber } from "react-icons/fa";
 
 // ================ TEAM MEMBER COMPONENT ================

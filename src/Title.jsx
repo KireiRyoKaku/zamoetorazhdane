@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import logoImage from "../public/assets/pictures/logo-white-outline.png";
+import logoImage from "./assets/pictures/logo-white-outline.png";
 import SocialLinks from "./components/SocialLinks";
 
 const Title = () => {
