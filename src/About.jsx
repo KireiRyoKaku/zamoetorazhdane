@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import logoImage from "../public/assets/pictures/logo-green-outline.png";
 import Team from "./Team";
 
-const About = ({ onClose }) => {
+const About = ({ onClose = () => {} }) => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [scrollTop, setScrollTop] = useState(0);
@@ -13,7 +13,7 @@ const About = ({ onClose }) => {
 
   const handleClickEvent = () => {
     navigate("/program");
-    onClose();
+    if (onClose) onClose(); // Add safety check
   };
 
   useEffect(() => {
@@ -147,7 +147,7 @@ const About = ({ onClose }) => {
 };
 
 About.propTypes = {
-  onClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
 };
 
 export default About;
