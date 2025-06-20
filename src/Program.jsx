@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const Program = ({ onClose }) => {
+const Program = ({ onClose = () => {} }) => {
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ const Program = ({ onClose }) => {
 };
 
 Program.propTypes = {
-  onClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
 };
 
 export default Program;
