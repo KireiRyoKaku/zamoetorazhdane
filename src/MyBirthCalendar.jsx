@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import SubscribeAndPay from "./SubscribeAndPay";
-import { scrollToElement } from "./utils";
 import { useNavigate, useLocation } from "react-router-dom";
 import calBgImage from "../public/assets/pictures/logo-and-text-green-outline.png";
 
@@ -10,6 +9,7 @@ import {
   FaMapMarkerAlt,
   FaInstagram,
 } from "react-icons/fa";
+import { API_URL } from "../utils/apiConfig.js";
 
 const MyBirthCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -25,7 +25,7 @@ const MyBirthCalendar = () => {
   const [animatingCalendar, setAnimatingCalendar] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = import.meta.env.VITE_API_URL; // http://localhost:5174
 
   // Move this function INSIDE the component
   const toggleLocationFilter = (location) => {
@@ -172,11 +172,20 @@ const MyBirthCalendar = () => {
   useEffect(() => {
     const fetchEventDates = async () => {
       try {
-        const response = await fetch(`${apiUrl}/events`);
+        console.log("🔄 Fetching events from:", `${API_URL}/events`);
+
+        const response = await fetch(`${API_URL}/events`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
+
         const events = await response.json();
+        console.log("✅ Events fetched successfully:", events.length, "events");
 
         const dates = events.map((event) => event.dayOfEvent);
         setInteractableDates(dates);
@@ -187,11 +196,15 @@ const MyBirthCalendar = () => {
         const specialDates = specialDatesArray.map((event) => event.dayOfEvent);
         setInteractableDatesSpecial(specialDates);
 
-        // Update the events state with the fetched events data
         setEvents(events);
       } catch (error) {
-        console.error("Error fetching event dates:", error);
-        setErrorState({ message: error.message }); // Set error state
+        console.error("❌ Error fetching event dates:", error);
+        setErrorState({ message: `Failed to load events: ${error.message}` });
+
+        // Fallback to empty state
+        setInteractableDates([]);
+        setInteractableDatesSpecial([]);
+        setEvents([]);
       }
     };
 

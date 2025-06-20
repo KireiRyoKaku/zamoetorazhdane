@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { differenceInHours } from "date-fns";
+import { API_URL } from "../utils/apiConfig.js";
 
 const SubscribeAndPay = ({ onClose }) => {
   const location = useLocation();
@@ -66,28 +67,37 @@ const SubscribeAndPay = ({ onClose }) => {
 
     try {
       console.log("Sending form data:", formData);
-      const response = await fetch(
-        "http://192.168.0.142:5174/api/submit-form",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5174";
+
+      const response = await fetch(`${API_URL}/submit-form`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify(formData),
+      });
 
-      const data = await response.json();
-
-      // Check if the response indicates an error
       if (!response.ok) {
-        // Server returned an error status code
-        console.error("Server returned an error:", data);
-        setError(data.message || "An error occurred during form submission");
-        return; // Stop processing - don't navigate away
+        // Extract the actual error message from server response
+        let errorMessage = `HTTP error! Status: ${response.status}`;
+
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorData.error || errorMessage;
+        } catch (parseError) {
+          try {
+            const errorText = await response.text();
+            errorMessage = errorText || errorMessage;
+          } catch (textError) {
+            // Keep the default message
+          }
+        }
+
+        throw new Error(errorMessage);
       }
 
-      console.log("Form submitted successfully:", data);
+      const result = await response.json();
+      console.log("✅ Form submitted successfully:", result);
 
       // Only navigate on success
       navigate("/program", { state: { showSuccessToast: true } });
