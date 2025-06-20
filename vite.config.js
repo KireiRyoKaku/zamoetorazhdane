@@ -6,6 +6,9 @@ export default defineConfig({
   base: "/zamoetorazhdane/",
   server: {
     port: 5173,
-    host: "192.168.0.142",
+    host: "0.0.0.0", // For mobile access
+  },
+  build: {
+    sourcemap: false,
   },
 });
