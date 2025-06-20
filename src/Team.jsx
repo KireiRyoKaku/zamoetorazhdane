@@ -75,8 +75,8 @@ const TeamMember = React.forwardRef(
         ref={ref}
         className={`relative flex-shrink-0 items-center justify-center overflow-hidden rounded-md shadow-lg transition-all duration-700 ${
           isExpanded
-            ? "h-[calc(100dvh-128px)] w-full max-w-[75%] bg-moetoRazhdaneYellow"
-            : "h-[calc(100dvh-128px)] w-36 max-w-[23%] bg-white"
+            ? "h-[calc(100dvh-128px)] w-full max-w-[75%] bg-moetoRazhdaneYellow md:h-[600px] md:max-w-[50%]"
+            : "h-[calc(100dvh-128px)] w-36 max-w-[23%] bg-white md:h-[600px]"
         }`}
         onClick={onClick}
       >
@@ -311,7 +311,7 @@ const Team = () => {
     >
       <div
         ref={containerRef}
-        className="flex h-screen items-start gap-x-2 overflow-x-auto scroll-smooth p-5"
+        className="flex items-start gap-x-2 overflow-x-auto scroll-smooth p-5 md:justify-center"
       >
         {teamMembers.map((member, index) => (
           <TeamMember
