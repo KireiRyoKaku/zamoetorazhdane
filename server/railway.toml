@@ -1,0 +1,16 @@
+# railway.toml
+[build]
+builder = "nixpacks"
+buildCommand = "npm install"
+
+[deploy]
+healthcheckPath = "/test"
+healthcheckTimeout = 300
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+[environments]
+  [environments.production]
+    NODE_ENV = "production"
+    PORT = "${{ PORT }}"
+    HOST = "0.0.0.0"

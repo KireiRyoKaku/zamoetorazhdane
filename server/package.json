@@ -1,0 +1,31 @@
+{
+  "name": "za-moeto-razhdane-server",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "googleapis": "^144.0.0",
+    "node-ical": "^0.20.1",
+    "nodemailer": "^6.10.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "keywords": [
+    "express",
+    "api",
+    "calendar",
+    "events"
+  ],
+  "author": "Stoyan Takov",
+  "license": "MIT"
+}
