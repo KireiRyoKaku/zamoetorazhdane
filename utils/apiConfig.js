@@ -2,7 +2,7 @@
 const getApiUrl = () => {
   // In production, use your deployed server URL
   if (import.meta.env.PROD) {
-    return "https://your-app-name.railway.app"; // Replace with your actual Railway URL
+    return "https://zamoetorazhdane-server.onrender.com"; // Replace with your actual Render URL
   }
 
   // In development, try to detect current network
