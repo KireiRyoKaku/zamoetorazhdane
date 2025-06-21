@@ -44,11 +44,12 @@ const Title = () => {
             className="dropdown-menu mt-7 flex w-full cursor-pointer flex-col items-center transition-transform duration-500 hover:scale-90"
             onClick={handleClickAbout}
           >
+            {" "}
             <div className="flex">
               <img
                 src={logoImage}
                 alt="За моето раждане лого"
-                className="logo object-contain"
+                className="logo max-h-[30vh] w-auto max-w-[90vw] object-contain sm:max-h-[33vh] md:max-h-[33vh] lg:max-h-[33vh] xl:max-h-[33vh] 2xl:max-h-[33vh]"
               />
             </div>
             <div>
@@ -56,9 +57,8 @@ const Title = () => {
                 за моето раждане
               </h1>
             </div>
-          </header>
-
-          <h2 className="custom-h2-style mb-7 whitespace-nowrap font-playfairDisplaySc text-3xl md:text-3xl">
+          </header>{" "}
+          <h2 className="custom-h2-style whitespace-nowrap font-playfairDisplaySc text-2xl md:text-3xl">
             общност за подкрепа между майки
           </h2>
         </div>
