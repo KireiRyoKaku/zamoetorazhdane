@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import aneliaImage from "./assets/pictures/good/anelia-good-ench.png";
 import galitaImage from "./assets/pictures/good/galita-good-ench.png";
 import katyaImage from "./assets/pictures/good/katya-good-ench.png";
-import stelaImage from "./assets/pictures/good/stela-good.png";
 import { FaInstagram, FaFacebook, FaGlobe, FaViber } from "react-icons/fa";
 
 // ================ TEAM MEMBER COMPONENT ================
@@ -226,16 +225,6 @@ const teamMembers = [
     linkWebsite:
       "http://calendly.com/katya-usheva-psychologist/15min?month=2025-01",
     image: katyaImage,
-  },
-  {
-    title: "",
-    firstName: "Стела",
-    lastName: "Дончева",
-    role: "психолог, психотерапевт, следродилна дула и треньор",
-    linkInsta: "https://www.facebook.com/perimamabg",
-    linkFacebook: "https://www.facebook.com/perimamabg",
-    linkWebsite: "https://zemnastela.com/",
-    image: stelaImage,
   },
 ];
 
