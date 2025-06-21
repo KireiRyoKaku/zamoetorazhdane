@@ -19,6 +19,7 @@ const TeamMember = React.forwardRef(
       linkFacebook,
       linkWebsite,
       linkVibergroup,
+      totalMembers,
     },
     ref,
   ) => {
@@ -75,8 +76,16 @@ const TeamMember = React.forwardRef(
         className={`relative flex-shrink-0 items-center justify-center overflow-hidden rounded-md shadow-lg transition-all duration-700 ${
           isExpanded
             ? "h-[calc(100dvh-128px)] w-full max-w-[75%] bg-moetoRazhdaneYellow md:h-[600px] md:max-w-[50%]"
-            : "h-[calc(100dvh-128px)] w-36 max-w-[23%] bg-white md:h-[600px]"
+            : "h-[calc(100dvh-128px)] bg-white md:h-[600px] md:w-36"
         }`}
+        style={{
+          // Mobile: Use calculated width when collapsed, full width when expanded
+          width: isExpanded
+            ? undefined
+            : window.innerWidth < 768
+              ? `calc((100vw - 40px - ${(totalMembers - 1) * 8}px) / ${totalMembers})`
+              : undefined,
+        }}
         onClick={onClick}
       >
         <img
@@ -301,6 +310,10 @@ const Team = () => {
       <div
         ref={containerRef}
         className="flex items-start gap-x-2 overflow-x-auto scroll-smooth p-5 md:justify-center"
+        style={{
+          // For mobile: calculate width to fill viewport minus padding and gaps
+          "--member-width-mobile": `calc((100vw - 40px - ${(teamMembers.length - 1) * 8}px) / ${teamMembers.length})`,
+        }}
       >
         {teamMembers.map((member, index) => (
           <TeamMember
@@ -317,6 +330,7 @@ const Team = () => {
             linkVibergroup={member.linkVibergroup}
             isExpanded={expandedIndex === index}
             onClick={() => handleToggleExpand(index)}
+            totalMembers={teamMembers.length}
           />
         ))}
       </div>
