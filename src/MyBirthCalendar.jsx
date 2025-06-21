@@ -377,16 +377,16 @@ const MyBirthCalendar = () => {
           // Get all events for this day
           const dayEvents = currentMonthEvents.filter(
             (event) => parseInt(event.dayOfEvent) === dayOfMonth,
-          );
+          ); // Check if there are events for this day matching filter criteria
+          const isHighlightedSofia = dayEvents.some((event) => {
+            const location = event.location.toLowerCase();
+            return location.includes("софия") || location.includes("sofia");
+          });
 
-          // Check if there are events for this day matching filter criteria
-          const isHighlightedSofia = dayEvents.some((event) =>
-            event.location.toLowerCase().includes("софия"),
-          );
-
-          const isHighlightedPlovdiv = dayEvents.some((event) =>
-            event.location.toLowerCase().includes("пловдив"),
-          );
+          const isHighlightedPlovdiv = dayEvents.some((event) => {
+            const location = event.location.toLowerCase();
+            return location.includes("пловдив") || location.includes("plovdiv");
+          });
 
           // Apply filtering regardless of event type - MODIFIED LOGIC HERE
           const shouldHighlight =
@@ -433,19 +433,19 @@ const MyBirthCalendar = () => {
       const eventDate = event.dateOfEvent.split(".");
       const eventMonth = parseInt(eventDate[1]) - 1; // Convert to 0-based month
       return eventMonth === currentDate.getMonth();
-    });
-
-    // Apply location filter if set - FIX THE COMPARISON HERE!
+    }); // Apply location filter if set - SUPPORT BOTH LATIN AND CYRILLIC!
     if (locationFilter === "софия") {
-      // Use Cyrillic
-      filteredEvents = filteredEvents.filter((event) =>
-        event.location.toLowerCase().includes("софия"),
-      );
+      // Filter for Sofia events (both Cyrillic and Latin)
+      filteredEvents = filteredEvents.filter((event) => {
+        const location = event.location.toLowerCase();
+        return location.includes("софия") || location.includes("sofia");
+      });
     } else if (locationFilter === "пловдив") {
-      // Use Cyrillic
-      filteredEvents = filteredEvents.filter((event) =>
-        event.location.toLowerCase().includes("пловдив"),
-      );
+      // Filter for Plovdiv events (both Cyrillic and Latin)
+      filteredEvents = filteredEvents.filter((event) => {
+        const location = event.location.toLowerCase();
+        return location.includes("пловдив") || location.includes("plovdiv");
+      });
     }
 
     // Sort events by day of month
@@ -459,30 +459,46 @@ const MyBirthCalendar = () => {
         "EventCircle flex h-10 w-10 items-center justify-center rounded-full text-xl text-white font-playfairDisplaySc";
       if (event.type === "Special") {
         eventCircleClass += " bg-moetoRazhdanePurple"; //
-      } else if (event.location.toLowerCase().includes("софия")) {
-        eventCircleClass += " bg-moetoRazhdaneLightGreen"; // Default background color class
-      } else if (event.location.toLowerCase().includes("пловдив")) {
-        eventCircleClass += " bg-moetoRazhdaneDarkGreen"; // Special event background color
+      } else if (
+        event.location.toLowerCase().includes("софия") ||
+        event.location.toLowerCase().includes("sofia")
+      ) {
+        eventCircleClass += " bg-moetoRazhdaneLightGreen"; // Sofia events
+      } else if (
+        event.location.toLowerCase().includes("пловдив") ||
+        event.location.toLowerCase().includes("plovdiv")
+      ) {
+        eventCircleClass += " bg-moetoRazhdaneDarkGreen"; // Plovdiv events
       }
-
       let eventTitleClass =
         "EventTitle relative flex min-h-[40px] min-w-[200px] max-w-[300px] place-content-center items-center font-hitchHike text-4xl text-moetoRazhdaneDarkGreen";
       if (event.type === "Special") {
         eventTitleClass += " text-moetoRazhdanePurple"; //
-      } else if (event.location.toLowerCase().includes("софия")) {
-        eventTitleClass += " text-moetoRazhdaneLightGreen"; // Default background color class
-      } else if (event.location.toLowerCase().includes("пловдив")) {
-        eventTitleClass += " text-moetoRazhdaneDarkGreen"; // Special event background color
+      } else if (
+        event.location.toLowerCase().includes("софия") ||
+        event.location.toLowerCase().includes("sofia")
+      ) {
+        eventTitleClass += " text-moetoRazhdaneLightGreen"; // Sofia events
+      } else if (
+        event.location.toLowerCase().includes("пловдив") ||
+        event.location.toLowerCase().includes("plovdiv")
+      ) {
+        eventTitleClass += " text-moetoRazhdaneDarkGreen"; // Plovdiv events
       }
-
       let eventDescriptionClass =
         "EventDescriptionText mt-2 rounded-xl p-4 font-light text-white opacity-85";
       if (event.type === "Special") {
         eventDescriptionClass += " bg-moetoRazhdanePurple"; // Special event background color
-      } else if (event.location.toLowerCase().includes("пловдив")) {
-        eventDescriptionClass += " bg-moetoRazhdaneDarkGreen"; // Special event background color
-      } else if (event.location.toLowerCase().includes("софия")) {
-        eventDescriptionClass += " bg-moetoRazhdaneLightGreen"; // Special event background color
+      } else if (
+        event.location.toLowerCase().includes("пловдив") ||
+        event.location.toLowerCase().includes("plovdiv")
+      ) {
+        eventDescriptionClass += " bg-moetoRazhdaneDarkGreen"; // Plovdiv event background color
+      } else if (
+        event.location.toLowerCase().includes("софия") ||
+        event.location.toLowerCase().includes("sofia")
+      ) {
+        eventDescriptionClass += " bg-moetoRazhdaneLightGreen"; // Sofia event background color
       } else {
         eventDescriptionClass += " bg-moetoRazhdaneLightGreen"; // Default background color class
       }
@@ -602,14 +618,15 @@ const MyBirthCalendar = () => {
     currentDate.getMonth(),
     events,
   );
+  const filterSofiaEvents = events.filter((event) => {
+    const location = event.location.toLowerCase();
+    return location.includes("софия") || location.includes("sofia");
+  });
 
-  const filterSofiaEvents = events.filter((event) =>
-    event.location.toLowerCase().includes("софия"),
-  );
-
-  const filterShowPlovdivEvents = events.filter((event) =>
-    event.location.toLowerCase().includes("пловдив"),
-  );
+  const filterShowPlovdivEvents = events.filter((event) => {
+    const location = event.location.toLowerCase();
+    return location.includes("пловдив") || location.includes("plovdiv");
+  });
 
   const monthName = currentDate.toLocaleString("bg-BG", { month: "long" });
   const year = currentDate.getFullYear();
