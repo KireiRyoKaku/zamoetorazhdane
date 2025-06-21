@@ -10,8 +10,13 @@ const About = ({ onClose = () => {} }) => {
   const contentRef = useRef(null);
   const elementsRef = useRef([]);
 
-  const handleClickEvent = () => {
+  const handleClickEventProgram = () => {
     navigate("/program");
+    if (onClose) onClose(); // Add safety check
+  };
+
+  const handleClickEventTeam = () => {
+    navigate("/team");
     if (onClose) onClose(); // Add safety check
   };
 
@@ -66,10 +71,10 @@ const About = ({ onClose = () => {} }) => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="fixed z-50 flex items-center justify-center px-5 pt-7 md:inset-0">
-        {/* Updated spacing */}
+      <div className="fixed z-50 mt-7 flex items-center justify-center px-5 md:inset-0 md:-mt-14 md:px-10">
+        {/* Updated spacing with negative margin instead of padding */}
         <div
-          className={`h-[calc(100dvh-125px)] w-full max-w-3xl transform overflow-y-auto rounded-lg bg-slate-50 p-8 text-left font-yanoneKaffeesatz text-xl font-light transition-all duration-300 ease-in-out md:h-[calc(100dvh-580px)] ${
+          className={`h-[calc(100dvh-125px)] w-full max-w-3xl transform overflow-y-auto rounded-lg bg-slate-50 p-8 text-left font-yanoneKaffeesatz text-xl font-light transition-all duration-300 ease-in-out md:h-[calc(100dvh-150px)] ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           }`}
           ref={contentRef}
@@ -100,9 +105,21 @@ const About = ({ onClose = () => {} }) => {
                 </b>{" "}
                 и благополучие в периода на ранното майчинство.
               </p>
+              <div
+                ref={(el) => (elementsRef.current[1] = el)}
+                className="mt-8 flex justify-center opacity-0 transition-opacity duration-1000 ease-in-out"
+              >
+                <button
+                  className="rounded-3xl bg-moetoRazhdaneYellow px-6 py-2 font-playfairDisplaySc text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
+                  onClick={handleClickEventTeam}
+                >
+                  Запознай се с екипа
+                </button>
+              </div>
+
               <br />
               <p
-                ref={(el) => (elementsRef.current[1] = el)}
+                ref={(el) => (elementsRef.current[2] = el)}
                 className="para2 opacity-0 transition-opacity duration-1000 ease-in-out"
               >
                 Нашата мисия е да създадем{" "}
@@ -112,7 +129,7 @@ const About = ({ onClose = () => {} }) => {
               </p>
               <br />
               <p
-                ref={(el) => (elementsRef.current[2] = el)}
+                ref={(el) => (elementsRef.current[3] = el)}
                 className="para3 opacity-0 transition-opacity duration-1000 ease-in-out"
               >
                 <b>Нашият фокус е върху майката</b>, с нейните тревоги и
@@ -124,12 +141,12 @@ const About = ({ onClose = () => {} }) => {
               </p>
             </h3>
             <div
-              ref={(el) => (elementsRef.current[3] = el)}
+              ref={(el) => (elementsRef.current[4] = el)}
               className="mt-8 flex justify-center opacity-0 transition-opacity duration-1000 ease-in-out"
             >
               <button
                 className="rounded-3xl bg-moetoRazhdaneYellow px-6 py-2 font-playfairDisplaySc text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
-                onClick={handleClickEvent}
+                onClick={handleClickEventProgram}
               >
                 Включи се
               </button>
