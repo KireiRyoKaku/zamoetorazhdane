@@ -556,14 +556,12 @@ const MyBirthCalendar = () => {
               <FaMapMarkerAlt className="h-4 w-4 text-moetoRazhdaneDarkGreen opacity-75" />
               <div className="EventDescriptionLocation">{event.location}</div>
             </div>
-            <div className={eventDescriptionClass}>
-              <b>Тема:</b> "{event.description}"
-            </div>
+            <div className={eventDescriptionClass}>"{event.description}"</div>
             {/* Only show subscribe button for future events */}
             {!isEventInPast(event) ? (
               <div className="flex w-full justify-center">
                 <button
-                  className="mt-2 items-center justify-center rounded-2xl bg-moetoRazhdaneYellow p-3 font-yanoneKaffeesatz text-4xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
+                  className="mt-2 items-center justify-center rounded-2xl bg-moetoRazhdaneYellow p-3 font-playfairDisplaySc text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
                   onClick={() => handleClickSubscribeAndPay(event)}
                 >
                   <p>Запиши се</p>
@@ -585,7 +583,7 @@ const MyBirthCalendar = () => {
               </div>
             )}
             {/* New Event Type Link */}
-            <div className="mt-2 items-center justify-center gap-4 border-moetoRazhdaneDarkGreen/20 pb-2">
+            {/* <div className="mt-2 items-center justify-center gap-4 border-moetoRazhdaneDarkGreen/20 pb-2">
               <div className="EventTypeLink">
                 <a
                   href={`/events/${event.type === "Special" ? "3" : event.type}`}
@@ -610,7 +608,7 @@ const MyBirthCalendar = () => {
                   </div>
                 </a>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       );
