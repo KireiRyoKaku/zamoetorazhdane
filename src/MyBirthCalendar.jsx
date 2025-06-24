@@ -23,6 +23,7 @@ const MyBirthCalendar = () => {
   const [errorState, setErrorState] = useState(null); // Add error state
   const [locationFilter, setLocationFilter] = useState(null); // null, 'sofia', or 'plovdiv'
   const [animatingCalendar, setAnimatingCalendar] = useState(false);
+  const [isLoadingEvents, setIsLoadingEvents] = useState(true); // Add loading state
   const navigate = useNavigate();
   const location = useLocation();
   const apiUrl = import.meta.env.VITE_API_URL; // http://localhost:5174
@@ -172,6 +173,7 @@ const MyBirthCalendar = () => {
   useEffect(() => {
     const fetchEventDates = async () => {
       try {
+        setIsLoadingEvents(true); // Start loading
         console.log("🔄 Fetching events from:", `${API_URL}/events`);
 
         const response = await fetch(`${API_URL}/events`, {
@@ -205,6 +207,8 @@ const MyBirthCalendar = () => {
         setInteractableDates([]);
         setInteractableDatesSpecial([]);
         setEvents([]);
+      } finally {
+        setIsLoadingEvents(false); // End loading
       }
     };
 
@@ -806,9 +810,29 @@ const MyBirthCalendar = () => {
         <div className="mb-8 font-makLight text-4xl font-bold text-moetoRazhdaneDarkGreen">
           Събития
         </div>
-        {currentMonthEvents.length > 0 ? (
+        {isLoadingEvents ? (
+          // Loading state
+          <div
+            className={`event-box mb-4 grid w-full grid-cols-[auto_1fr] grid-rows-[min-content] rounded bg-white p-3 ring-1 ring-moetoRazhdaneDarkGreen transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] ${
+              showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
+            }`}
+          >
+            <div className="flex h-full items-center">
+              <div className="NoEventDay mr-4 flex items-center justify-center">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-moetoRazhdaneYellow font-playfairDisplaySc text-xl text-black">
+                  <div className="animate-spin">⏳</div>
+                </span>
+              </div>
+              <div className="NoEventSummary flex-1 items-center font-hitchHike text-3xl text-moetoRazhdaneDarkGreen">
+                Зареждане на събитията в програмата. Това може да отнеме
+                известно време. Моля изчакайте.
+              </div>
+            </div>
+          </div>
+        ) : currentMonthEvents.length > 0 ? (
           createEventList()
         ) : (
+          // No events state (only shown after loading is complete)
           <div
             className={`event-box mb-4 grid w-full grid-cols-[auto_1fr] grid-rows-[min-content] rounded bg-white p-3 ring-1 ring-moetoRazhdaneDarkGreen transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] ${
               showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
