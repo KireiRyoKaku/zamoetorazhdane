@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import aneliaImage from "./assets/pictures/good/anelia-good-ench.png";
-import galitaImage from "./assets/pictures/good/galita-good-ench.png";
-import katyaImage from "./assets/pictures/good/katya-good-ench.png";
+import aneliaImage from "./assets/pictures/good/anelia-good-ench1.png";
+import galitaImage from "./assets/pictures/good/galita-good-ench1.png";
+import katyaImage from "./assets/pictures/good/katya-good-ench1.png";
 import { FaInstagram, FaFacebook, FaGlobe, FaViber } from "react-icons/fa";
 
 // ================ TEAM MEMBER COMPONENT ================
