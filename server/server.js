@@ -182,9 +182,15 @@ app.get("/events", async (req, res) => {
             location:
               ev.location?.trim() ||
               "Локацията за тази среща все още избира 🌏 . Проверете по-късно пак!",
-            timeStart: ev.start.toLocaleTimeString([], { timeStyle: "short" }),
+            timeStart: ev.start.toLocaleTimeString("bg-BG", {
+              timeStyle: "short",
+              timeZone: "Europe/Sofia",
+            }),
             dateOfEventLocaleString: ev.start.toDateString(),
-            timeEnd: ev.end.toLocaleTimeString([], { timeStyle: "short" }),
+            timeEnd: ev.end.toLocaleTimeString("bg-BG", {
+              timeStyle: "short",
+              timeZone: "Europe/Sofia",
+            }),
             type: type,
             cID: cID,
           });
