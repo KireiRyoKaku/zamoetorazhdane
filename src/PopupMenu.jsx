@@ -48,15 +48,15 @@ const PopupMenu = () => {
   // Determine current route text and link
   let currentRoute;
 
+  // Get the full URL including hash for proper route detection
+  const fullPath = location.pathname + location.hash;
+
   // Check if we're on a subscribe/payment page
-  if (
-    location.pathname.includes("subscribe") ||
-    location.pathname.includes("pay")
-  ) {
+  if (fullPath.includes("subscribe") || fullPath.includes("pay")) {
     currentRoute = { text: "Формуляр", link: null };
   }
-  // Check if we're on events page or any event-specific page
-  else if (location.pathname.includes("/events")) {
+  // Check if we're on events page or any event-specific page (including hash routes)
+  else if (fullPath.includes("/events") || fullPath.includes("#/events")) {
     currentRoute = routeNames["/events"];
   } else {
     currentRoute = routeNames[location.pathname] || routeNames["/"];
@@ -93,14 +93,15 @@ const PopupMenu = () => {
                     </button>
                   )}
                 {/* Rest of the menu buttons remain unchanged */}
-                {location.pathname !== "/events" && (
-                  <button
-                    onClick={() => handleNavigation("/events")}
-                    className="text-left text-black transition-colors duration-1000 hover:text-black/30"
-                  >
-                    Събития
-                  </button>
-                )}
+                {!fullPath.includes("/events") &&
+                  !fullPath.includes("#/events") && (
+                    <button
+                      onClick={() => handleNavigation("/events")}
+                      className="text-left text-black transition-colors duration-1000 hover:text-black/30"
+                    >
+                      Събития
+                    </button>
+                  )}
                 {location.pathname !== "/about" && (
                   <button
                     onClick={() => handleNavigation("/about")}
