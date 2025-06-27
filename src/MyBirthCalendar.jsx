@@ -821,7 +821,7 @@ const MyBirthCalendar = () => {
                   <div className="animate-spin">⏳</div>
                 </span>
               </div>
-              <div className="NoEventSummary flex-1 items-center font-hitchHike text-3xl text-moetoRazhdaneDarkGreen">
+              <div className="NoEventSummary flex-1 items-center font-yanoneKaffeesatz text-2xl text-moetoRazhdaneDarkGreen">
                 Зареждане на събитията в програмата. Това може да отнеме
                 известно време. Моля изчакайте.
               </div>
@@ -839,13 +839,29 @@ const MyBirthCalendar = () => {
             <div className="flex h-full items-center">
               <div className="NoEventDay mr-4 flex items-center justify-center">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-moetoRazhdaneDarkGreen font-playfairDisplaySc text-xl text-white">
-                  <div className="mb-2">😿</div>
+                  <div className="mb-1">📅</div>
                 </span>
               </div>
-              <div className="NoEventSummary flex-1 items-center font-hitchHike text-3xl text-moetoRazhdaneDarkGreen">
+              <div className="NoEventSummary flex-1 items-center font-yanoneKaffeesatz text-2xl text-moetoRazhdaneDarkGreen">
                 {locationFilter
                   ? `Няма събития в ${locationFilter === "софия" ? "София" : "Пловдив"} за този месец.`
-                  : "Все още няма събития за този месец. Проверете скоро отново!"}
+                  : (() => {
+                      // Check if the displayed month is in the past
+                      const today = new Date();
+                      const currentYear = today.getFullYear();
+                      const currentMonth = today.getMonth();
+                      const displayedYear = currentDate.getFullYear();
+                      const displayedMonth = currentDate.getMonth();
+
+                      const isDisplayedMonthInPast =
+                        displayedYear < currentYear ||
+                        (displayedYear === currentYear &&
+                          displayedMonth < currentMonth);
+
+                      return isDisplayedMonthInPast
+                        ? "За този месец нямаше проведени събития."
+                        : "Все още няма събития за този месец. Проверете скоро отново!";
+                    })()}
               </div>
             </div>
           </div>
