@@ -509,7 +509,7 @@ const MyBirthCalendar = () => {
       return (
         <div
           key={index}
-          className={`event-box mb-4 grid w-full grid-cols-[auto_1fr] grid-rows-[min-content] rounded bg-white p-3 text-xl font-medium ring-1 ring-moetoRazhdaneDarkGreen transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] ${
+          className={`event-box mb-4 grid w-full grid-cols-[auto_1fr] grid-rows-[min-content] gap-3 rounded bg-white p-3 text-xl font-medium ring-1 ring-moetoRazhdaneDarkGreen transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] ${
             showAnimation
               ? "translate-y-0 scale-100 opacity-100"
               : "translate-y-4 scale-95 opacity-0"
