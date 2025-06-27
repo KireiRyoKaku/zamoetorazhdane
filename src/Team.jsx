@@ -28,6 +28,9 @@ const TeamMember = React.forwardRef(
     const [showCollapsedName, setShowCollapsedName] = useState(false);
     const [showLinks, setShowLinks] = useState(false);
 
+    // Pre-calculate the collapsed width to avoid inline calculations during render
+    const collapsedWidthMobile = `calc((100vw - 40px - ${(totalMembers - 1) * 8}px) / ${totalMembers})`;
+
     // Control visibility with slight delays after expansion or collapse
     useEffect(() => {
       if (isExpanded) {
@@ -75,16 +78,25 @@ const TeamMember = React.forwardRef(
         ref={ref}
         className={`relative flex-shrink-0 items-center justify-center overflow-hidden rounded-md shadow-lg transition-all duration-700 ${
           isExpanded
-            ? "h-[calc(100dvh-128px)] w-full max-w-[75%] bg-moetoRazhdaneYellow md:h-[600px] md:max-w-[50%]"
+            ? "h-[calc(100dvh-128px)] w-full max-w-[75%] bg-moetoRazhdaneYellow md:h-[600px] md:max-w-[400px]"
             : "h-[calc(100dvh-128px)] bg-white md:h-[600px] md:w-36"
         }`}
         style={{
-          // Mobile: Use calculated width when collapsed, full width when expanded
-          width: isExpanded
-            ? undefined
-            : window.innerWidth < 768
-              ? `calc((100vw - 40px - ${(totalMembers - 1) * 8}px) / ${totalMembers})`
-              : undefined,
+          // Apply width constraints on all viewports when collapsed
+          ...(!isExpanded && {
+            // Mobile: use calculated width
+            ...(window.innerWidth < 768 && {
+              width: collapsedWidthMobile,
+              minWidth: collapsedWidthMobile,
+              maxWidth: collapsedWidthMobile,
+            }),
+            // Desktop: use fixed width
+            ...(window.innerWidth >= 768 && {
+              width: "100px", // Smaller width for desktop
+              minWidth: "100px",
+              maxWidth: "100px",
+            }),
+          }),
         }}
         onClick={onClick}
       >
@@ -309,11 +321,7 @@ const Team = () => {
     >
       <div
         ref={containerRef}
-        className="flex items-start gap-x-2 overflow-x-auto scroll-smooth p-5 md:justify-center"
-        style={{
-          // For mobile: calculate width to fill viewport minus padding and gaps
-          "--member-width-mobile": `calc((100vw - 40px - ${(teamMembers.length - 1) * 8}px) / ${teamMembers.length})`,
-        }}
+        className="flex items-start gap-x-2 overflow-x-auto scroll-smooth p-5 md:mt-20 md:justify-center md:gap-x-4"
       >
         {teamMembers.map((member, index) => (
           <TeamMember
