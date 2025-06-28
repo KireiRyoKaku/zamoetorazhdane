@@ -509,7 +509,11 @@ const MyBirthCalendar = () => {
       return (
         <div
           key={index}
-          className={`event-box mb-4 grid w-full grid-cols-[auto_1fr] grid-rows-[min-content] gap-3 rounded bg-white p-3 text-xl font-medium ring-1 ring-moetoRazhdaneDarkGreen transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] ${
+          className={`event-box mb-4 grid w-full grid-cols-[auto_1fr] grid-rows-[min-content] gap-3 rounded bg-white p-3 text-xl font-medium ring-1 transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] ${
+            isEventInPast(event)
+              ? "ring-gray-300"
+              : "ring-moetoRazhdaneDarkGreen"
+          } ${
             showAnimation
               ? "translate-y-0 scale-100 opacity-100"
               : "translate-y-4 scale-95 opacity-0"
@@ -521,12 +525,16 @@ const MyBirthCalendar = () => {
         >
           {/* First Row, First Column: EventDay - Fixed size */}
           <div className="EventDay flex min-h-[40px] min-w-[40px] items-center justify-center">
-            <span className={eventCircleClass}>
+            <span
+              className={`${eventCircleClass} ${isEventInPast(event) ? "!bg-gray-400" : ""}`}
+            >
               <div>{event.dayOfEvent}</div>
             </span>
           </div>
           {/* First Row, Second Column: EventTitle */}
-          <div className={eventTitleClass}>
+          <div
+            className={`${eventTitleClass} ${isEventInPast(event) ? "!text-gray-500" : ""}`}
+          >
             <div
               className={`${event.summary.length > 18 ? "whitespace-pre-wrap" : ""}`}
             >
@@ -821,7 +829,7 @@ const MyBirthCalendar = () => {
                   <div className="animate-spin">⏳</div>
                 </span>
               </div>
-              <div className="NoEventSummary flex-1 items-center font-yanoneKaffeesatz text-2xl text-moetoRazhdaneDarkGreen">
+              <div className="NoEventSummary flex-1 items-center font-hitchHike text-3xl text-moetoRazhdaneDarkGreen">
                 Зареждане на събитията в програмата. Това може да отнеме
                 известно време. Моля изчакайте.
               </div>
@@ -839,29 +847,13 @@ const MyBirthCalendar = () => {
             <div className="flex h-full items-center">
               <div className="NoEventDay mr-4 flex items-center justify-center">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-moetoRazhdaneDarkGreen font-playfairDisplaySc text-xl text-white">
-                  <div className="mb-1">📅</div>
+                  <div className="mb-2">😿</div>
                 </span>
               </div>
-              <div className="NoEventSummary flex-1 items-center font-yanoneKaffeesatz text-2xl text-moetoRazhdaneDarkGreen">
+              <div className="NoEventSummary flex-1 items-center font-hitchHike text-3xl text-moetoRazhdaneDarkGreen">
                 {locationFilter
                   ? `Няма събития в ${locationFilter === "софия" ? "София" : "Пловдив"} за този месец.`
-                  : (() => {
-                      // Check if the displayed month is in the past
-                      const today = new Date();
-                      const currentYear = today.getFullYear();
-                      const currentMonth = today.getMonth();
-                      const displayedYear = currentDate.getFullYear();
-                      const displayedMonth = currentDate.getMonth();
-
-                      const isDisplayedMonthInPast =
-                        displayedYear < currentYear ||
-                        (displayedYear === currentYear &&
-                          displayedMonth < currentMonth);
-
-                      return isDisplayedMonthInPast
-                        ? "За този месец нямаше проведени събития."
-                        : "Все още няма събития за този месец. Проверете скоро отново!";
-                    })()}
+                  : "Все още няма събития за този месец. Проверете скоро отново!"}
               </div>
             </div>
           </div>
