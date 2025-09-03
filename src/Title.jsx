@@ -35,9 +35,7 @@ const Title = () => {
               ”
             </span>
             <p className="quote relative text-center font-yanoneKaffeesatz text-2.5xl font-thin italic text-slate-50">
-              С раждането на моето дете
-              <br />
-              се раждам и аз, като майка.
+              За всеки етап от майчинството
             </p>
           </div>
           <header
@@ -48,18 +46,18 @@ const Title = () => {
             <div className="flex">
               <img
                 src={logoImage}
-                alt="За моето раждане лого"
+                alt="Прегърната лого"
                 className="logo max-h-[30vh] w-auto max-w-[90vw] object-contain sm:max-h-[33vh] md:max-h-[33vh] lg:max-h-[33vh] xl:max-h-[33vh] 2xl:max-h-[33vh]"
               />
             </div>
             <div>
-              <h1 className="font-makLight font-bold text-slate-50 sm:text-3xl md:text-5xl lg:text-7xl">
-                за моето раждане
+              <h1 className="font-magnoliaScript font-bold text-slate-50 sm:text-3xl md:text-5xl lg:text-7xl">
+                прегърната
               </h1>
             </div>
           </header>{" "}
-          <h2 className="custom-h2-style whitespace-nowrap font-playfairDisplaySc text-2xl md:text-3xl">
-            общност за подкрепа между майки
+          <h2 className="custom-h2-style whitespace-nowrap font-magnoliaScript text-slate-50 text-2xl md:text-3xl">
+            онлайн клуб за майки
           </h2>
         </div>
       </div>
