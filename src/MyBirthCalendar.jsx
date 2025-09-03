@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import SubscribeAndPay from "./SubscribeAndPay";
 import { useNavigate, useLocation } from "react-router-dom";
 import calBgImage from "./assets/pictures/logo-and-text-green-outline.png";
+import heartbeatLogo from "./assets/pictures/HeartbeatLogo.png";
 
 import {
   FaCalendarAlt,
   FaClock,
   FaMapMarkerAlt,
+  FaDesktop,
   FaInstagram,
 } from "react-icons/fa";
 import { API_URL } from "../utils/apiConfig.js";
@@ -14,14 +16,14 @@ import { API_URL } from "../utils/apiConfig.js";
 const MyBirthCalendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [interactableDates, setInteractableDates] = useState([]);
-  const [interactableDatesSpecial, setInteractableDatesSpecial] = useState([]);
+  const [interactableDatesOnline, setInteractableDatesOnline] = useState([]);
   const [showAnimation, setShowAnimation] = useState(false);
   const [events, setEvents] = useState([]);
   const [ShowSubscribeAndPay, setShowSubscribeAndPay] = useState(false);
   const [isBlurred, setIsBlurred] = useState(true);
   const [showToast, setShowToast] = useState(false);
   const [errorState, setErrorState] = useState(null); // Add error state
-  const [locationFilter, setLocationFilter] = useState(null); // null, 'sofia', or 'plovdiv'
+  const [locationFilter, setLocationFilter] = useState(null); // null, 'sofia', 'plovdiv', or 'online'
   const [animatingCalendar, setAnimatingCalendar] = useState(false);
   const [isLoadingEvents, setIsLoadingEvents] = useState(true); // Add loading state
   const navigate = useNavigate();
@@ -32,19 +34,26 @@ const MyBirthCalendar = () => {
   const toggleLocationFilter = (location) => {
     // Map Latin to Cyrillic location names
     const locationMap = {
-      sofia: "софия",
-      plovdiv: "пловдив",
+      sofia: "sofia",
+      plovdiv: "plovdiv",
+      online: "online",
     };
 
-    // Convert to Cyrillic for comparison
-    const cyrillicLocation = locationMap[location];
+    // Convert to Cyrillic for comparison (except online which stays the same)
+    const cyrillicLocationMap = {
+      sofia: "софия",
+      plovdiv: "пловдив", 
+      online: "online",
+    };
+
+    const filterValue = cyrillicLocationMap[location];
 
     // Toggle functionality: if same location is clicked, remove filter
-    if (locationFilter === cyrillicLocation) {
+    if (locationFilter === filterValue) {
       setLocationFilter(null);
     } else {
       // Otherwise set the new filter
-      setLocationFilter(cyrillicLocation);
+      setLocationFilter(filterValue);
     }
   };
 
@@ -97,7 +106,8 @@ const MyBirthCalendar = () => {
   const currentMonthEvents = events.filter((event) => {
     const eventDate = event.dateOfEvent.split(".");
     const eventMonth = parseInt(eventDate[1]) - 1; // Convert to 0-based month
-    return eventMonth === currentDate.getMonth();
+    const eventYear = parseInt(eventDate[2]); // Get the year
+    return eventMonth === currentDate.getMonth() && eventYear === currentDate.getFullYear();
   });
 
   // Modified function to conditionally enable next month navigation
@@ -136,6 +146,7 @@ const MyBirthCalendar = () => {
   };
 
   const handleNextMonth = () => {
+    // Only allow navigation if there are future events or we can navigate to current month
     if (hasFutureEventsOrIsCurrentCalendarMonth()) {
       setCurrentDate((prev) => {
         const newDate = new Date(prev);
@@ -150,7 +161,26 @@ const MyBirthCalendar = () => {
     }
   };
 
+  // Helper function to check if the current calendar month is in the past
+  const isCurrentMonthInPast = () => {
+    const today = new Date();
+    const currentRealYear = today.getFullYear();
+    const currentRealMonth = today.getMonth();
+    
+    return (
+      currentDate.getFullYear() < currentRealYear ||
+      (currentDate.getFullYear() === currentRealYear && currentDate.getMonth() < currentRealMonth)
+    );
+  };
+
   const handleClickSubscribeAndPay = (event) => {
+    // For online events (URLs), open the link directly
+    if (/^https?:\/\/.+/i.test(event.location)) {
+      window.open(event.location, '_blank', 'noopener,noreferrer');
+      return;
+    }
+    
+    // For regular events, navigate to subscription page
     navigate(`/subscribe-and-pay/${event.cID}`, {
       state: {
         eventSummary: event.summary,
@@ -192,11 +222,11 @@ const MyBirthCalendar = () => {
         const dates = events.map((event) => event.dayOfEvent);
         setInteractableDates(dates);
 
-        const specialDatesArray = events.filter(
-          (event) => event.type === "Special",
+        const onlineDatesArray = events.filter(
+          (event) => /^https?:\/\/.+/i.test(event.location),
         );
-        const specialDates = specialDatesArray.map((event) => event.dayOfEvent);
-        setInteractableDatesSpecial(specialDates);
+        const onlineDates = onlineDatesArray.map((event) => event.dayOfEvent);
+        setInteractableDatesOnline(onlineDates);
 
         setEvents(events);
       } catch (error) {
@@ -205,7 +235,7 @@ const MyBirthCalendar = () => {
 
         // Fallback to empty state
         setInteractableDates([]);
-        setInteractableDatesSpecial([]);
+        setInteractableDatesOnline([]);
         setEvents([]);
       } finally {
         setIsLoadingEvents(false); // End loading
@@ -306,13 +336,17 @@ const MyBirthCalendar = () => {
     }
   };
 
-  // Add this function to check if a date is in the past
+  // Add this function to check if a date is in the past using Bulgaria timezone
   const isDateInPast = (year, month, day) => {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset time to start of day
+    // Get current date in Bulgaria timezone (Europe/Sofia)
+    const nowInBulgaria = new Date().toLocaleString("en-US", {
+      timeZone: "Europe/Sofia"
+    });
+    const todayInBulgaria = new Date(nowInBulgaria);
+    todayInBulgaria.setHours(0, 0, 0, 0); // Reset time to start of day
 
     const checkDate = new Date(year, month, day);
-    return checkDate < today;
+    return checkDate < todayInBulgaria;
   };
 
   const isEventInPast = (event) => {
@@ -325,13 +359,18 @@ const MyBirthCalendar = () => {
       // Parse the date (DD.MM.YYYY format)
       const [day, month, year] = datePart.split(".").map(Number);
 
-      // Create date objects for comparison
+      // Create event date in Bulgaria timezone (Europe/Sofia)
       const eventDate = new Date(year, month - 1, day); // month is 0-based in JS
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); // Reset time to start of day
+      
+      // Get current date in Bulgaria timezone (Europe/Sofia)
+      const nowInBulgaria = new Date().toLocaleString("en-US", {
+        timeZone: "Europe/Sofia"
+      });
+      const todayInBulgaria = new Date(nowInBulgaria);
+      todayInBulgaria.setHours(0, 0, 0, 0); // Reset time to start of day
 
-      // Simple comparison - is event date before today?
-      return eventDate < today;
+      // Compare using Bulgaria timezone
+      return eventDate < todayInBulgaria;
     } catch (error) {
       console.error(
         `Error processing date for event "${event.summary}":`,
@@ -342,7 +381,7 @@ const MyBirthCalendar = () => {
   };
 
   // Modify the createCalendar function to add isPast flag
-  function createCalendar(year, month) {
+  function createCalendar(year, month, eventsToUse = events) {
     const myCalendar = [];
     const firstDayOfMonth = new Date(year, month, 1);
     const firstDayIndex = (firstDayOfMonth.getDay() + 6) % 7; // Adjust to start from Monday
@@ -352,20 +391,23 @@ const MyBirthCalendar = () => {
     // Add days of week as the first row
     myCalendar.push(daysOfWeek.map((day) => ({ day, isHeader: true })));
 
-    // Filter dates for current month
-    const currentMonthEvents = events.filter((event) => {
-      const [, monthStr] = event.dateOfEvent.split(".");
+    // Filter dates for current month and year using the provided events array
+    const currentMonthEvents = eventsToUse.filter((event) => {
+      const [, monthStr, yearStr] = event.dateOfEvent.split(".");
       const eventMonth = parseInt(monthStr) - 1;
-      return eventMonth === month;
+      const eventYear = parseInt(yearStr);
+      return eventMonth === month && eventYear === year;
     });
 
     const currentMonthInteractableDates = currentMonthEvents.map(
       (event) => event.dayOfEvent,
     );
 
-    const currentMonthSpecialDates = currentMonthEvents
-      .filter((event) => event.type === "Special")
+    const currentMonthOnlineDates = currentMonthEvents
+      .filter((event) => /^https?:\/\/.+/i.test(event.location))
       .map((event) => event.dayOfEvent);
+    
+    console.log("🟣 Online events for current month:", currentMonthOnlineDates);
 
     let dayOfMonth = 1;
     let lastNonEmptyRow = 0;
@@ -392,26 +434,35 @@ const MyBirthCalendar = () => {
             return location.includes("пловдив") || location.includes("plovdiv");
           });
 
+          const isHighlightedOnline = dayEvents.some((event) => {
+            return /^https?:\/\/.+/i.test(event.location);
+          });
+
           // Apply filtering regardless of event type - MODIFIED LOGIC HERE
           const shouldHighlight =
             !locationFilter || // No filter - show all events
             (locationFilter === "софия" && isHighlightedSofia) || // Sofia filter
-            (locationFilter === "пловдив" && isHighlightedPlovdiv); // Plovdiv filter
+            (locationFilter === "пловдив" && isHighlightedPlovdiv) || // Plovdiv filter
+            (locationFilter === "online" && isHighlightedOnline); // Online filter
 
-          // Special events logic - only highlight if it passes the location filter
-          const isSpecial = currentMonthSpecialDates.includes(dayOfMonth);
+          // Online events logic - only highlight if it passes the location filter
+          const isOnline = currentMonthOnlineDates.includes(dayOfMonth);
           const isPast = isDateInPast(year, month, dayOfMonth);
           const isCurrentDay =
             new Date().getDate() === dayOfMonth &&
             new Date().getMonth() === month &&
             new Date().getFullYear() === year;
 
+          if (isOnline) {
+            console.log(`🟣 Day ${dayOfMonth} is online event`);
+          }
+
           myCalendar[i + 1].push({
             day: dayOfMonth,
             isHighlighted: shouldHighlight, // Simplified
             isHighlightedPlovdiv: shouldHighlight && isHighlightedPlovdiv,
             isHighlightedSofia: shouldHighlight && isHighlightedSofia,
-            isSpecial: shouldHighlight && isSpecial, // Only show special if it matches filter
+            isOnline: isOnline, // Always show online styling if event is online, regardless of filter
             isPast,
             isCurrentDay,
           });
@@ -431,26 +482,45 @@ const MyBirthCalendar = () => {
     return myCalendar.slice(0, lastNonEmptyRow + 1);
   }
 
-  const createEventList = () => {
-    // Filter events for current month
+  // Helper function to get filtered events for current month
+  const getFilteredEvents = () => {
+    // Filter events for current month and year
     let filteredEvents = events.filter((event) => {
       const eventDate = event.dateOfEvent.split(".");
       const eventMonth = parseInt(eventDate[1]) - 1; // Convert to 0-based month
-      return eventMonth === currentDate.getMonth();
-    }); // Apply location filter if set - SUPPORT BOTH LATIN AND CYRILLIC!
+      const eventYear = parseInt(eventDate[2]); // Get the year
+      return eventMonth === currentDate.getMonth() && eventYear === currentDate.getFullYear();
+    });
+
+    // Apply location filter if set
     if (locationFilter === "софия") {
-      // Filter for Sofia events (both Cyrillic and Latin)
+      // Filter for Sofia events (both Cyrillic and Latin) - exclude online events
       filteredEvents = filteredEvents.filter((event) => {
         const location = event.location.toLowerCase();
-        return location.includes("софия") || location.includes("sofia");
+        const isPhysicalSofia = location.includes("софия") || location.includes("sofia");
+        const isOnlineEvent = /^https?:\/\/.+/i.test(event.location);
+        return isPhysicalSofia && !isOnlineEvent;
       });
     } else if (locationFilter === "пловдив") {
-      // Filter for Plovdiv events (both Cyrillic and Latin)
+      // Filter for Plovdiv events (both Cyrillic and Latin) - exclude online events  
       filteredEvents = filteredEvents.filter((event) => {
         const location = event.location.toLowerCase();
-        return location.includes("пловдив") || location.includes("plovdiv");
+        const isPhysicalPlovdiv = location.includes("пловдив") || location.includes("plovdiv");
+        const isOnlineEvent = /^https?:\/\/.+/i.test(event.location);
+        return isPhysicalPlovdiv && !isOnlineEvent;
+      });
+    } else if (locationFilter === "online") {
+      // Filter for online events (URLs in location)
+      filteredEvents = filteredEvents.filter((event) => {
+        return /^https?:\/\/.+/i.test(event.location);
       });
     }
+
+    return filteredEvents;
+  };
+
+  const createEventList = () => {
+    const filteredEvents = getFilteredEvents();
 
     // Sort events by day of month
     const sortedEvents = [...filteredEvents].sort((a, b) => {
@@ -461,8 +531,8 @@ const MyBirthCalendar = () => {
     return sortedEvents.map((event, index) => {
       let eventCircleClass =
         "EventCircle flex h-10 w-10 items-center justify-center rounded-full text-xl text-white font-playfairDisplaySc";
-      if (event.type === "Special") {
-        eventCircleClass += " bg-moetoRazhdanePurple"; //
+      if (/^https?:\/\/.+/i.test(event.location)) {
+        eventCircleClass += " bg-moetoRazhdanePurple"; // Online events
       } else if (
         event.location.toLowerCase().includes("софия") ||
         event.location.toLowerCase().includes("sofia")
@@ -475,14 +545,14 @@ const MyBirthCalendar = () => {
         eventCircleClass += " bg-moetoRazhdaneDarkGreen"; // Plovdiv events
       }
       let eventTitleClass =
-        "EventTitle relative flex min-h-[40px] min-w-[200px] max-w-[300px] place-content-center items-center font-hitchHike text-4xl text-moetoRazhdaneDarkGreen";
-      if (event.type === "Special") {
-        eventTitleClass += " text-moetoRazhdanePurple"; //
+        "EventTitle relative flex items-center justify-start text-left font-hitchHike text-4xl ";
+      if (/^https?:\/\/.+/i.test(event.location)) {
+        eventTitleClass += " text-moetoRazhdanePurple"; // Online events
       } else if (
         event.location.toLowerCase().includes("софия") ||
         event.location.toLowerCase().includes("sofia")
       ) {
-        eventTitleClass += " text-moetoRazhdaneLightGreen"; // Sofia events
+        eventTitleClass += " text-gray-400"; // Sofia events - changed to gray for better readability
       } else if (
         event.location.toLowerCase().includes("пловдив") ||
         event.location.toLowerCase().includes("plovdiv")
@@ -490,26 +560,26 @@ const MyBirthCalendar = () => {
         eventTitleClass += " text-moetoRazhdaneDarkGreen"; // Plovdiv events
       }
       let eventDescriptionClass =
-        "EventDescriptionText mt-2 rounded-xl p-4 font-light text-white opacity-85";
-      if (event.type === "Special") {
-        eventDescriptionClass += " bg-moetoRazhdanePurple"; // Special event background color
+        "EventDescriptionText mt-2 rounded-xl p-4 font-light opacity-85 text-center";
+      if (/^https?:\/\/.+/i.test(event.location)) {
+        eventDescriptionClass += " bg-moetoRazhdanePurple text-white"; // Online event background color
       } else if (
         event.location.toLowerCase().includes("пловдив") ||
         event.location.toLowerCase().includes("plovdiv")
       ) {
-        eventDescriptionClass += " bg-moetoRazhdaneDarkGreen"; // Plovdiv event background color
+        eventDescriptionClass += " bg-moetoRazhdaneDarkGreen text-white"; // Plovdiv event background color
       } else if (
         event.location.toLowerCase().includes("софия") ||
         event.location.toLowerCase().includes("sofia")
       ) {
-        eventDescriptionClass += " bg-moetoRazhdaneLightGreen"; // Sofia event background color
+        eventDescriptionClass += " bg-moetoRazhdaneLightGreen text-black"; // Sofia event background color - changed to black text
       } else {
-        eventDescriptionClass += " bg-moetoRazhdaneLightGreen"; // Default background color class
+        eventDescriptionClass += " bg-moetoRazhdaneLightGreen text-black"; // Default background color class - changed to black text
       }
       return (
         <div
           key={index}
-          className={`event-box mb-4 grid w-full grid-cols-[auto_1fr] grid-rows-[min-content] gap-3 rounded bg-white p-3 text-xl font-medium ring-1 transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] ${
+          className={`event-box relative mb-4 w-full rounded bg-white p-4 ring-1 transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] sm:w-80 ${
             isEventInPast(event)
               ? "ring-gray-300"
               : "ring-moetoRazhdaneDarkGreen"
@@ -523,30 +593,31 @@ const MyBirthCalendar = () => {
           }}
           onClick={() => handleEventInteraction(event.ID)}
         >
-          {/* First Row, First Column: EventDay - Fixed size */}
-          <div className="EventDay flex min-h-[40px] min-w-[40px] items-center justify-center">
+          {/* Day Circle - Positioned in upper left */}
+          <div className="EventDay absolute left-4 top-4 flex h-[40px] w-[40px] items-center justify-center">
             <span
               className={`${eventCircleClass} ${isEventInPast(event) ? "!bg-gray-400" : ""}`}
             >
               <div>{event.dayOfEvent}</div>
             </span>
           </div>
-          {/* First Row, Second Column: EventTitle */}
-          <div
-            className={`${eventTitleClass} ${isEventInPast(event) ? "!text-gray-500" : ""}`}
-          >
-            <div
-              className={`${event.summary.length > 18 ? "whitespace-pre-wrap" : ""}`}
-            >
-              {event.summary}
-            </div>
 
-            {/* Location icon */}
+          {/* Event Title - Centered */}
+          <div className="mt-2 flex w-full justify-center">
+            <div
+              className={`${eventTitleClass} ${isEventInPast(event) ? "!text-gray-500" : ""} text-center`}
+            >
+              <div
+                className={`${event.summary.length > 18 ? "whitespace-pre-wrap" : ""}`}
+              >
+                {event.summary}
+              </div>
+            </div>
           </div>
 
-          {/* Second Row: Description (hidden by default) */}
+          {/* Expandable Description Section */}
           <div
-            className="EventDescription col-span-2 hidden max-w-max bg-white p-4 text-left font-light text-moetoRazhdaneDarkGreen"
+            className="EventDescription hidden w-full bg-white p-4 text-center font-light text-moetoRazhdaneDarkGreen"
             data-id={event.ID}
           >
             {/* Existing Date Info */}
@@ -558,75 +629,84 @@ const MyBirthCalendar = () => {
               <FaClock className="h-4 w-4 text-moetoRazhdaneDarkGreen opacity-75" />
               <div className="EventDescriptionTime">
                 {event.timeStart} - {event.timeEnd}
+                <span className="ml-2 text-sm font-medium text-moetoRazhdaneDarkGreen/70">
+                  (България / EEST)
+                </span>
               </div>
             </div>
             <div className="flex items-center gap-2 border-b pb-1">
-              <FaMapMarkerAlt className="h-4 w-4 text-moetoRazhdaneDarkGreen opacity-75" />
-              <div className="EventDescriptionLocation">{event.location}</div>
+              {/* Use different icons for online vs physical events */}
+              {/^https?:\/\/.+/i.test(event.location) ? (
+                <FaDesktop className="h-4 w-4 text-moetoRazhdaneDarkGreen opacity-75" />
+              ) : (
+                <FaMapMarkerAlt className="h-4 w-4 text-moetoRazhdaneDarkGreen opacity-75" />
+              )}
+              <div className="EventDescriptionLocation">
+                {/* Check if location is a URL, show "онлайн събитие", otherwise make it a Google Maps link */}
+                {/^https?:\/\/.+/i.test(event.location) ? (
+                  <span className="text-moetoRazhdaneDarkGreen">
+                    онлайн събитие
+                  </span>
+                ) : (
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-moetoRazhdaneDarkGreen underline hover:text-moetoRazhdanePurple"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {event.location}
+                  </a>
+                )}
+              </div>
             </div>
             <div className={eventDescriptionClass}>"{event.description}"</div>
             {/* Only show subscribe button for future events */}
-            {!isEventInPast(event) ? (
-              <div className="flex w-full justify-center">
-                <button
-                  className="mt-2 items-center justify-center rounded-2xl bg-moetoRazhdaneYellow p-3 font-playfairDisplaySc text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
-                  onClick={() => handleClickSubscribeAndPay(event)}
-                >
-                  <p>Запиши се</p>
-                </button>
-              </div>
-            ) : (
-              <div className="flex w-full justify-center">
-                <div className="mt-2 items-center justify-center rounded-2xl border border-moetoRazhdaneWhite bg-moetoRazhdaneYellow p-3 text-center font-yanoneKaffeesatz text-xl font-light text-black">
-                  Това е изминало събитие, <br />
-                  <a
-                    href="https://instagram.com/zamoetorazhdane"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex transform-gpu items-center justify-center text-stone-900 transition-all duration-300 ease-in-out hover:scale-90 hover:text-moetoRazhdanePurple active:scale-75"
-                  >
-                    виж Instagram <FaInstagram className="ml-1 h-6 w-6" />
-                  </a>
-                </div>
-              </div>
-            )}
-            {/* New Event Type Link */}
-            {/* <div className="mt-2 items-center justify-center gap-4 border-moetoRazhdaneDarkGreen/20 pb-2">
-              <div className="EventTypeLink">
-                <a
-                  href={`/events/${event.type === "Special" ? "3" : event.type}`}
-                  className="flex items-center rounded-3xl bg-gray-500 p-3 text-center font-yanoneKaffeesatz text-lg font-light text-white transition-all duration-500 ease-in-out hover:bg-sky-100 hover:text-black/30"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation(); // Prevent event bubble up
-
-                    // Navigate to event by ID
-                    navigate(
-                      `/events/${event.type === "Special" ? "3" : event.type}`,
-                    );
-                  }}
-                >
-                  <div className="flex w-full justify-center gap-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-2xl border border-white text-white">
-                      ℹ
-                    </span>
-                    <span className="font-light">
-                      Повече за този вид събитие
-                    </span>
-                  </div>
-                </a>
-              </div>
-            </div> */}
-          </div>
+                      {!isEventInPast(event) ? (
+                      <div className="flex w-full justify-center">
+                      <button
+                        className="mt-2 items-center justify-center rounded-2xl bg-moetoRazhdaneYellow p-3 font-playfairDisplaySc text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
+                        onClick={() => handleClickSubscribeAndPay(event)}
+                      >
+                        <div className="flex flex-col items-center gap-2">
+                        {/^https?:\/\/.+/i.test(event.location) ? (
+                        <>
+                        <span className="text-xl">Присъедини се с</span>
+                        <img src={heartbeatLogo} alt="heartbeatLogo" className="h-7 w-max" />
+                        </>
+                        ) : (
+                        'Запиши се'
+                        )}
+                        </div>
+                      </button>
+                      </div>
+                      ) : (
+                      <div className="flex w-full justify-center">
+                      <div className="mt-2 items-center justify-center rounded-2xl border border-moetoRazhdaneWhite bg-moetoRazhdaneYellow p-3 text-center font-yanoneKaffeesatz text-xl font-light text-black">
+                        Това е изминало събитие, <br />
+                        <a
+                        href="https://www.instagram.com/embraced.mothersclub/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex transform-gpu items-center justify-center text-stone-900 transition-all duration-300 ease-in-out hover:scale-90 hover:text-moetorazhdanePurple active:scale-75"
+                        onClick={(e) => e.stopPropagation()}
+                        >
+                        виж Instagram <FaInstagram className="ml-1 h-6 w-6" />
+                        </a>
+                      </div>
+                      </div>
+                      )}
+                    </div>
         </div>
       );
     });
   };
 
+  const filteredEventsForCalendar = getFilteredEvents();
   const myCalendar = createCalendar(
     currentDate.getFullYear(),
     currentDate.getMonth(),
-    events,
+    filteredEventsForCalendar,
   );
   const filterSofiaEvents = events.filter((event) => {
     const location = event.location.toLowerCase();
@@ -668,12 +748,18 @@ const MyBirthCalendar = () => {
       )}
 
       <div className="calendar-container w-full flex-1 font-playfairDisplay lg:w-7/12">
-        <div className="calendar-header flex-1 flex-col items-center justify-center font-makLight">
+        <div className="calendar-header flex-1 flex-col items-center justify-center font-magnoliaScript">
           <div className="calender-navigation flex items-center justify-center gap-4 p-3 text-center text-6xl">
             <div>
               <button
                 onClick={handlePrevMonth}
-                className="transition-all duration-300 hover:opacity-30"
+                onTouchEnd={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  handlePrevMonth();
+                }}
+                className="min-h-[44px] min-w-[44px] touch-manipulation transition-all duration-300 hover:opacity-30"
+                style={{ WebkitTapHighlightColor: 'transparent' }}
               >
                 &lt;
               </button>
@@ -687,11 +773,16 @@ const MyBirthCalendar = () => {
               </div>
             </div>
             <div>
-              {/* Conditionally render the next month button with tooltip when disabled */}
               {hasFutureEventsOrIsCurrentCalendarMonth() ? (
                 <button
                   onClick={handleNextMonth}
-                  className="transition-all duration-300 hover:opacity-30"
+                  onTouchEnd={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleNextMonth();
+                  }}
+                  className="min-h-[44px] min-w-[44px] touch-manipulation transition-all duration-300 hover:opacity-30"
+                  style={{ WebkitTapHighlightColor: 'transparent' }}
                 >
                   &gt;
                 </button>
@@ -700,8 +791,8 @@ const MyBirthCalendar = () => {
                   <button
                     disabled
                     className="cursor-not-allowed opacity-10 transition-all duration-300"
-                  >
-                    &gt;
+                >
+                  &gt;
                   </button>
                   {/* Tooltip */}
                   <div className="absolute bottom-full right-1/2 z-50 mb-2 -translate-x-0.5 rounded bg-moetoRazhdaneYellow p-3 text-xs font-black text-black opacity-0 shadow-lg transition-opacity duration-300 group-hover:opacity-100">
@@ -738,6 +829,16 @@ const MyBirthCalendar = () => {
               >
                 Събития в Пловдив
               </button>
+              <button
+                onClick={() => toggleLocationFilter("online")}
+                className={`rounded-xl px-2 py-1 font-black transition-all duration-300 ${
+                  locationFilter === "online"
+                    ? "bg-moetoRazhdanePurple text-white ring-2 ring-moetoRazhdanePurple ring-offset-2"
+                    : "bg-gray-100 text-moetoRazhdanePurple hover:bg-gray-200"
+                }`}
+              >
+                Онлайн събития
+              </button>
             </div>
           </div>
         </div>
@@ -761,18 +862,18 @@ const MyBirthCalendar = () => {
                       key={dayIndex}
                       className={`calendar-cell flex h-12 w-12 items-center justify-center transition-all duration-500 ${
                         day.isHeader
-                          ? "font-hitchHike text-xl font-bold text-moetoRazhdaneDarkGreen"
+                          ? "font-rocaTwoRegular text-xl font-bold text-moetoRazhdaneDarkGreen"
                           : day.day === ""
                             ? "pointer-events-none font-light"
                             : day.isPast &&
                                 !day.isHighlightedSofia &&
                                 !day.isHighlightedPlovdiv &&
-                                !day.isSpecial
+                                !day.isOnline
                               ? "cursor-pointer opacity-25"
                               : day.isPast
                                 ? "highlightedPast cursor-pointer opacity-25"
-                                : day.isCurrentDay && day.isSpecial
-                                  ? "special ring-bg-sky-200 scale-75 rounded-full ring ring-offset-2"
+                                : day.isCurrentDay && day.isOnline
+                                  ? "online ring-bg-sky-200 scale-75 rounded-full ring ring-offset-2"
                                   : day.isCurrentDay && day.isHighlightedSofia
                                     ? "highlightedSofia ring-bg-sky-200 scale-75 rounded-full ring ring-offset-2"
                                     : day.isCurrentDay &&
@@ -780,8 +881,8 @@ const MyBirthCalendar = () => {
                                       ? "highlightedPlovdiv ring-bg-sky-200 scale-75 rounded-full ring ring-offset-2"
                                       : day.isCurrentDay
                                         ? "ring-bg-sky-200 scale-75 rounded-full ring ring-offset-2"
-                                        : day.isSpecial
-                                          ? "special cursor-pointer"
+                                        : day.isOnline
+                                          ? "online cursor-pointer"
                                           : day.isHighlightedPlovdiv
                                             ? "highlightedPlovdiv cursor-pointer"
                                             : day.isHighlightedSofia
@@ -790,7 +891,7 @@ const MyBirthCalendar = () => {
                       } ${
                         (day.isHighlightedSofia ||
                           day.isHighlightedPlovdiv ||
-                          day.isSpecial) &&
+                          day.isOnline) &&
                         animatingCalendar
                           ? "animate-event-pop"
                           : ""
@@ -813,13 +914,14 @@ const MyBirthCalendar = () => {
       </div>
 
       <div className="events-container flex w-full flex-col items-center justify-center lg:mt-0 lg:w-5/12">
-        <div className="mb-8 font-makLight text-4xl font-bold text-moetoRazhdaneDarkGreen">
+        <div className="mb-8 font-magnoliaScript text-4xl font-bold text-moetoRazhdaneDarkGre
+        en">
           Събития
         </div>
         {isLoadingEvents ? (
           // Loading state
           <div
-            className={`event-box mb-4 grid w-full grid-cols-[auto_1fr] grid-rows-[min-content] rounded bg-white p-3 ring-1 ring-moetoRazhdaneDarkGreen transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] ${
+            className={`event-box mb-4 grid w-full sm:w-80 grid-cols-[auto_1fr] grid-rows-[min-content] rounded bg-white p-3 ring-1 ring-moetoRazhdaneDarkGreen transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] ${
               showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
             }`}
           >
@@ -829,7 +931,7 @@ const MyBirthCalendar = () => {
                   <div className="animate-spin">⏳</div>
                 </span>
               </div>
-              <div className="NoEventSummary flex-1 items-center font-hitchHike text-3xl text-moetoRazhdaneDarkGreen">
+              <div className="NoEventSummary flex-1 items-center text-balance font-yanoneKaffeesatz text-3xl text-moetoRazhdaneDarkGreen">
                 Зареждане на събитията в програмата. Това може да отнеме
                 известно време. Моля изчакайте.
               </div>
@@ -840,20 +942,28 @@ const MyBirthCalendar = () => {
         ) : (
           // No events state (only shown after loading is complete)
           <div
-            className={`event-box mb-4 grid w-full grid-cols-[auto_1fr] grid-rows-[min-content] rounded bg-white p-3 ring-1 ring-moetoRazhdaneDarkGreen transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] ${
+            className={`event-box mb-4 grid w-full sm:w-80 grid-cols-[auto_1fr] grid-rows-[min-content] rounded bg-white p-3 ring-1 ring-moetoRazhdaneDarkGreen transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] ${
               showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
             }`}
           >
             <div className="flex h-full items-center">
               <div className="NoEventDay mr-4 flex items-center justify-center">
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-moetoRazhdaneDarkGreen font-playfairDisplaySc text-xl text-white">
-                  <div className="mb-2">😿</div>
+                  <div className="mb-2">{isCurrentMonthInPast() ? "📅" : "😿"}</div>
                 </span>
               </div>
-              <div className="NoEventSummary flex-1 items-center font-hitchHike text-3xl text-moetoRazhdaneDarkGreen">
-                {locationFilter
-                  ? `Няма събития в ${locationFilter === "софия" ? "София" : "Пловдив"} за този месец.`
-                  : "Все още няма събития за този месец. Проверете скоро отново!"}
+              <div className="NoEventSummary flex-1 items-center text-balance font-yanoneKaffeesatz text-3xl text-moetoRazhdaneDarkGreen">
+                {isCurrentMonthInPast() ? (
+                  // Past month message
+                  locationFilter
+                    ? `Няма събития ${locationFilter === "софия" ? "в София" : locationFilter === "пловдив" ? "в Пловдив" : "онлайн"} за този месец в миналото.`
+                    : "Няма записани събития за този месец в миналото."
+                ) : (
+                  // Future month message  
+                  locationFilter
+                    ? `Няма събития ${locationFilter === "софия" ? "в София" : locationFilter === "пловдив" ? "в Пловдив" : "онлайн"} за този месец.`
+                    : "Все още няма събития за този месец. Проверете скоро отново!"
+                )}
               </div>
             </div>
           </div>
