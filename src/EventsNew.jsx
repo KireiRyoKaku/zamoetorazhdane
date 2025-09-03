@@ -37,7 +37,7 @@ const EventsNew = ({ onClose }) => {
   const eventCards = [
     {
       id: 1,
-      title: "Време за мама",
+      title: "Време за мама (онлайн и на живо)",
       // Wrap image in a div to control size consistently
       icon: (
         <div className="flex h-32 w-32 items-center justify-center md:h-52 md:w-52">
@@ -56,11 +56,11 @@ const EventsNew = ({ onClose }) => {
       ),
       iconColor: "text-moetoRazhdanePurple",
       description:
-        "Групови практики (само за майки, без деца), в които пълним своите чашки с любов и грижа към себе си. Нека това бъдат твоите 2 часа в месеца, в които да се обърнеш навътре към себе си, да си подариш грижата, от която имаш нужда и да си благодариш за всичко, което си.",
+        "Групови практики (само за майки, без деца), в които пълним своите чашки с любов и грижа към себе си. Нека това бъдат твоите 90 минути в месеца, в които да се обърнеш навътре към себе си, да си подариш грижата, от която имаш нужда и да си благодариш за всичко, което си",
     },
     {
       id: 2,
-      title: "Майчински кръг",
+      title: "Майчински кръг (онлайн и на живо)",
       icon: (
         <div className="flex h-32 w-32 items-center justify-center md:h-52 md:w-52">
           <img
@@ -81,7 +81,7 @@ const EventsNew = ({ onClose }) => {
     },
     {
       id: 3,
-      title: "Специални събития",
+      title: "Специални събития (само на живо)",
       // Already using React Icon - just ensure consistent sizing
       icon: (
         <div className="flex h-32 w-32 items-center justify-center md:h-52 md:w-52">
@@ -101,6 +101,52 @@ const EventsNew = ({ onClose }) => {
       iconColor: "text-moetoRazhdaneYellow",
       description:
         "Периодично в програмата ни присъства поне едно специално събитие или творилница. Събираме се и творим с ръцете си нещо красиво и/или практично, което да отнесем със себе си към вкъщи след това. Вдъхновяваме се взаимно, черпим от женската енергия и се зареждаме чрез изкуство. И най-вече: говорим си, разпускаме и се забавляваме.",
+    },
+    {
+      id: 4,
+      title: "Срещи с гост-лектори (само онлайн)",
+      // Already using React Icon - just ensure consistent sizing
+      icon: (
+        <div className="flex h-32 w-32 items-center justify-center md:h-52 md:w-52">
+          <img
+            src={icon3 || "/assets/pictures/icons/icon3.png"}
+            alt="Специални събития"
+            className="h-full w-auto object-contain"
+            onError={(e) => {
+              // Fallback to icon component if image fails to load
+              e.target.style.display = "none";
+              e.target.parentNode.innerHTML =
+                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-moetoRazhdanePurple"><MdOutlineSelfImprovement /></svg>';
+            }}
+          />
+        </div>
+      ),
+      iconColor: "text-moetoRazhdaneYellow",
+      description:
+        "В клуба те очакват вдъхновяващи срещи с различни специалисти, които ще споделят своето знание, опит и гледни точки, за да обогатят ежедневието ти с нови идеи, практики и подкрепа.",
+    },
+    {
+      id: 5,
+      title: "Q&A с екипа (само онлайн)",
+      // Already using React Icon - just ensure consistent sizing
+      icon: (
+        <div className="flex h-32 w-32 items-center justify-center md:h-52 md:w-52">
+          <img
+            src={icon3 || "/assets/pictures/icons/icon3.png"}
+            alt="Специални събития"
+            className="h-full w-auto object-contain"
+            onError={(e) => {
+              // Fallback to icon component if image fails to load
+              e.target.style.display = "none";
+              e.target.parentNode.innerHTML =
+                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-moetoRazhdanePurple"><MdOutlineSelfImprovement /></svg>';
+            }}
+          />
+        </div>
+      ),
+      iconColor: "text-moetoRazhdaneYellow",
+      description:
+        "Периодични срещи, където можеш да попиташ всичко, което те вълнува. Ние, като екип от специалисти, ще сме там да ти отговорим с внимание, разбиране и практични насоки. Твоите въпроси са важни, защото отварят пространство за истински разговор и подкрепа.",
     },
   ];
 
@@ -276,7 +322,7 @@ const EventsNew = ({ onClose }) => {
           </div>
           {/* Title */}
           <h2
-            className={`mb-4 transform text-center font-hitchHike text-5xl text-moetoRazhdaneDarkGreen transition-all duration-500 ease-out ${
+            className={`mb-4 transform text-center font-magnoliaScript text-4xl text-moetoRazhdaneDarkGreen transition-all duration-500 ease-out ${
               titleVisible
                 ? "translate-y-0 opacity-100"
                 : "translate-y-8 opacity-0"
