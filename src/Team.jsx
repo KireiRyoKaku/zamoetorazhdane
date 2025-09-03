@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import aneliaImage from "./assets/pictures/good/anelia-good-ench1.png";
-import galitaImage from "./assets/pictures/good/galita-good-ench1.png";
-import katyaImage from "./assets/pictures/good/katya-good-ench1.png";
+import aneliaImage from "./assets/pictures/good/anelia-good-ench.png";
+import galitaImage from "./assets/pictures/good/galita-good-ench.png";
+import katyaImage from "./assets/pictures/good/katya-good-ench.png";
 import { FaInstagram, FaFacebook, FaGlobe, FaViber } from "react-icons/fa";
 
 // ================ TEAM MEMBER COMPONENT ================
@@ -120,7 +120,7 @@ const TeamMember = React.forwardRef(
         {!isExpanded && (
           <div className="absolute left-0 top-4 z-10 w-full p-5 text-center">
             <div
-              className={`rotate-90 transform font-playfairDisplaySc text-3xl font-bold text-black transition-all duration-700 ease-in-out ${
+              className={`rotate-90 transform font-playfairDisplaySc text-xl font-bold text-black transition-all duration-700 ease-in-out  ${
                 showCollapsedName
                   ? "translate-y-0 opacity-100"
                   : "translate-y-4 opacity-0"
@@ -135,7 +135,7 @@ const TeamMember = React.forwardRef(
           <>
             <div className="absolute left-0 top-0 m-5 w-full">
               <h3
-                className={`transform font-playfairDisplaySc text-3xl font-bold text-black drop-shadow-lg transition-all duration-700 ease-in-out ${
+                className={`transform font-playfairDisplaySc text-3xl font-bold text-black drop-shadow-lg transition-all duration-700 ease-in-out sm:text-2xl md:text-3xl ${
                   showName
                     ? "translate-y-0 opacity-100"
                     : "translate-y-4 opacity-0"
@@ -239,7 +239,7 @@ const teamMembers = [
     title: "",
     firstName: "Катя",
     lastName: "Ушева",
-    role: "психолог, емоционален ментор в обучение, създател на онлайн простраството @travel.inside.your.soul, майка на две деца",
+    role: "Холистичен психолог, емоционален ментор, праймъл терапевт, създател на онлайн пространството „Пътуване навътре“. Майка на две деца.",
     linkInsta: "https://www.instagram.com/travel.inside.your.soul/",
     linkVibergroup:
       "https://invite.viber.com/?g2=AQAwLm9O0zVKLFNpw2hf4gob5pxBweALNK6JMgXwFo6hy0AwRgTnsBt2fJ1oVDGK&lang=en",
