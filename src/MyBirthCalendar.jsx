@@ -645,7 +645,7 @@ const MyBirthCalendar = () => {
                 {/* Check if location is a URL, show "онлайн събитие", otherwise make it a Google Maps link */}
                 {/^https?:\/\/.+/i.test(event.location) ? (
                   <span className="text-moetoRazhdaneDarkGreen">
-                    онлайн събитие
+                    онлайн събитие в Прегърната
                   </span>
                 ) : (
                   <a
@@ -660,7 +660,10 @@ const MyBirthCalendar = () => {
                 )}
               </div>
             </div>
-            <div className={eventDescriptionClass}>"{event.description}"</div>
+            <div 
+              className={eventDescriptionClass}
+              dangerouslySetInnerHTML={{ __html: event.description }}
+            />
             {/* Only show subscribe button for future events */}
                       {!isEventInPast(event) ? (
                       <div className="flex w-full justify-center">
@@ -835,7 +838,7 @@ const MyBirthCalendar = () => {
                     : "bg-gray-100 text-moetoRazhdanePurple hover:bg-gray-200"
                 }`}
               >
-                Онлайн събитие
+                Онлайн събитие 
               </button>
             </div>
           </div>
