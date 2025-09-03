@@ -196,7 +196,7 @@ const Partners = ({ onClose }) => {
       description: "Първият онлайн магазин с Нулев Отпадък в България",
       image: greenrevoluciaImage,
       link: "https://www.greenrevolucia.com/",
-    },a
+    },
     {
       partnerName: "Carry Dance",
       description: "Активности за мама и бебе",
