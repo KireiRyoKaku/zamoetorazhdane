@@ -25,56 +25,101 @@ const SubscribeAndPay = ({ onClose }) => {
     eventTime: eventTime || "",
     eventLocation: eventLocation || "",
     email: "",
-    name: "",
+    name: "", // This will be participant 1 name
     phone: "",
-    participation: "",
-    topics: "",
-    role: "",
-    customRole: "",
     source: "",
+    participantCount: 1,
+    participantNames: ["", "", "", "", ""], // Names for participants 1-5
   });
 
   const currentDate = new Date();
-  const priceOneTime = () => {
-    let difference = differenceInHours(eventDateLocaleString, currentDate);
-    if (difference > 49) {
-      //two days and one hour
-      return (
-        <>
-          <span className="line-through">30 лв.</span>
-          <span className="font-bold"> 27 лв. ранно записване!</span>
-        </>
-      );
+  
+  // Create proper event datetime by combining eventDateLocaleString and eventTime
+  const getEventDateTime = () => {
+    if (eventDateLocaleString.includes('T')) {
+      // If it's already an ISO string, use it directly
+      return new Date(eventDateLocaleString);
     } else {
-      return "30 лв.";
+      // If it's just a date string, combine with time
+      const eventDateTime = new Date(eventDateLocaleString);
+      if (eventTime) {
+        const [hours, minutes] = eventTime.split(':').map(Number);
+        eventDateTime.setHours(hours, minutes, 0, 0);
+      }
+      return eventDateTime;
     }
   };
 
+    const priceOneTime = () => {
+    let difference = differenceInHours(getEventDateTime(), currentDate);
+    let basePrice = difference < 72 ? 40 : 35;
+    let memberPrice = Math.max(20, basePrice - 10);
+    const count = formData.participantCount;
+    
+    // Calculate member pricing: discount for 1 person + regular price for additional participants
+    const memberTotalPrice = memberPrice + (basePrice * (count - 1));
+    const nonMemberTotalPrice = basePrice * count;
+    
+    return (
+      <div className="space-y-2">
+        <div className="space-y-1">
+          <div className="font-bold text-red-600">
+        {count === 1 ? 
+          `Нормална цена: ${nonMemberTotalPrice} лв.` :
+          `Нормална цена: ${nonMemberTotalPrice} лв. (${basePrice} лв. x ${count})`
+        }
+          </div>
+          <div className="font-bold text-green-600">
+        {count === 1 ? 
+          `Цена за членове: ${memberTotalPrice} лв.` :
+          `Цена за членове: ${memberTotalPrice} лв. (${memberPrice} лв. + ${basePrice} лв. x ${count - 1})`
+        }
+          </div>
+        </div>
+        <div className="text-sm text-blue-600">
+          * Правилната цена ще бъде изчислена в потвърдителния имейл според членството ти. Само първия участник може да бъде таксуван като член.
+        </div>
+      </div>
+    );
+  };
+
   const handlePrice = () => {
-    let difference = differenceInHours(eventDateLocaleString, currentDate);
-    if (difference > 49) {
-      // two days and one hour
-      return "Еднократно Намалено 27 лв.";
-    } else {
-      return "Еднократно 30 лв.";
-    }
+    let difference = differenceInHours(getEventDateTime(), currentDate);
+    let basePrice = difference < 72 ? 40 : 35;
+    let memberPrice = Math.max(20, basePrice - 10);
+    const count = formData.participantCount;
+    
+    // Calculate member pricing: discount for 1 person + regular price for additional participants
+    const memberTotalPrice = memberPrice + (basePrice * (count - 1));
+    const nonMemberTotalPrice = basePrice * count;
+    
+    return `Еднократно: Нечленове ${nonMemberTotalPrice} лв. ${count > 1 ? `(${basePrice} x ${count})` : ''} | Членове ${memberTotalPrice} лв. ${count > 1 ? `(${memberPrice} + ${basePrice} x ${count - 1})` : ''}`;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     setIsSubmitting(true);
-    setError(null);
-
+    
+    // Calculate price for submission
+    const now = new Date();
+    const eventDateTime = new Date(eventDate);
+    const difference = (eventDateTime - now) / (1000 * 60 * 60); // hours
+    
+    let basePrice = difference < 72 ? 40 : 35;
+    let calculatedPrice = basePrice * formData.participantCount;
+    
+    const submissionData = { ...formData, event: eventSummary, eventDate, price: calculatedPrice };
+    
     try {
-      console.log("Sending form data:", formData);
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5174";
+      console.log("Sending form data:", submissionData);
 
       const response = await fetch(`${API_URL}/submit-form`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(submissionData),
       });
 
       if (!response.ok) {
@@ -112,19 +157,49 @@ const SubscribeAndPay = ({ onClose }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // For the role field, clear the customRole when switching to non-custom options
-    if (name === "role" && value !== "Друго") {
+    // Name field validation function
+    const validateNameField = (inputValue) => {
+      // Allow Bulgarian Cyrillic, Latin letters, spaces, hyphens, and apostrophes
+      let filtered = inputValue.replace(/[^а-яА-Яa-zA-Z\s\-']/g, '');
+      
+      // Limit to reasonable name length
+      if (filtered.length > 50) {
+        filtered = filtered.slice(0, 50);
+      }
+      
+      // Prevent multiple consecutive spaces
+      filtered = filtered.replace(/\s{2,}/g, ' ');
+      
+      // Prevent starting with space or hyphen
+      filtered = filtered.replace(/^[\s\-]/, '');
+      
+      return filtered;
+    };
+
+    // Handle participant count changes
+    if (name === "participantCount") {
+      const count = parseInt(value);
       setFormData((prev) => ({
         ...prev,
-        [name]: value,
-        customRole: "", // Reset custom role when selecting other options
+        participantCount: count,
+        // Update the main name field to be the first participant
+        name: prev.participantNames[0] || prev.name,
       }));
-    } else if (name === "customRole") {
-      setFormData((prev) => ({
-        ...prev,
-        customRole: value,
-        role: "Друго", // Ensure role is set to "Друго" when typing in custom field
-      }));
+    }
+    // Handle participant name changes with validation
+    else if (name.startsWith("participantName_")) {
+      const index = parseInt(name.split("_")[1]);
+      const validatedValue = validateNameField(value);
+      setFormData((prev) => {
+        const newParticipantNames = [...prev.participantNames];
+        newParticipantNames[index] = validatedValue;
+        return {
+          ...prev,
+          participantNames: newParticipantNames,
+          // Keep the main name field synced with first participant
+          name: index === 0 ? validatedValue : prev.name,
+        };
+      });
     } else {
       setFormData((prev) => ({
         ...prev,
@@ -133,11 +208,35 @@ const SubscribeAndPay = ({ onClose }) => {
     }
   };
 
+  // Function to add another participant
+  const addParticipant = () => {
+    if (formData.participantCount < 5) {
+      setFormData((prev) => ({
+        ...prev,
+        participantCount: prev.participantCount + 1,
+      }));
+    }
+  };
+
+  // Function to remove a participant
+  const removeParticipant = () => {
+    if (formData.participantCount > 1) {
+      setFormData((prev) => ({
+        ...prev,
+        participantCount: prev.participantCount - 1,
+        // Clear the name of the removed participant
+        participantNames: prev.participantNames.map((name, index) =>
+          index === prev.participantCount - 1 ? "" : name
+        ),
+      }));
+    }
+  };
+
   return (
-    <div className="subscribe-and-pay-container z-50 m-auto mb-14 h-[calc(100dvh-100px)] w-11/12 overflow-y-auto rounded-xl bg-white p-8 shadow-lg">
-      <h2 className="text-center text-3xl font-bold">Записване за</h2>
+    <div className="subscribe-and-pay-container z-50 m-auto mb-16 max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-lg sm:mb-24">
+      <h2 className="text-center text-4xl font-bold">Записване за</h2>
       <h1 className="EventSummary">
-        <p className="EventName py-2 text-center font-hitchHike text-6xl text-moetoRazhdaneDarkGreen">
+        <p className="EventName py-2 text-center font-hitchHike text-5xl text-moetoRazhdaneDarkGreen">
           {eventSummary}
         </p>
         <p className="Date text-center text-3xl font-bold">
@@ -148,181 +247,166 @@ const SubscribeAndPay = ({ onClose }) => {
       </h1>
       <form
         onSubmit={handleSubmit}
-        className="space-y-4 text-xl font-normal text-gray-700" // Changed from text-lg
+        className="space-y-3 text-4xl font-normal text-gray-700"
       >
+        {/* Email field - always show first */}
         <div>
-          <label className="block text-xl font-medium text-gray-700">
-            Име и фамилия <span className="text-red-500">*</span>
+          <label className="block text-3xl font-medium text-gray-700">
+            E-Mail <span className="text-red-500">*</span>
+          </label>
+          <div className="relative">
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="mt-1 block w-full rounded-md border-gray-300 text-3xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            />
+          </div>
+        </div>
+
+        {/* First participant name field - separate and required */}
+        <div>
+          <label className="block text-3xl font-medium text-gray-700">
+            Име и фамилия (Участник 1) <span className="text-red-500">*</span>
+            <span className="block text-sm text-gray-500 font-normal mt-1">Само букви, интервали, тире и апострофи (до 50 символа)</span>
           </label>
           <input
             type="text"
-            name="name"
-            value={formData.name}
+            name="participantName_0"
+            value={formData.participantNames[0] || ""}
             onChange={handleChange}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 text-xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500" // Added text-xl, removed sm:text-sm
+            className="mt-1 block w-full rounded-md border-gray-300 text-3xl shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
+            placeholder="напр. Мария Иванова-Петрова"
           />
         </div>
+
         <div>
-          <label className="block text-xl font-medium text-gray-700">
-            E-Mail <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-xl font-medium text-gray-700">
-            Телефон <span className="text-red-500">*</span>
+          <label className="block text-3xl font-medium text-gray-700">
+            Телефон за връзка <span className="text-red-500">*</span>
           </label>
           <input
             type="tel"
             name="phone"
-            value={formData.phone}
-            onChange={(e) => {
-              // Filter input to only allow numbers, plus sign, spaces, parentheses and hyphens
-              const filtered = e.target.value.replace(/[^0-9+\s()\-]/g, "");
-              // Create a synthetic event with the filtered value
-              const syntheticEvent = {
-                target: {
-                  name: "phone",
-                  value: filtered,
-                },
-              };
-              handleChange(syntheticEvent);
-            }}
-            pattern="^(\+)?[0-9\s()\-]+"
-            placeholder="+359 888 123456"
-            title="Въведете валиден телефонен номер"
-            required
-            className="mt-1 block w-full rounded-md border-gray-300 text-xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          />
-        </div>
-        <div>
-          <label className="block text-xl font-medium text-gray-700">
-            Форма на участие <span className="text-red-500">*</span>
-          </label>
-          <div className="mt-1">
-            {/* One-time participation option */}
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="participation"
-                value={handlePrice()}
-                checked={formData.participation === handlePrice()}
-                onChange={handleChange}
-                required
-                className="form-radio"
-              />
-              <span className="ml-2 text-xl">
-                Еднократно участие - {priceOneTime()}
-              </span>
-            </label>
-            <br />
-
-            {/* Membership option */}
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="participation"
-                value="Абонамент"
-                checked={formData.participation === "Абонамент"}
-                onChange={handleChange}
-                required
-                className="form-radio"
-              />
-              <span className="ml-2 text-xl">Членство в общността - 85 лв</span>
-            </label>
-            <br />
+              value={formData.phone}
+              onChange={(e) => {
+                let value = e.target.value;
+                
+                // Only allow digits, plus sign, spaces, parentheses, and hyphens
+                value = value.replace(/[^\d+\s()\-]/g, '');
+                
+                // Limit length to reasonable phone number length
+                if (value.length > 20) {
+                  value = value.slice(0, 20);
+                }
+                
+                // Create a synthetic event with the filtered value
+                const syntheticEvent = {
+                  target: {
+                    name: "phone",
+                    value: value,
+                  },
+                };
+                handleChange(syntheticEvent);
+              }}
+              placeholder="+359 888 123456, 0888123456 или 359888123456"
+              title="Въведете валиден телефонен номер за връзка"
+              required
+              className="mt-1 block w-full rounded-md border-gray-300 text-3xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            />
           </div>
-        </div>
-
+        
         <div>
-          <label className="block text-xl font-medium text-gray-700">
-            Аз съм:
+          <label className="block text-3xl font-medium text-gray-700">
+            Запазване на място
           </label>
-          <div className="mt-1">
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="role"
-                value="Бременна"
-                checked={formData.role === "Бременна"}
-                onChange={handleChange}
-                className="form-radio"
-              />
-              <span className="ml-2 text-xl">бременна</span>
-            </label>
-            <br />
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="role"
-                value="Родила"
-                checked={formData.role === "Родила"}
-                onChange={handleChange}
-                className="form-radio"
-              />
-              <span className="ml-2 text-xl">вече родила</span>
-            </label>
-            <br />
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="role"
-                value="Друго"
-                checked={formData.role === "Друго"}
-                onChange={handleChange}
-                className="form-radio"
-              />
-              <span className="ml-2 text-xl">друго:</span>
-            </label>
-
-            {/* Conditional input field that appears when "Друго" is selected */}
-            {formData.role === "Друго" && (
-              <div className="ml-6 mt-2">
-                <input
-                  type="text"
-                  name="customRole"
-                  value={formData.customRole}
-                  onChange={handleChange}
-                  placeholder="Моля, уточнете..."
-                  className="block w-full rounded-md border-gray-300 text-xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                />
+          <div className="mt-2 space-y-4">
+            {/* Pricing display */}
+            <div className="rounded-md border border-gray-300 bg-gray-50 p-3">
+              <span className="text-3xl text-gray-700">
+                {priceOneTime()}
+              </span>
+            </div>
+            
+            {/* Add participant button */}
+            {formData.participantCount < 5 && (
+              <button
+                type="button"
+                onClick={addParticipant}
+                className="w-full bg-moetoRazhdaneDarkGreen text-white text-2xl font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors duration-200 flex items-center justify-center gap-2"
+              >
+                <span>+ добави място</span>
+                <span className="text-lg">({formData.participantCount}/5)</span>
+              </button>
+            )}
+            
+            {/* Remove participant button (only show if more than 1) */}
+            {formData.participantCount > 1 && (
+              <button
+                type="button"
+                onClick={removeParticipant}
+                className="w-full bg-red-600 text-white text-xl font-medium py-2 px-4 rounded-lg hover:bg-red-700 transition-colors duration-200"
+              >
+                - премахни място ({formData.participantCount}/5)
+              </button>
+            )}
+            
+            {/* Dynamic participant name fields - appear below buttons (additional participants only) */}
+            {formData.participantCount > 1 && (
+              <div className="space-y-3 mt-4">
+                {Array.from({ length: formData.participantCount - 1 }, (_, index) => {
+                  const actualIndex = index + 1; // Start from participant 2
+                  return (
+                    <div key={actualIndex} className="bg-white border-2 border-gray-200 p-4 rounded-lg shadow-sm">
+                      <label className="block text-2xl font-medium text-gray-700 mb-2">
+                        Участник {actualIndex + 1} - Име и фамилия
+                        <span className="block text-sm text-gray-500 font-normal mt-1">Само букви, интервали, тире и апострофи (до 50 символа)</span>
+                      </label>
+                      <input
+                        type="text"
+                        name={`participantName_${actualIndex}`}
+                        value={formData.participantNames[actualIndex] || ""}
+                        onChange={handleChange}
+                        required={false} // Additional participants are not required
+                        className="block w-full rounded-md border-gray-300 text-2xl shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen p-3"
+                        placeholder="напр. Мария Иванова-Петрова или остави празно"
+                      />
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
         </div>
+        
         <div>
-          <div>
-            <label className="block text-xl font-medium text-gray-700">
-              Имам деца на възраст:
-            </label>
-            <input
-              type="text"
-              name="topics"
-              value={formData.topics}
-              onChange={handleChange}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-            />
-          </div>
-        </div>
-        <div>
-          <label className="block text-xl font-medium text-gray-700">
-            От къде научи за &quot;За моето раждане&quot;?
+          <label className="block text-3xl font-medium text-gray-700">
+            От къде научи за &quot;Прегърната&quot;? <span className="text-sm text-gray-500">(до 280 символа)</span>
           </label>
           <input
             type="text"
             name="source"
             value={formData.source}
-            onChange={handleChange}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            onChange={(e) => {
+              // Limit to 280 characters
+              const value = e.target.value.slice(0, 280);
+              const syntheticEvent = {
+                target: {
+                  name: "source",
+                  value: value,
+                },
+              };
+              handleChange(syntheticEvent);
+            }}
+            maxLength={280}
+            placeholder="Социални мрежи, приятел, Google търсене..."
+            className="mt-1 block w-full rounded-md border-gray-300 text-3xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
           />
+          <div className="mt-1 text-right text-sm text-gray-500">
+            {formData.source.length}/280 символа
+          </div>
         </div>
         {error && (
           <div
