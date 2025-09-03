@@ -7,6 +7,8 @@ import nodemailer from "nodemailer";
 import {
   getConfirmationEmailHTML,
   getConfirmationEmailText,
+  getAdminNotificationHTML,
+  getAdminNotificationText,
 } from "./emailTemplates/confirmationEmail.js";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -236,13 +238,31 @@ try {
   console.error("❌ Failed to initialize email service:", error.message);
 }
 
+// Member check endpoint
+// Route to check if user is a member
+app.post('/check-member', async (req, res) => {
+  const { email } = req.body;
+  
+  if (!email) {
+    return res.status(400).json({ error: 'Email is required' });
+  }
+
+  try {
+    const isMember = await checkMemberInSheets(email);
+    res.json({ isMember });
+  } catch (error) {
+    console.error('Error checking member status:', error);
+    res.status(500).json({ error: 'Failed to check member status' });
+  }
+});
+
 // Form submission endpoint
 app.post("/submit-form", async (req, res) => {
   try {
     console.log("📝 Form submission received:", req.body);
 
     const formData = req.body;
-    const { email, participation, name, event, eventDate } = formData;
+    const { email, name, event, eventDate } = formData;
 
     // Validate required fields
     if (!email || !name || !event || !eventDate) {
@@ -253,70 +273,74 @@ app.post("/submit-form", async (req, res) => {
       });
     }
 
-    // Check if Google Sheets is available for duplicate checking and saving
+    // Check if user is a member first - this is needed for both sheets and email
+    const isMember = await checkMemberInSheets(email);
+    console.log(`Member check for ${email}: ${isMember}`);
+    
+    // Calculate pricing (needed for both sheets and email)
+    const participantCount = formData.participantCount || 1;
+    
+    // Parse event date to calculate hours until event - handle Bulgarian format
+    let eventDateTime;
+    try {
+      // Handle Bulgarian date format like "12.05.2025, понеделник"
+      const dateOnly = formData.eventDate.split(',')[0].trim(); // Extract "12.05.2025"
+      const [day, month, year] = dateOnly.split('.');
+      const [hours, minutes] = (formData.eventTime || '18:00').split(':');
+      eventDateTime = new Date(year, month - 1, day, hours, minutes);
+    } catch (error) {
+      console.error('Date parsing error:', error);
+      eventDateTime = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // Default to 7 days from now
+    }
+    
+    const now = new Date();
+    const hoursUntilEvent = (eventDateTime - now) / (1000 * 60 * 60);
+    
+    let basePrice = hoursUntilEvent < 72 ? 40 : 35;
+    let finalPriceForSheets;
+    
+    if (isMember) {
+      const memberPrice = Math.max(20, basePrice - 10);
+      // Member discount only applies to one person, others pay regular price
+      if (participantCount === 1) {
+        finalPriceForSheets = `${memberPrice} лв. (членска отстъпка)`;
+      } else {
+        const totalPrice = memberPrice + (basePrice * (participantCount - 1));
+        finalPriceForSheets = `${totalPrice} лв. (${memberPrice} лв. членска отстъпка + ${basePrice} лв. x ${participantCount - 1} участника)`;
+      }
+    } else {
+      finalPriceForSheets = `${basePrice * participantCount} лв. (${basePrice} лв. x ${participantCount} участника)`;
+    }
+
+    // Check if Google Sheets is available for saving
+    // Combine all participant names into one string for the name field
+    const allParticipantNames = formData.participantNames 
+      ? formData.participantNames.filter(name => name.trim()).join(', ')
+      : formData.name || "";
+
     if (sheetsAvailable && client) {
       try {
         await client.authorize();
         const gsapi = google.sheets({ version: "v4", auth: client });
 
-        // Check for duplicates
-        const checkResult = await gsapi.spreadsheets.values.get({
-          spreadsheetId: process.env.SHEETS_ID,
-          range: "Sheet1!A:F",
-        });
-
-        const rows = checkResult.data.values || [];
-        let foundDuplicate = false;
-
-        for (let i = 1; i < rows.length; i++) {
-          // Skip header row
-          const row = rows[i];
-          if (row.length < 4) continue;
-
-          const rowEmail = row[3] ? row[3].trim().toLowerCase() : "";
-          const rowEvent = row[1] ? row[1].trim() : "";
-          const rowEventDate = row[2] ? row[2].trim() : "";
-          const normalizedEmail = email.trim().toLowerCase();
-
-          if (
-            rowEmail === normalizedEmail &&
-            rowEvent === event &&
-            rowEventDate === eventDate
-          ) {
-            foundDuplicate = true;
-            break;
-          }
-        }
-
-        if (foundDuplicate) {
-          return res.status(400).json({
-            success: false,
-            error: "duplicate_registration",
-            message: `Вече съществува регистрация за събитието "${event}" на ${eventDate} с имейл адреса ${email}.`,
-          });
-        }
-
-        // Save to Google Sheets
         const opt = {
           spreadsheetId: process.env.SHEETS_ID,
-          range: "Sheet1!A:Z",
+          range: "A:Z", // Use range without sheet name to append to the first sheet
           valueInputOption: "USER_ENTERED",
           resource: {
             values: [
               [
-                formData.name || "",
-                formData.event || "",
-                formData.eventDate || "",
-                formData.email || "",
-                formData.phone || "",
-                formData.participation || "",
-                formData.topics || "",
-                formData.role === "Друго"
-                  ? formData.customRole || "Друго"
-                  : formData.role || "",
-                formData.source || "",
-                new Date().toISOString(),
-                formData.eventTime || "",
+                allParticipantNames || formData.name || "", // Column A: All participant names
+                formData.event || "", // Column B: Event
+                formData.eventDate || "", // Column C: Event Date
+                formData.email || "", // Column D: Email
+                formData.participantCount || 1, // Column E: Number of participants
+                formData.phone || "", // Column F: Phone
+                formData.source || "", // Column G: Source (moved from J to G)
+                new Date().toISOString(), // Column H: Timestamp (moved from K to H)
+                formData.eventTime || "", // Column I: Event Time (moved from L to I)
+                isMember ? 'Да' : 'Не', // Column J: Member status
+                finalPriceForSheets || "", // Column K: Final price to be paid
               ],
             ],
           },
@@ -335,18 +359,19 @@ app.post("/submit-form", async (req, res) => {
     // Send confirmation emails if email service is available
     if (emailAvailable && transporter) {
       try {
+        // Use the variables we already calculated above
         const emailData = {
-          name: formData.name,
+          name: allParticipantNames || formData.name,
           event: formData.event,
           eventDate: formData.eventDate,
           eventTime: formData.eventTime,
           eventLocation: formData.eventLocation,
-          participation: formData.participation,
           phone: formData.phone,
-          role: formData.role,
-          customRole: formData.customRole,
-          topics: formData.topics,
           source: formData.source,
+          isMember: isMember,
+          finalPrice: finalPriceForSheets,
+          participantCount: participantCount,
+          participantNames: formData.participantNames || [formData.name],
         };
 
         // Send confirmation email to user
@@ -367,11 +392,27 @@ app.post("/submit-form", async (req, res) => {
         };
 
         // Send notification email to admin
+        const adminEmailData = {
+          name: formData.name,
+          email: email,
+          event: event,
+          eventDate: eventDate,
+          eventTime: formData.eventTime,
+          eventLocation: formData.eventLocation,
+          phone: formData.phone,
+          source: formData.source,
+          isMember: isMember,
+          finalPrice: finalPriceForSheets,
+          participantCount: participantCount,
+          participantNames: formData.participantNames
+        };
+
         const adminMailOptions = {
           from: process.env.SENDER_EMAIL,
           to: process.env.ADMIN_EMAIL,
-          subject: "Нова регистрация за събитие",
-          text: `Нова регистрация за събитие!\n\nИме: ${name}\nИмейл: ${email}\nТелефон: ${formData.phone}\nСъбитие: ${event}\nДата: ${eventDate}\nУчастие: ${participation}\nТеми: ${formData.topics}\nРоля: ${formData.role}\nИзточник: ${formData.source}`,
+          subject: `🎉 Нова регистрация: "${event}" - ${participantCount} участници`,
+          text: getAdminNotificationText(adminEmailData),
+          html: getAdminNotificationHTML(adminEmailData),
         };
 
         await transporter.sendMail(userMailOptions);
@@ -404,6 +445,43 @@ app.post("/submit-form", async (req, res) => {
     });
   }
 });
+
+// Helper function to check if email is in members sheet
+async function checkMemberInSheets(email) {
+  try {
+    if (!sheetsAvailable || !client) {
+      console.log('Google Sheets not available for member check');
+      return false;
+    }
+
+    // Authorize the client
+    await client.authorize();
+    const gsapi = google.sheets({ version: "v4", auth: client });
+
+    console.log(`Checking Members sheet for email: ${email}`);
+
+    // Get member emails from the Members sheet
+    const memberRows = await gsapi.spreadsheets.values.get({
+      spreadsheetId: process.env.SHEETS_ID,
+      range: 'Members!A:A',
+    });
+    
+    const memberEmails = memberRows.data.values?.flat().filter(Boolean) || [];
+    console.log(`Found ${memberEmails.length} members in Members sheet`);
+    
+    // Check if the email exists in the members list
+    const isMember = memberEmails.some(memberEmail => 
+      memberEmail.toLowerCase().trim() === email.toLowerCase().trim()
+    );
+    
+    console.log(`Member check result for ${email}: ${isMember}`);
+    return isMember;
+    
+  } catch (error) {
+    console.error('Error checking member in sheets:', error);
+    return false;
+  }
+}
 
 // Start the server
 app.listen(port, host, () => {
