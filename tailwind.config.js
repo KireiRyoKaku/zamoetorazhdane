@@ -3,14 +3,15 @@ export const content = ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"];
 export const theme = {
   extend: {
     colors: {
-      moetoRazhdanePurple: "#beb46d",
-      moetoRazhdaneDarkGreen: "#626F47",
-      moetoRazhdaneLightGreen: "#A4B465",
-      moetoRazhdaneYellow: "#FFCF50",
-      moetoRazhdaneWhite: "#FEFAE0",
+      moetoRazhdanePurple: "#EDAFB8",
+      moetoRazhdaneDarkGreen: "#B0C4B1",
+      moetoRazhdaneLightGreen: "#DEDBD2",
+      moetoRazhdaneYellow: "#F7E1D7",
+      moetoRazhdaneWhite: "#4E5F4C",
       bodyBackground: {
-        DEFAULT: "#626F47", // default color
+        DEFAULT: "#EDAFB8", // default color
       },
+      
     },
     fontFamily: {
       makLight: ["MakLight", "sans-serif"],
@@ -18,6 +19,11 @@ export const theme = {
       playfairDisplay: ["Playfair-Display", "sans-serif"],
       playfairDisplaySc: ['"Playfair Display SC"', "serif"],
       yanoneKaffeesatz: ['"Yanone Kaffeesatz"', "sans-serif"],
+      magnoliaScript: ['"Magnolia Script"', "cursive"],
+      rocaTwoRegular: ['"Roca Two Regular"', "cursive"],
+      rocaTwoBold: ['"Roca Two Bold"', "cursive"],
+      rocaTwoThin: ['"Roca Two Thin"', "cursive"],
+      rocaTwoItalic: ['"Roca Two Italic"', "cursive"],
     },
     screens: {
       xs: "320px",
