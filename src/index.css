@@ -11,7 +11,36 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
+@font-face {
+  font-family: "Magnolia Script";
+  src: url("./assets/fonts/MagnoliaScript/MagnoliaScript.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roka Two Regular";
+  src: url("./assets/fonts/RocaTwo/Roca\ Regular.ttf") format("trueType");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roka Two Bold";
+  src: url("./assets/fonts/RocaTwo/Roca\ Bold.ttf") format("trueType");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roka Two Thin";
+  src: url("./assets/fonts/RocaTwo/Roca\ Thin.ttf") format("trueType");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Roka Two Italic";
+  src: url("./assets/fonts/RocaTwo/Roca\ Italic.ttf") format("trueType");
+  font-weight: normal;
+  font-style: normal;
+}
 /* Add specific mobile optimization */
 @media screen and (max-width: 768px) {
   .font-MakLight {
@@ -61,11 +90,6 @@
 body {
   font-family: "Yanone Kaffeesatz", sans-serif;
   @apply bg-bodyBackground transition-colors duration-300;
-}
-
-.custom-h2-style {
-  font-family: "Hitch Hike", sans-serif;
-  @apply text-white;
 }
 
 .dropdown-menu button:hover {
@@ -144,7 +168,7 @@ body {
   border-radius: 50%;
   transform: scale(0.8); /* Shrinks to 80% of its size */
 }
-.calendar-cell.special {
+.calendar-cell.online {
   @apply bg-moetoRazhdanePurple;
   cursor: pointer;
   @apply text-moetoRazhdaneWhite;
