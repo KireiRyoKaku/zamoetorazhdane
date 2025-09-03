@@ -42,11 +42,11 @@ const PartnerCard = ({
           className="h-auto w-full object-contain p-1"
         />
       </div>
-      <h3 className="mt-4 text-center font-playfairDisplaySc text-3xl font-bold text-black">
+      <h3 className="mt-4 text-center font-magnoliaScript text-3xl font-bold text-black">
         {partnerName}
       </h3>
       {description && (
-        <p className="mt-2 text-center font-yanoneKaffeesatz text-xl font-light text-gray-600">
+        <p className="mt-2 text-center font-rocaTwoThin text-lg font-light text-gray-600">
           {description}
         </p>
       )}

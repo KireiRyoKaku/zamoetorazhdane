@@ -339,7 +339,7 @@ const EventsNew = ({ onClose }) => {
                 : "translate-y-8 opacity-0"
             }`}
           >
-            <p className="text-left font-yanoneKaffeesatz text-xl font-light text-gray-700">
+            <p className="text-left font-rocaTwoThin text-lg font-light text-gray-700">
               {card.description}
             </p>
           </div>
@@ -353,7 +353,7 @@ const EventsNew = ({ onClose }) => {
             }`}
           >
             <button
-              className="rounded-3xl bg-moetoRazhdaneYellow px-6 py-2 font-playfairDisplaySc text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
+              className="rounded-3xl bg-moetoRazhdaneYellow px-6 py-2 font-rocaTwoRegular text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
               onClick={() => {
                 setIsClosing(true);
                 setTimeout(() => {
@@ -362,7 +362,7 @@ const EventsNew = ({ onClose }) => {
                 }, 300);
               }}
             >
-              Включи се
+              ВКЛЮЧИ СЕ
             </button>
           </div>
         </div>

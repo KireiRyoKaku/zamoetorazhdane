@@ -18,26 +18,26 @@
   font-style: normal;
 }
 @font-face {
-  font-family: "Roka Two Regular";
-  src: url("./assets/fonts/RocaTwo/Roca\ Regular.ttf") format("trueType");
+  font-family: "Roca Two Regular";
+  src: url("./assets/fonts/RocaTwo/Roca Two Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
-  font-family: "Roka Two Bold";
-  src: url("./assets/fonts/RocaTwo/Roca\ Bold.ttf") format("trueType");
+  font-family: "Roca Two Bold";
+  src: url("./assets/fonts/RocaTwo/Roca Two Bold.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
-  font-family: "Roka Two Thin";
-  src: url("./assets/fonts/RocaTwo/Roca\ Thin.ttf") format("trueType");
+  font-family: "Roca Two Thin";
+  src: url("./assets/fonts/RocaTwo/Roca Two Thin.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
-  font-family: "Roka Two Italic";
-  src: url("./assets/fonts/RocaTwo/Roca\ Italic.ttf") format("trueType");
+  font-family: "Roca Two Italic";
+  src: url("./assets/fonts/RocaTwo/Roca Two Italic.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -88,7 +88,7 @@
 }
 
 body {
-  font-family: "Yanone Kaffeesatz", sans-serif;
+  font-family: "Roca Two Regular", sans-serif;
   @apply bg-bodyBackground transition-colors duration-300;
 }
 

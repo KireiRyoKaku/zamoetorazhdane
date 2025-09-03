@@ -120,7 +120,7 @@ const TeamMember = React.forwardRef(
         {!isExpanded && (
           <div className="absolute left-0 top-4 z-10 w-full p-5 text-center">
             <div
-              className={`rotate-90 transform font-playfairDisplaySc text-xl font-bold text-black transition-all duration-700 ease-in-out  ${
+              className={`rotate-90 transform font-magnoliaScript text-4xl font-bold text-black transition-all duration-700 ease-in-out  ${
                 showCollapsedName
                   ? "translate-y-0 opacity-100"
                   : "translate-y-4 opacity-0"
@@ -135,7 +135,7 @@ const TeamMember = React.forwardRef(
           <>
             <div className="absolute left-0 top-0 m-5 w-full">
               <h3
-                className={`transform font-playfairDisplaySc text-3xl font-bold text-black drop-shadow-lg transition-all duration-700 ease-in-out sm:text-2xl md:text-3xl ${
+                className={`transform font-magnoliaScript text-3xl font-bold text-black drop-shadow-lg transition-all duration-700 ease-in-out sm:text-2xl md:text-3xl ${
                   showName
                     ? "translate-y-0 opacity-100"
                     : "translate-y-4 opacity-0"
@@ -144,7 +144,7 @@ const TeamMember = React.forwardRef(
                 {title} {firstName} {lastName}
               </h3>
               <p
-                className={`max-w-[90%] transform whitespace-normal break-words pt-4 text-xl font-light text-black drop-shadow-lg transition-all duration-700 ease-in-out ${
+                className={`max-w-[90%] transform whitespace-normal break-words pt-4 text-base font-rocaTwoThin text-black drop-shadow-lg transition-all duration-700 ease-in-out ${
                   showRole
                     ? "translate-y-0 opacity-100"
                     : "translate-y-4 opacity-0"

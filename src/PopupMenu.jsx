@@ -37,12 +37,12 @@ const PopupMenu = () => {
   // Update the route detection logic to handle event pages with hash fragments
   // Map of routes to their display names
   const routeNames = {
-    "/": { text: "Включи се", link: "/program" },
-    "/program": { text: "Програма", link: null },
-    "/events": { text: "Събития", link: null },
-    "/about": { text: "За нас", link: null },
-    "/partners": { text: "Партньори", link: null },
-    "/team": { text: "Екип", link: null },
+    "/": { text: "ВКЛЮЧИ СЕ", link: "/program" },
+    "/program": { text: "ПРОГРАМА", link: null },
+    "/events": { text: "СЪБИТИЯ", link: null },
+    "/about": { text: "ЗА НАС", link: null },
+    "/partners": { text: "ПАРТНЬОРИ", link: null },
+    "/team": { text: "ЕКИП", link: null },
   };
 
   // Determine current route text and link
@@ -65,7 +65,7 @@ const PopupMenu = () => {
   return (
     <div
       ref={menuRef}
-      className="fixed bottom-0 left-0 z-[9999] w-full pb-4 font-playfairDisplaySc text-2xl font-black drop-shadow-xl"
+      className="fixed bottom-0 left-0 z-[9999] w-full pb-4 font-rocaTwoRegular text-2xl font-black drop-shadow-xl"
     >
       <div className="mx-auto w-11/12 max-w-sm sm:max-w-md md:max-w-lg">
         <div
@@ -89,7 +89,7 @@ const PopupMenu = () => {
                       onClick={() => handleNavigation("/program")}
                       className="text-left text-black transition-colors duration-1000 hover:text-black/30"
                     >
-                      Програма
+                      ПРОГРАМА
                     </button>
                   )}
                 {/* Rest of the menu buttons remain unchanged */}
@@ -99,7 +99,7 @@ const PopupMenu = () => {
                       onClick={() => handleNavigation("/events")}
                       className="text-left text-black transition-colors duration-1000 hover:text-black/30"
                     >
-                      Събития
+                      СЪБИТИЯ
                     </button>
                   )}
                 {location.pathname !== "/about" && (
@@ -107,7 +107,7 @@ const PopupMenu = () => {
                     onClick={() => handleNavigation("/about")}
                     className="text-left text-black transition-colors duration-1000 hover:text-black/30"
                   >
-                    За нас
+                    ЗА НАС
                   </button>
                 )}
                 {location.pathname !== "/partners" && (
@@ -115,7 +115,7 @@ const PopupMenu = () => {
                     onClick={() => handleNavigation("/partners")}
                     className="text-left text-black transition-colors duration-1000 hover:text-black/30"
                   >
-                    Партньори
+                    ПАРТНЬОРИ
                   </button>
                 )}
                 {location.pathname !== "/team" && (
@@ -123,7 +123,7 @@ const PopupMenu = () => {
                     onClick={() => handleNavigation("/team")}
                     className="text-left text-black transition-colors duration-1000 hover:text-black/30"
                   >
-                    Екип
+                    ЕКИП
                   </button>
                 )}
               </div>

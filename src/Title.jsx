@@ -34,7 +34,7 @@ const Title = () => {
             <span className="absolute -top-9 left-4 font-playfairDisplaySc text-9xl text-white/20">
               ”
             </span>
-            <p className="quote relative text-center font-yanoneKaffeesatz text-2.5xl font-thin italic text-slate-50">
+          <p className="quote relative text-center font-rocaTwoThin text-xl font-thin italic text-slate-50">
               За всеки етап от майчинството
             </p>
           </div>
@@ -51,13 +51,13 @@ const Title = () => {
               />
             </div>
             <div>
-              <h1 className="font-magnoliaScript font-bold text-slate-50 sm:text-3xl md:text-5xl lg:text-7xl">
+              <h1 className="font-magnoliaScript text-slate-50 sm:text-3xl md:text-5xl lg:text-7xl">
                 прегърната
               </h1>
             </div>
           </header>{" "}
           <h2 className="custom-h2-style whitespace-nowrap font-magnoliaScript text-slate-50 text-2xl md:text-3xl">
-            онлайн клуб за майки
+            клуб за майки
           </h2>
         </div>
       </div>

@@ -530,7 +530,7 @@ const MyBirthCalendar = () => {
     // Now map over the sorted events with staggered animations
     return sortedEvents.map((event, index) => {
       let eventCircleClass =
-        "EventCircle flex h-10 w-10 items-center justify-center rounded-full text-xl text-white font-playfairDisplaySc";
+        "EventCircle flex h-10 w-10 items-center justify-center rounded-full text-xl text-white font-rocaTwoRegular";
       if (/^https?:\/\/.+/i.test(event.location)) {
         eventCircleClass += " bg-moetoRazhdanePurple"; // Online events
       } else if (
@@ -545,7 +545,7 @@ const MyBirthCalendar = () => {
         eventCircleClass += " bg-moetoRazhdaneDarkGreen"; // Plovdiv events
       }
       let eventTitleClass =
-        "EventTitle relative flex items-center justify-start text-left font-hitchHike text-4xl ";
+        "EventTitle relative flex items-center justify-start text-right font-magnoliaScript text-2xl ";
       if (/^https?:\/\/.+/i.test(event.location)) {
         eventTitleClass += " text-moetoRazhdanePurple"; // Online events
       } else if (
@@ -603,7 +603,7 @@ const MyBirthCalendar = () => {
           </div>
 
           {/* Event Title - Centered */}
-          <div className="mt-2 flex w-full justify-center">
+          <div className="mt-2 ml-6 flex w-full justify-center">
             <div
               className={`${eventTitleClass} ${isEventInPast(event) ? "!text-gray-500" : ""} text-center`}
             >
@@ -665,24 +665,22 @@ const MyBirthCalendar = () => {
                       {!isEventInPast(event) ? (
                       <div className="flex w-full justify-center">
                       <button
-                        className="mt-2 items-center justify-center rounded-2xl bg-moetoRazhdaneYellow p-3 font-playfairDisplaySc text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
+                        className="mt-2 items-center justify-center rounded-2xl bg-moetoRazhdaneYellow p-3 font-rocaTwoRegular text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
                         onClick={() => handleClickSubscribeAndPay(event)}
                       >
                         <div className="flex flex-col items-center gap-2">
                         {/^https?:\/\/.+/i.test(event.location) ? (
                         <>
-                        <span className="text-xl">Присъедини се с</span>
-                        <img src={heartbeatLogo} alt="heartbeatLogo" className="h-7 w-max" />
-                        </>
+                        <span className="text-xl">ПРИСЪЕДИНИ СЕ С HEARTBEAT</span>                        </>
                         ) : (
-                        'Запиши се'
+                        'ЗАПИШИ СЕ'
                         )}
                         </div>
                       </button>
                       </div>
                       ) : (
                       <div className="flex w-full justify-center">
-                      <div className="mt-2 items-center justify-center rounded-2xl border border-moetoRazhdaneWhite bg-moetoRazhdaneYellow p-3 text-center font-yanoneKaffeesatz text-xl font-light text-black">
+                      <div className="mt-2 items-center justify-center rounded-2xl border border-moetoRazhdaneWhite bg-moetoRazhdaneYellow p-3 text-center font-rocaTwoThin text-base font-light text-black">
                         Това е изминало събитие, <br />
                         <a
                         href="https://www.instagram.com/embraced.mothersclub/"
@@ -732,7 +730,7 @@ const MyBirthCalendar = () => {
       >
         <button
           onClick={() => setShowToast(false)}
-          className="flex items-center rounded bg-moetoRazhdaneYellow p-3 px-3 py-3 text-center font-playfairDisplaySc text-xl font-black text-black shadow-lg hover:backdrop-opacity-70"
+          className="flex items-center rounded bg-moetoRazhdaneYellow p-3 px-3 py-3 text-center font-rocaTwoRegular text-xl font-black text-black shadow-lg hover:backdrop-opacity-70"
         >
           Записа се успешно! <br />
           Провери пощата си.
@@ -796,7 +794,7 @@ const MyBirthCalendar = () => {
                   </button>
                   {/* Tooltip */}
                   <div className="absolute bottom-full right-1/2 z-50 mb-2 -translate-x-0.5 rounded bg-moetoRazhdaneYellow p-3 text-xs font-black text-black opacity-0 shadow-lg transition-opacity duration-300 group-hover:opacity-100">
-                    <div className="whitespace-nowrap font-playfairDisplaySc">
+                    <div className="whitespace-nowrap font-rocaTwoRegular">
                       Няма планирани събития
                       <br /> за следващите месеци.
                     </div>
@@ -808,7 +806,7 @@ const MyBirthCalendar = () => {
             </div>
           </div>
           <div className="calender-filter mt-4">
-            <div className="flex items-center justify-center gap-4 font-yanoneKaffeesatz text-xl">
+            <div className="flex items-center justify-center gap-4 font-rocaTwoThin text-base">
               <button
                 onClick={() => toggleLocationFilter("sofia")}
                 className={`rounded-xl px-2 py-1 font-black transition-all duration-300 ${
@@ -837,7 +835,7 @@ const MyBirthCalendar = () => {
                     : "bg-gray-100 text-moetoRazhdanePurple hover:bg-gray-200"
                 }`}
               >
-                Онлайн събития
+                Онлайн събитие
               </button>
             </div>
           </div>
@@ -853,7 +851,7 @@ const MyBirthCalendar = () => {
               width: "75%",
             }}
           ></div>
-          <table className="w-full max-w-3xl text-center font-playfairDisplaySc">
+          <table className="w-full max-w-3xl text-center font-rocaTwoRegular">
             <tbody>
               {myCalendar.map((week, weekIndex) => (
                 <tr key={weekIndex} className="flex justify-center">
@@ -927,11 +925,11 @@ const MyBirthCalendar = () => {
           >
             <div className="flex h-full items-center">
               <div className="NoEventDay mr-4 flex items-center justify-center">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-moetoRazhdaneYellow font-playfairDisplaySc text-xl text-black">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-moetoRazhdaneYellow font-rocaTwoRegular text-xl text-black">
                   <div className="animate-spin">⏳</div>
                 </span>
               </div>
-              <div className="NoEventSummary flex-1 items-center text-balance font-yanoneKaffeesatz text-3xl text-moetoRazhdaneDarkGreen">
+              <div className="NoEventSummary flex-1 items-center text-balance font-rocaTwoThin text-3xl text-moetoRazhdaneDarkGreen">
                 Зареждане на събитията в програмата. Това може да отнеме
                 известно време. Моля изчакайте.
               </div>
@@ -948,11 +946,11 @@ const MyBirthCalendar = () => {
           >
             <div className="flex h-full items-center">
               <div className="NoEventDay mr-4 flex items-center justify-center">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-moetoRazhdaneDarkGreen font-playfairDisplaySc text-xl text-white">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-moetoRazhdaneDarkGreen font-rocaTwoRegular text-xl text-white">
                   <div className="mb-2">{isCurrentMonthInPast() ? "📅" : "😿"}</div>
                 </span>
               </div>
-              <div className="NoEventSummary flex-1 items-center text-balance font-yanoneKaffeesatz text-3xl text-moetoRazhdaneDarkGreen">
+              <div className="NoEventSummary flex-1 items-center text-balance font-rocaTwoThin text-3xl text-moetoRazhdaneDarkGreen">
                 {isCurrentMonthInPast() ? (
                   // Past month message
                   locationFilter

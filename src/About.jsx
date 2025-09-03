@@ -121,10 +121,10 @@ const About = ({ onClose = () => {} }) => {
                 className="mt-8 flex justify-center opacity-0 transition-opacity duration-1000 ease-in-out"
               >
                 <button
-                  className="rounded-3xl bg-moetoRazhdaneYellow px-6 py-2 font-playfairDisplaySc text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
+                  className="rounded-3xl bg-moetoRazhdaneYellow px-6 py-2 font-rocaTwoBold text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
                   onClick={handleClickEventTeam}
                 >
-                  Запознай се с екипа
+                  ЗАПОЗНАЙ СЕ С ЕКИПА
                 </button>
               </div>
             <div
@@ -132,10 +132,10 @@ const About = ({ onClose = () => {} }) => {
               className="mt-8 flex justify-center opacity-0 transition-opacity duration-1000 ease-in-out"
             >
               <button
-                className="rounded-3xl bg-moetoRazhdaneYellow px-6 py-2 font-playfairDisplaySc text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
+                className="rounded-3xl bg-moetoRazhdaneYellow px-6 py-2 font-rocaTwoBold text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
                 onClick={handleClickEventProgram}
               >
-                Включи се
+                ВКЛЮЧИ СЕ
               </button>
             </div>
           </div>

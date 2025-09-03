@@ -25,7 +25,7 @@ const CookieConsent = () => {
   if (!showBanner) return null;
 
   return (
-    <div className="fixed top-0 left-0 right-0 mx-auto w-full bg-white/95 backdrop-blur-sm p-4 shadow-lg z-[10000]">
+    <div className="fixed top-0 left-0 right-0 mx-auto w-full bg-white/95 backdrop-blur-sm p-4 shadow-lg z-[10000] font-rocaTwoRegular">
       <div className="max-w-xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <p className="text-sm text-left text-black/80 max-w-md">
           Този сайт използва бисквитки, за да подобри вашето преживяване. 

@@ -236,7 +236,7 @@ const SubscribeAndPay = ({ onClose }) => {
     <div className="subscribe-and-pay-container z-50 m-auto mb-16 max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-lg sm:mb-24">
       <h2 className="text-center text-4xl font-bold">Записване за</h2>
       <h1 className="EventSummary">
-        <p className="EventName py-2 text-center font-hitchHike text-5xl text-moetoRazhdaneDarkGreen">
+        <p className="EventName py-2 text-center font-magnoliaScript text-5xl text-moetoRazhdaneDarkGreen">
           {eventSummary}
         </p>
         <p className="Date text-center text-3xl font-bold">
@@ -422,11 +422,11 @@ const SubscribeAndPay = ({ onClose }) => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`rounded-3xl bg-moetoRazhdaneYellow px-6 py-2 font-playfairDisplaySc text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30 ${
+            className={`rounded-3xl bg-moetoRazhdaneYellow px-6 py-2 font-rocaTwoBold text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30 ${
               isSubmitting ? "cursor-not-allowed opacity-50" : ""
             }`}
           >
-            {isSubmitting ? "Записване..." : "Запиши ме!"}
+            {isSubmitting ? "ЗАПИСВАНЕ..." : "ЗАПИШИ МЕ!"}
           </button>
         </div>
       </form>

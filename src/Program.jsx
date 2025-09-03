@@ -22,7 +22,7 @@ const Program = ({ onClose = () => {} }) => {
         className={`fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center transition-all duration-300`}
       >
         <div
-          className={`font-montserrat max-h-full max-w-full transform overflow-y-auto rounded bg-slate-50 p-10 transition-all duration-300 ease-in-out ${
+          className={` max-h-full max-w-full transform overflow-y-auto rounded bg-slate-50 p-10 transition-all duration-300 ease-in-out ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           }`}
         >
