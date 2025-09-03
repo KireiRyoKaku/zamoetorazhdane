@@ -13,6 +13,8 @@ const SubscribeAndPay = ({ onClose }) => {
     eventDateLocaleString = "",
     eventTime = "",
     eventLocation = "",
+    eventDescription = "",
+    eventType = "",
   } = location.state || {};
 
   const navigate = useNavigate();
@@ -33,6 +35,18 @@ const SubscribeAndPay = ({ onClose }) => {
   });
 
   const currentDate = new Date();
+  
+  // Function to get background color based on event location
+  const getEventTypeStyle = () => {
+    // Check for Sofia
+    if (eventLocation && (eventLocation.toLowerCase().includes('софия') || eventLocation.toLowerCase().includes('sofia'))) {
+      return "bg-moetoRazhdaneLightGreen text-black"; // Sofia events - light green
+    }
+    // Check for Plovdiv (default for subscription events)
+    else {
+      return "bg-moetoRazhdaneDarkGreen text-white"; // Plovdiv events - dark green
+    }
+  };
   
   // Create proper event datetime by combining eventDateLocaleString and eventTime
   const getEventDateTime = () => {
@@ -242,9 +256,19 @@ const SubscribeAndPay = ({ onClose }) => {
         <p className="Date text-center text-3xl font-bold">
           на {eventDate}
           <br />
-          от {eventTime}ч.
+          от {eventTime}ч. в {eventLocation}
         </p>
       </h1>
+      {/* Event Description at the top */}
+      {eventDescription && (
+        <div className={`event-description mt-4 mb-6 rounded-lg p-4 ${getEventTypeStyle()}`}>
+          <h3 className="mb-3 text-lg font-bold text-center">Описание</h3>
+          <div 
+            className="text-center"
+            dangerouslySetInnerHTML={{ __html: eventDescription }}
+          />
+        </div>
+      )}
       <form
         onSubmit={handleSubmit}
         className="space-y-3 text-4xl font-normal text-gray-700"
