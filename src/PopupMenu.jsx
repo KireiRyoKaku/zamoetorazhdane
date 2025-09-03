@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import logoSmall from "./assets/pictures/logoSmall.png"; // Add this import at the top
+import logoSmall from "./assets/pictures/logo-green-outline.png"; // Updated to use pink logo without text
 
 const PopupMenu = () => {
   const navigate = useNavigate();
@@ -67,7 +67,7 @@ const PopupMenu = () => {
       ref={menuRef}
       className="fixed bottom-0 left-0 z-[9999] w-full pb-4 font-playfairDisplaySc text-2xl font-black drop-shadow-xl"
     >
-      <div className="mx-auto w-11/12">
+      <div className="mx-auto w-11/12 max-w-sm sm:max-w-md md:max-w-lg">
         <div
           className={`rounded-3xl bg-white transition-all ${
             isMenuOpen ? "duration-1000" : "duration-300"
@@ -130,37 +130,70 @@ const PopupMenu = () => {
             </div>
           </div>
 
-          {/* Menu Bar */}
-          <div className="flex items-center justify-between px-4 py-3">
-            <button
-              onClick={() =>
-                currentRoute.link && handleNavigation(currentRoute.link)
+          {/* Menu Bar - clickable when closed, closable when open (except on frontpage with program button) */}
+          <div 
+            className={`flex items-center justify-between px-4 py-3 ${
+              !isMenuOpen ? "cursor-pointer" : (location.pathname === "/" && currentRoute.link ? "" : "cursor-pointer")
+            }`}
+            onClick={(e) => {
+              if (!isMenuOpen) {
+                // When closed, always open the menu
+                toggleMenu();
+              } else {
+                // When open, close the menu UNLESS we're on frontpage with program button
+                if (location.pathname === "/" && currentRoute.link) {
+                  // On frontpage with program button - don't close, let button handle it
+                  return;
+                } else {
+                  // On other pages or frontpage without program button - close menu
+                  toggleMenu();
+                }
               }
+            }}
+          >
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (currentRoute.link) {
+                  handleNavigation(currentRoute.link);
+                } else if (isMenuOpen) {
+                  // If no link and menu is open, do nothing (just prevent propagation)
+                } else {
+                  // If no link and menu is closed, open the menu
+                  toggleMenu();
+                }
+              }}
               className={`rounded-2xl px-4 text-black transition-colors duration-200 ${
                 currentRoute.link
-                  ? "bg-moetoRazhdaneYellow hover:bg-transparent hover:text-black/30"
+                  ? "bg-moetoRazhdaneYellow hover:bg-transparent hover:text-black/30 cursor-pointer"
                   : "cursor-default bg-transparent"
-              } px-2 py-2`} // Increased padding and added min-width
+              } px-2 py-2`}
             >
               {currentRoute.text}
             </button>
             <div className="flex items-center gap-1">
               <button
-                onClick={() => handleNavigation("/")}
-                className={`flex h-12 w-12 transform-gpu items-center justify-center rounded-full bg-white/20 transition-all duration-1000 ease-in-out will-change-transform ${
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNavigation("/");
+                }}
+                className={`flex h-12 w-11 transform-gpu items-center justify-center rounded-2xl bg-moetoRazhdaneYellow transition-all duration-1000 ease-in-out will-change-transform ${
                   location.pathname === "/"
                     ? "invisible opacity-0"
                     : "visible opacity-100"
-                } hover:opacity-70`}
+                } hover:bg-transparent hover:text-black/30`}
               >
                 <img
                   src={logoSmall}
                   alt="Home"
-                  className="h-10 w-10 rounded-full bg-moetoRazhdaneDarkGreen object-contain"
+                  className="h-10 w-10 object-contain"
                 />
               </button>
               <button
-                onClick={toggleMenu}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleMenu();
+                }}
                 className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 transition-all duration-300 hover:text-black/30"
               >
                 <svg
