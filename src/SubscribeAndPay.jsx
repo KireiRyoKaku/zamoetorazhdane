@@ -251,7 +251,7 @@ const SubscribeAndPay = ({ onClose }) => {
       >
         {/* Email field - always show first */}
         <div>
-          <label className="block text-3xl font-medium text-gray-700">
+          <label className="block text-xl font-medium text-gray-700">
             E-Mail <span className="text-red-500">*</span>
           </label>
           <div className="relative">
@@ -261,16 +261,15 @@ const SubscribeAndPay = ({ onClose }) => {
               value={formData.email}
               onChange={handleChange}
               required
-              className="mt-1 block w-full rounded-md border-gray-300 text-3xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border-gray-100 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             />
           </div>
         </div>
 
         {/* First participant name field - separate and required */}
         <div>
-          <label className="block text-3xl font-medium text-gray-700">
+          <label className="block text-xl font-medium text-gray-700">
             Име и фамилия (Участник 1) <span className="text-red-500">*</span>
-            <span className="block text-sm text-gray-500 font-normal mt-1">Само букви, интервали, тире и апострофи (до 50 символа)</span>
           </label>
           <input
             type="text"
@@ -278,13 +277,12 @@ const SubscribeAndPay = ({ onClose }) => {
             value={formData.participantNames[0] || ""}
             onChange={handleChange}
             required
-            className="mt-1 block w-full rounded-md border-gray-300 text-3xl shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
-            placeholder="напр. Мария Иванова-Петрова"
+            className="mt-1 block w-full rounded-md border-gray-50 text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
           />
         </div>
 
         <div>
-          <label className="block text-3xl font-medium text-gray-700">
+          <label className="block text-xl font-medium text-gray-700">
             Телефон за връзка <span className="text-red-500">*</span>
           </label>
           <input
@@ -311,21 +309,20 @@ const SubscribeAndPay = ({ onClose }) => {
                 };
                 handleChange(syntheticEvent);
               }}
-              placeholder="+359 888 123456, 0888123456 или 359888123456"
               title="Въведете валиден телефонен номер за връзка"
               required
-              className="mt-1 block w-full rounded-md border-gray-300 text-3xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              className="mt-1 block w-full rounded-md border-gray-50 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             />
           </div>
         
         <div>
-          <label className="block text-3xl font-medium text-gray-700">
+          <label className="block text-xl font-medium text-gray-700">
             Запазване на място
           </label>
           <div className="mt-2 space-y-4">
             {/* Pricing display */}
-            <div className="rounded-md border border-gray-300 bg-gray-50 p-3">
-              <span className="text-3xl text-gray-700">
+            <div className="rounded-md border border-gray-100 bg-gray-50 p-3">
+              <span className="text-base text-gray-700">
                 {priceOneTime()}
               </span>
             </div>
@@ -335,7 +332,7 @@ const SubscribeAndPay = ({ onClose }) => {
               <button
                 type="button"
                 onClick={addParticipant}
-                className="w-full bg-moetoRazhdaneDarkGreen text-white text-2xl font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors duration-200 flex items-center justify-center gap-2"
+                className="w-full bg-moetoRazhdaneDarkGreen text-white text-base font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors duration-200 flex items-center justify-center gap-2"
               >
                 <span>+ добави място</span>
                 <span className="text-lg">({formData.participantCount}/5)</span>
@@ -360,9 +357,8 @@ const SubscribeAndPay = ({ onClose }) => {
                   const actualIndex = index + 1; // Start from participant 2
                   return (
                     <div key={actualIndex} className="bg-white border-2 border-gray-200 p-4 rounded-lg shadow-sm">
-                      <label className="block text-2xl font-medium text-gray-700 mb-2">
+                      <label className="block text-base font-medium text-gray-700 mb-2">
                         Участник {actualIndex + 1} - Име и фамилия
-                        <span className="block text-sm text-gray-500 font-normal mt-1">Само букви, интервали, тире и апострофи (до 50 символа)</span>
                       </label>
                       <input
                         type="text"
@@ -370,8 +366,7 @@ const SubscribeAndPay = ({ onClose }) => {
                         value={formData.participantNames[actualIndex] || ""}
                         onChange={handleChange}
                         required={false} // Additional participants are not required
-                        className="block w-full rounded-md border-gray-300 text-2xl shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen p-3"
-                        placeholder="напр. Мария Иванова-Петрова или остави празно"
+                        className="block w-full rounded-md border-gray-100 text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen p-3"
                       />
                     </div>
                   );
@@ -382,7 +377,7 @@ const SubscribeAndPay = ({ onClose }) => {
         </div>
         
         <div>
-          <label className="block text-3xl font-medium text-gray-700">
+          <label className="block text-xl font-medium text-gray-700">
             От къде научи за &quot;Прегърната&quot;? <span className="text-sm text-gray-500">(до 280 символа)</span>
           </label>
           <input
@@ -401,8 +396,7 @@ const SubscribeAndPay = ({ onClose }) => {
               handleChange(syntheticEvent);
             }}
             maxLength={280}
-            placeholder="Социални мрежи, приятел, Google търсене..."
-            className="mt-1 block w-full rounded-md border-gray-300 text-3xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="mt-1 block w-full rounded-md border-gray-100 text-xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
           />
           <div className="mt-1 text-right text-sm text-gray-500">
             {formData.source.length}/280 символа
