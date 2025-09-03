@@ -674,7 +674,8 @@ const MyBirthCalendar = () => {
                         <div className="flex flex-col items-center gap-2">
                         {/^https?:\/\/.+/i.test(event.location) ? (
                         <>
-                        <span className="text-xl">ПРИСЪЕДИНИ СЕ С HEARTBEAT</span>                        </>
+                        <span className="text-xl">ВКЛЮЧИ СЕ С HEARTBEAT</span>
+                        </>
                         ) : (
                         'ЗАПИШИ СЕ'
                         )}
