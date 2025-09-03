@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import logoImage from "./assets/pictures/logo-green-outline.png";
+import logoImage from "./assets/pictures/PregurnataLogoPinkNoText.png"; // Updated to use pink logo without text
 
 const About = ({ onClose = () => {} }) => {
   const navigate = useNavigate();
@@ -79,32 +79,43 @@ const About = ({ onClose = () => {} }) => {
           }`}
           ref={contentRef}
         >
-          <div className="mb-8 flex justify-center">
+          <div className="mb-1 -mt-5 flex justify-center">
             <img
               src={logoImage}
-              alt="За моето раждане лого"
-              className="h-24 w-auto object-contain md:h-28 lg:h-32 xl:h-36 2xl:h-40"
+              alt="Прегърната лого"
+              className="h-56 w-auto object-contain md:h-28 lg:h-32 xl:h-36 2xl:h-40"
             />
           </div>
           <div className="relative">
             <h3>
-              <div className="mb-1 flex justify-center">
-                <span className="font-makLight text-2xl md:text-3xl lg:text-6xl">
-                  &quot;за моето раждане&quot;
+              <div className="mb-5 flex justify-center">
+                <span className="font-magnoliaScript text-2xl md:text-3xl lg:text-6xl">
+                  Прегърната
                 </span>
               </div>
               <p
                 ref={(el) => (elementsRef.current[0] = el)}
                 className="para1 opacity-0 transition-opacity duration-1000 ease-in-out"
               >
-                е инициатива от и за майки в Пловдив и София, водена от
-                <b>
-                  {" "}
-                  специалисти по кърмене, детски сън, детско развитие, физическо
-                  и психично здраве
-                </b>{" "}
-                и благополучие в периода на ранното майчинство.
+                 е общност, създадена от и за майки. Място, в което на фокус е жената – приета, чута и подкрепена във всеки етап на своето майчинство.
               </p>
+
+              <br />
+              <p
+                ref={(el) => (elementsRef.current[2] = el)}
+                className="para2 opacity-0 transition-opacity duration-1000 ease-in-out"
+              >
+                Нашата мисия е да създадем пространство, в което майки се събират и взаимодействат помежду си въз основа на <b>своите ценности и интереси в и извън родителството.</b>
+              </p>
+              <br />
+              <p
+                ref={(el) => (elementsRef.current[3] = el)}
+                className="para3 opacity-0 transition-opacity duration-1000 ease-in-out"
+              >
+                Тук <b>всяка майка има право на подкрепа</b>, разбиране и позволение за собствените си емоции и нужди. Силно вярваме в това, че <b>когато тя е</b> <span className="font-magnoliaScript">„прегърната“</span>, може с повече лекота и радост да бъде до своите деца и семейство.
+                <br />
+              </p>
+            </h3>
               <div
                 ref={(el) => (elementsRef.current[1] = el)}
                 className="mt-8 flex justify-center opacity-0 transition-opacity duration-1000 ease-in-out"
@@ -116,30 +127,6 @@ const About = ({ onClose = () => {} }) => {
                   Запознай се с екипа
                 </button>
               </div>
-
-              <br />
-              <p
-                ref={(el) => (elementsRef.current[2] = el)}
-                className="para2 opacity-0 transition-opacity duration-1000 ease-in-out"
-              >
-                Нашата мисия е да създадем{" "}
-                <b>пространство, където майки се събират</b>, споделят своите
-                опитности и откриват подкрепата и знанието, от които имат нужда
-                през своето майчинство.
-              </p>
-              <br />
-              <p
-                ref={(el) => (elementsRef.current[3] = el)}
-                className="para3 opacity-0 transition-opacity duration-1000 ease-in-out"
-              >
-                <b>Нашият фокус е върху майката</b>, с нейните тревоги и
-                предизвикателства. И върху подкрепата, от която се нуждае тя за
-                едно спокойно и хармонично начало с бебе.
-                <br />
-                <br />
-                <b>Нашият фокус си ти. </b>
-              </p>
-            </h3>
             <div
               ref={(el) => (elementsRef.current[4] = el)}
               className="mt-8 flex justify-center opacity-0 transition-opacity duration-1000 ease-in-out"
