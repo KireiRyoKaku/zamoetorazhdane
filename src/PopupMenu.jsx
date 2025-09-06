@@ -82,58 +82,88 @@ const PopupMenu = () => {
               }`}
             >
               <div className="flex flex-col space-y-5 px-9 py-5 pb-0">
-                {/* Only show Program in menu if not on homepage AND not on program page */}
-                {location.pathname !== "/program" &&
-                  location.pathname !== "/" && (
-                    <button
-                      onClick={() => handleNavigation("/program")}
-                      className="text-left text-black transition-colors duration-1000 hover:text-black/30"
-                    >
-                      ПРОГРАМА
-                    </button>
-                  )}
-                {/* Rest of the menu buttons remain unchanged */}
-                {!fullPath.includes("/events") &&
-                  !fullPath.includes("#/events") && (
-                    <button
-                      onClick={() => handleNavigation("/events")}
-                      className="text-left text-black transition-colors duration-1000 hover:text-black/30"
-                    >
-                      СЪБИТИЯ
-                    </button>
-                  )}
-                {location.pathname !== "/about" && (
-                  <button
-                    onClick={() => handleNavigation("/about")}
-                    className="text-left text-black transition-colors duration-1000 hover:text-black/30"
-                  >
-                    ЗА НАС
-                  </button>
-                )}
-                {location.pathname !== "/partners" && (
-                  <button
-                    onClick={() => handleNavigation("/partners")}
-                    className="text-left text-black transition-colors duration-1000 hover:text-black/30"
-                  >
-                    ПАРТНЬОРИ
-                  </button>
-                )}
-                {location.pathname !== "/team" && (
-                  <button
-                    onClick={() => handleNavigation("/team")}
-                    className="text-left text-black transition-colors duration-1000 hover:text-black/30"
-                  >
-                    ЕКИП
-                  </button>
-                )}
+                {/* Always show all menu items in the same order */}
+                <button
+                  onClick={() => handleNavigation("/program")}
+                  className={`text-left transition-colors duration-1000 ${
+                    location.pathname === "/program" ||
+                    location.pathname === "/"
+                      ? "cursor-default font-black text-moetoRazhdaneYellow"
+                      : "text-black hover:text-black/30"
+                  }`}
+                  disabled={
+                    location.pathname === "/program" ||
+                    location.pathname === "/"
+                  }
+                >
+                  ПРОГРАМА
+                </button>
+
+                <button
+                  onClick={() => handleNavigation("/events")}
+                  className={`text-left transition-colors duration-1000 ${
+                    fullPath.includes("/events") ||
+                    fullPath.includes("#/events")
+                      ? "cursor-default font-black text-moetoRazhdaneYellow"
+                      : "text-black hover:text-black/30"
+                  }`}
+                  disabled={
+                    fullPath.includes("/events") ||
+                    fullPath.includes("#/events")
+                  }
+                >
+                  СЪБИТИЯ
+                </button>
+
+                <button
+                  onClick={() => handleNavigation("/about")}
+                  className={`text-left transition-colors duration-1000 ${
+                    location.pathname === "/about"
+                      ? "cursor-default font-black text-moetoRazhdaneYellow"
+                      : "text-black hover:text-black/30"
+                  }`}
+                  disabled={location.pathname === "/about"}
+                >
+                  ЗА НАС
+                </button>
+
+                <button
+                  onClick={() => handleNavigation("/partners")}
+                  className={`text-left transition-colors duration-1000 ${
+                    location.pathname === "/partners"
+                      ? "cursor-default font-black text-moetoRazhdaneYellow"
+                      : "text-black hover:text-black/30"
+                  }`}
+                  disabled={location.pathname === "/partners"}
+                >
+                  ПАРТНЬОРИ
+                </button>
+
+                <button
+                  onClick={() => handleNavigation("/team")}
+                  className={`text-left transition-colors duration-1000 ${
+                    location.pathname === "/team"
+                      ? "cursor-default font-black text-moetoRazhdaneYellow"
+                      : "text-black hover:text-black/30"
+                  }`}
+                  disabled={location.pathname === "/team"}
+                >
+                  ЕКИП
+                </button>
               </div>
             </div>
           </div>
 
           {/* Menu Bar - clickable when closed, closable when open (except on frontpage with program button) */}
-          <div 
-            className={`flex items-center justify-between px-4 py-3 ${
-              !isMenuOpen ? "cursor-pointer" : (location.pathname === "/" && currentRoute.link ? "" : "cursor-pointer")
+          <div
+            className={`relative flex items-center py-3 transition-all duration-500 ${
+              isMenuOpen ? "justify-center px-0" : "justify-between px-4"
+            } ${
+              !isMenuOpen
+                ? "cursor-pointer"
+                : location.pathname === "/" && currentRoute.link
+                  ? ""
+                  : "cursor-pointer"
             }`}
             onClick={(e) => {
               if (!isMenuOpen) {
@@ -163,24 +193,34 @@ const PopupMenu = () => {
                   toggleMenu();
                 }
               }}
-              className={`rounded-2xl px-4 text-black transition-colors duration-200 ${
+              className={`rounded-2xl px-4 text-black transition-all duration-500 ${
+                isMenuOpen
+                  ? "pointer-events-none w-0 px-0 opacity-0"
+                  : "opacity-100"
+              } ${
                 currentRoute.link
-                  ? "bg-moetoRazhdaneYellow hover:bg-transparent hover:text-black/30 cursor-pointer"
+                  ? "cursor-pointer bg-moetoRazhdaneYellow hover:bg-transparent hover:text-black/30"
                   : "cursor-default bg-transparent"
               } px-2 py-2`}
             >
               {currentRoute.text}
             </button>
-            <div className="flex items-center gap-1">
+            <div
+              className={`${isMenuOpen ? "flex w-full" : "flex items-center"} transition-all duration-700 ease-out ${isMenuOpen ? "gap-0" : "gap-1"}`}
+            >
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   handleNavigation("/");
                 }}
-                className={`flex h-12 w-11 transform-gpu items-center justify-center rounded-2xl bg-moetoRazhdaneYellow transition-all duration-1000 ease-in-out will-change-transform ${
+                className={`flex h-12 w-11 transform-gpu items-center justify-center rounded-2xl bg-moetoRazhdaneYellow transition-all duration-700 ease-out will-change-transform ${
                   location.pathname === "/"
                     ? "invisible opacity-0"
                     : "visible opacity-100"
+                } ${
+                  isMenuOpen
+                    ? "druration-700 absolute left-1/2 -translate-x-1/2 transform ease-out"
+                    : ""
                 } hover:bg-transparent hover:text-black/30`}
               >
                 <img
@@ -194,7 +234,11 @@ const PopupMenu = () => {
                   e.stopPropagation();
                   toggleMenu();
                 }}
-                className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 transition-all duration-300 hover:text-black/30"
+                className={`flex h-12 w-12 items-center justify-center rounded-full bg-white/20 transition-all duration-300 hover:text-black/30 ${
+                  isMenuOpen
+                    ? "pointer-events-none w-0 opacity-0"
+                    : "opacity-100"
+                }`}
               >
                 <svg
                   className={`h-6 w-6 text-black transition-transform duration-1000 ${
