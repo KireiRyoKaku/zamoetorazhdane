@@ -86,15 +86,11 @@ const PopupMenu = () => {
                 <button
                   onClick={() => handleNavigation("/program")}
                   className={`text-left transition-colors duration-1000 ${
-                    location.pathname === "/program" ||
-                    location.pathname === "/"
+                    location.pathname === "/program"
                       ? "cursor-default font-black text-moetoRazhdaneYellow"
                       : "text-black hover:text-black/30"
                   }`}
-                  disabled={
-                    location.pathname === "/program" ||
-                    location.pathname === "/"
-                  }
+                  disabled={location.pathname === "/program"}
                 >
                   ПРОГРАМА
                 </button>
@@ -214,7 +210,7 @@ const PopupMenu = () => {
                   handleNavigation("/");
                 }}
                 className={`flex h-12 w-11 transform-gpu items-center justify-center rounded-2xl bg-moetoRazhdaneYellow transition-all duration-700 ease-out will-change-transform ${
-                  location.pathname === "/"
+                  !isMenuOpen && location.pathname === "/"
                     ? "invisible opacity-0"
                     : "visible opacity-100"
                 } ${
