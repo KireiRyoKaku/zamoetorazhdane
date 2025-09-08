@@ -596,7 +596,7 @@ const MyBirthCalendar = () => {
         event.location.toLowerCase().includes("софия") ||
         event.location.toLowerCase().includes("sofia")
       ) {
-        eventTitleClass += " text-gray-400"; // Sofia events - changed to gray for better readability
+        eventTitleClass += " text-moetoRazhdaneLightGreen"; // Sofia events - changed to gray for better readability
       } else if (
         event.location.toLowerCase().includes("пловдив") ||
         event.location.toLowerCase().includes("plovdiv")
@@ -642,7 +642,7 @@ const MyBirthCalendar = () => {
           {/* Day Circle - Positioned in upper left */}
           <div className="EventDay absolute left-4 top-4 flex h-[40px] w-[40px] items-center justify-center">
             <span
-              className={`${eventCircleClass} ${isEventInPast(event) ? "!bg-gray-400" : ""}`}
+              className={`${eventCircleClass} ${isEventInPast(event) ? "!bg-gray-300" : ""}`}
             >
               <div>{event.dayOfEvent}</div>
             </span>
@@ -651,7 +651,7 @@ const MyBirthCalendar = () => {
           {/* Event Title - Centered */}
           <div className="mt-2 mx-8 flex w-full justify-center">
             <div
-              className={`${eventTitleClass} ${isEventInPast(event) ? "!text-gray-500" : ""} text-center`}
+              className={`${eventTitleClass} ${isEventInPast(event) ? "!text-gray-300" : ""} text-center`}
             >
               <div
                 className={`${event.summary.length > 18 ? "whitespace-pre-wrap" : ""}`}
