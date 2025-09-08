@@ -603,6 +603,25 @@ const MyBirthCalendar = () => {
       ) {
         eventTitleClass += " text-moetoRazhdaneDarkGreen"; // Plovdiv events
       }
+      
+      // Create subtitle class with event-specific styling
+      let eventSubtitleClass = "text-sm font-light italic text-center px-3 leading-relaxed ";
+      if (/^https?:\/\/.+/i.test(event.location)) {
+        eventSubtitleClass += "text-moetoRazhdanePurple/70"; // Online events
+      } else if (
+        event.location.toLowerCase().includes("софия") ||
+        event.location.toLowerCase().includes("sofia")
+      ) {
+        eventSubtitleClass += "text-gray-400/70"; // Sofia events
+      } else if (
+        event.location.toLowerCase().includes("пловдив") ||
+        event.location.toLowerCase().includes("plovdiv")
+      ) {
+        eventSubtitleClass += "text-moetoRazhdaneWhite/50"; // Plovdiv events
+      } else {
+        eventSubtitleClass += "text-moetoRazhdaneDarkGreen/70"; // Default
+      }
+      
       return (
         <div
           key={index}
@@ -645,7 +664,7 @@ const MyBirthCalendar = () => {
           {/* Secondary Title - First quoted sentence from description */}
           {getFirstQuotedSentence(event.description) && (
             <div className="mt-1 mx-8 flex w-full justify-center">
-              <div className="text-sm font-light text-moetoRazhdaneDarkGreen/70 italic text-center px-3 leading-relaxed">
+              <div className={eventSubtitleClass}>
                 "{getFirstQuotedSentence(event.description)}"
               </div>
             </div>
@@ -653,19 +672,19 @@ const MyBirthCalendar = () => {
 
           {/* Expandable Description Section */}
           <div
-            className="EventDescription hidden w-full bg-white p-4 text-center font-light text-moetoRazhdaneDarkGreen"
+            className="EventDescription hidden w-full bg-white p-4 text-center font-light text-moetoRazhdaneWhite"
             data-id={event.ID}
           >
             {/* Existing Date Info */}
             <div className="flex items-center gap-2 border-t pt-1">
-              <FaCalendarAlt className="h-4 w-4 text-moetoRazhdaneDarkGreen opacity-75" />
+              <FaCalendarAlt className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
               <div className="EventDescriptionDate">{event.dateOfEvent}</div>
             </div>
             <div className="flex items-center gap-2 pb-1">
-              <FaClock className="h-4 w-4 text-moetoRazhdaneDarkGreen opacity-75" />
+              <FaClock className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
               <div className="EventDescriptionTime">
                 {event.timeStart} - {event.timeEnd}
-                <span className="ml-2 text-sm font-medium text-moetoRazhdaneDarkGreen/70">
+                <span className="ml-2 text-sm font-medium text-moetoRazhdaneWhite/70">
                   (България / EEST)
                 </span>
               </div>
@@ -673,14 +692,14 @@ const MyBirthCalendar = () => {
             <div className="flex items-center gap-2 border-b pb-1">
               {/* Use different icons for online vs physical events */}
               {/^https?:\/\/.+/i.test(event.location) ? (
-                <FaDesktop className="h-4 w-4 text-moetoRazhdaneDarkGreen opacity-75" />
+                <FaDesktop className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
               ) : (
-                <FaMapMarkerAlt className="h-4 w-4 text-moetoRazhdaneDarkGreen opacity-75" />
+                <FaMapMarkerAlt className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
               )}
               <div className="EventDescriptionLocation text-left">
                 {/* Check if location is a URL, show "онлайн събитие", otherwise make it a Google Maps link */}
                 {/^https?:\/\/.+/i.test(event.location) ? (
-                  <span className="text-moetoRazhdaneDarkGreen">
+                  <span className="text-moetoRazhdaneWhite">
                     онлайн събитие в Прегърната
                   </span>
                 ) : (
@@ -688,7 +707,7 @@ const MyBirthCalendar = () => {
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-moetoRazhdaneDarkGreen underline hover:text-moetoRazhdanePurple"
+                    className="text-moetoRazhdaneWhite underline hover:text-moetoRazhdanePurple"
                     onClick={(e) => e.stopPropagation()}
                   >
                     {event.location}
@@ -699,7 +718,7 @@ const MyBirthCalendar = () => {
             {/* Description Button */}
             <button
               onClick={(e) => toggleDescriptionModal(event.ID, e)}
-              className="mt-2 w-full text-center font-light text-moetoRazhdaneDarkGreen hover:text-moetoRazhdanePurple transition-colors duration-200 underline"
+              className="mt-2 w-full text-center font-light text-moetoRazhdaneWhite hover:text-moetoRazhdanePurple transition-colors duration-200 underline"
             >
               Виж повече за събитието...
             </button>
@@ -724,17 +743,8 @@ const MyBirthCalendar = () => {
                       ) : (
                       <div className="flex w-full justify-center">
                       <div className="mt-2 items-center justify-center rounded-2xl border border-moetoRazhdaneWhite bg-moetoRazhdaneYellow p-3 text-center font-rocaTwoThin text-base font-light text-black">
-                        Това е изминало събитие, <br />
-                        <a
-                        href="https://www.instagram.com/embraced.mothersclub/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex transform-gpu items-center justify-center text-stone-900 transition-all duration-300 ease-in-out hover:scale-90 hover:text-moetorazhdanePurple active:scale-75"
-                        onClick={(e) => e.stopPropagation()}
-                        >
-                        виж Instagram <FaInstagram className="ml-1 h-6 w-6" />
-                        </a>
-                      </div>
+                    Изминало събитие <br />
+                  </div>
                       </div>
                       )}
                     </div>
@@ -789,7 +799,7 @@ const MyBirthCalendar = () => {
         />
       )}
 
-      <div className="calendar-container w-full flex-1 font-playfairDisplay lg:w-7/12">
+      <div className="calendar-container w-full flex-1 font-playfairDisplay lg:w-7/12 lg:sticky lg:top-4 lg:self-start lg:max-h-screen lg:overflow-y-auto">
         <div className="calendar-header flex-1 flex-col items-center justify-center font-magnoliaScript">
           <div className="calender-navigation flex items-center justify-center gap-4 p-3 text-center text-6xl">
             <div>
