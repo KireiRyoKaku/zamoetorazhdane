@@ -341,22 +341,14 @@ const MyBirthCalendar = () => {
           // Find the parent event box
           const eventBox = eventDescription.closest(".event-box");
           if (eventBox) {
-            // Use the more reliable scrollIntoView method
+            // Use the more reliable scrollIntoView method with better positioning
             eventBox.scrollIntoView({
               behavior: "smooth",
-              block: "start", // Align the top of the element with the top of the viewport
+              block: "center", // Center the event box in the viewport for better visibility
               inline: "nearest",
             });
-
-            // Add additional offset from top of viewport using scrollBy
-            setTimeout(() => {
-              window.scrollBy({
-                top: -80, // Negative value to move up (offset from top)
-                behavior: "smooth",
-              });
-            }, 200);
           }
-        }, 100); // Increased delay to ensure animation has started
+        }, 200); // Increased delay to ensure description expansion animation has progressed
       } else {
         // Animate out
         eventDescription.classList.remove("opacity-100", "max-h-[700px]");
@@ -859,7 +851,7 @@ const MyBirthCalendar = () => {
               )}
             </div>
           </div>
-          <div className="calender-filter mt-4">
+          <div className="calender-filter mt-4 px-4">
             <div className="flex items-center justify-center gap-4 font-rocaTwoThin text-base">
               <button
                 onClick={() => toggleLocationFilter("sofia")}
@@ -889,7 +881,7 @@ const MyBirthCalendar = () => {
                     : "bg-gray-100 text-moetoRazhdanePurple hover:bg-gray-200"
                 }`}
               >
-                Онлайн събитие 
+                Онлайн събития
               </button>
             </div>
           </div>
