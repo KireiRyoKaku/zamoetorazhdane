@@ -20,6 +20,7 @@ const SubscribeAndPay = ({ onClose }) => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   const [formData, setFormData] = useState({
     event: eventSummary || "",
@@ -261,13 +262,23 @@ const SubscribeAndPay = ({ onClose }) => {
       </h1>
       {/* Event Description at the top */}
       {eventDescription && (
-        <div className={`event-description mt-4 mb-6 rounded-lg p-4 ${getEventTypeStyle()}`}>
-          <h3 className="mb-3 text-lg font-bold text-center">Описание</h3>
-          <div 
-            className="text-center"
-            dangerouslySetInnerHTML={{ __html: eventDescription }}
-          />
-        </div>
+        <button
+          type="button"
+          onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+          className={`event-description mt-4 mb-6 rounded-lg overflow-hidden w-full text-left focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-white transition-all duration-200 hover:opacity-90 ${getEventTypeStyle()}`}
+        >
+          <div className="p-4">
+            <h3 className="text-lg font-bold text-center ">
+              {isDescriptionExpanded ? "Описание" : "Описание..."}
+            </h3>
+            {isDescriptionExpanded && (
+              <div 
+                className="text-left"
+                dangerouslySetInnerHTML={{ __html: eventDescription }}
+              />
+            )}
+          </div>
+        </button>
       )}
       <form
         onSubmit={handleSubmit}
