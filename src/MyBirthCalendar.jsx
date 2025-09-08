@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import SubscribeAndPay from "./SubscribeAndPay";
 import { useNavigate, useLocation } from "react-router-dom";
 import calBgImage from "./assets/pictures/logo-and-text-green-outline.png";
@@ -26,9 +27,52 @@ const MyBirthCalendar = () => {
   const [locationFilter, setLocationFilter] = useState(null); // null, 'sofia', 'plovdiv', or 'online'
   const [animatingCalendar, setAnimatingCalendar] = useState(false);
   const [isLoadingEvents, setIsLoadingEvents] = useState(true); // Add loading state
+  const [modalEventId, setModalEventId] = useState(null); // Track which event modal is open
   const navigate = useNavigate();
   const location = useLocation();
   const apiUrl = import.meta.env.VITE_API_URL; // http://localhost:5174
+
+  // Add function to toggle description modal
+  const toggleDescriptionModal = (eventId, e) => {
+    e.stopPropagation(); // Prevent event bubbling
+    setModalEventId(eventId);
+  };
+
+  // Function to close modal
+  const closeModal = () => {
+    setModalEventId(null);
+  };
+
+  // Function to extract the first sentence in quotes from description
+  const getFirstQuotedSentence = (description) => {
+    if (!description) return '';
+    
+    // Remove HTML tags first
+    const textOnly = description.replace(/<[^>]*>/g, '');
+    
+    // Look for text between quotes (both " and ")
+    const quotedMatch = textOnly.match(/[""]([^"""]+)[""]/) || textOnly.match(/"([^"]+)"/);
+    
+    if (quotedMatch) {
+      return quotedMatch[1].trim();
+    }
+    
+    return '';
+  };
+
+  // Add escape key handler for modal
+  useEffect(() => {
+    const handleEscapeKey = (event) => {
+      if (event.key === 'Escape' && modalEventId) {
+        closeModal();
+      }
+    };
+
+    document.addEventListener('keydown', handleEscapeKey);
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [modalEventId]);
 
   // Move this function INSIDE the component
   const toggleLocationFilter = (location) => {
@@ -559,23 +603,6 @@ const MyBirthCalendar = () => {
       ) {
         eventTitleClass += " text-moetoRazhdaneDarkGreen"; // Plovdiv events
       }
-      let eventDescriptionClass =
-        "EventDescriptionText mt-2 rounded-xl p-4 font-light opacity-85 text-center";
-      if (/^https?:\/\/.+/i.test(event.location)) {
-        eventDescriptionClass += " bg-moetoRazhdanePurple text-white"; // Online event background color
-      } else if (
-        event.location.toLowerCase().includes("пловдив") ||
-        event.location.toLowerCase().includes("plovdiv")
-      ) {
-        eventDescriptionClass += " bg-moetoRazhdaneDarkGreen text-white"; // Plovdiv event background color
-      } else if (
-        event.location.toLowerCase().includes("софия") ||
-        event.location.toLowerCase().includes("sofia")
-      ) {
-        eventDescriptionClass += " bg-moetoRazhdaneLightGreen text-black"; // Sofia event background color - changed to black text
-      } else {
-        eventDescriptionClass += " bg-moetoRazhdaneLightGreen text-black"; // Default background color class - changed to black text
-      }
       return (
         <div
           key={index}
@@ -603,7 +630,7 @@ const MyBirthCalendar = () => {
           </div>
 
           {/* Event Title - Centered */}
-          <div className="mt-2 ml-6 flex w-full justify-center">
+          <div className="mt-2 mx-8 flex w-full justify-center">
             <div
               className={`${eventTitleClass} ${isEventInPast(event) ? "!text-gray-500" : ""} text-center`}
             >
@@ -614,6 +641,15 @@ const MyBirthCalendar = () => {
               </div>
             </div>
           </div>
+
+          {/* Secondary Title - First quoted sentence from description */}
+          {getFirstQuotedSentence(event.description) && (
+            <div className="mt-1 mx-8 flex w-full justify-center">
+              <div className="text-sm font-light text-moetoRazhdaneDarkGreen/70 italic text-center px-3 leading-relaxed">
+                "{getFirstQuotedSentence(event.description)}"
+              </div>
+            </div>
+          )}
 
           {/* Expandable Description Section */}
           <div
@@ -641,7 +677,7 @@ const MyBirthCalendar = () => {
               ) : (
                 <FaMapMarkerAlt className="h-4 w-4 text-moetoRazhdaneDarkGreen opacity-75" />
               )}
-              <div className="EventDescriptionLocation">
+              <div className="EventDescriptionLocation text-left">
                 {/* Check if location is a URL, show "онлайн събитие", otherwise make it a Google Maps link */}
                 {/^https?:\/\/.+/i.test(event.location) ? (
                   <span className="text-moetoRazhdaneDarkGreen">
@@ -660,10 +696,13 @@ const MyBirthCalendar = () => {
                 )}
               </div>
             </div>
-            <div 
-              className={eventDescriptionClass}
-              dangerouslySetInnerHTML={{ __html: event.description }}
-            />
+            {/* Description Button */}
+            <button
+              onClick={(e) => toggleDescriptionModal(event.ID, e)}
+              className="mt-2 w-full text-center font-light text-moetoRazhdaneDarkGreen hover:text-moetoRazhdanePurple transition-colors duration-200 underline"
+            >
+              Виж повече за събитието...
+            </button>
             {/* Only show subscribe button for future events */}
                       {!isEventInPast(event) ? (
                       <div className="flex w-full justify-center">
@@ -723,7 +762,8 @@ const MyBirthCalendar = () => {
   const monthName = currentDate.toLocaleString("bg-BG", { month: "long" });
   const year = currentDate.getFullYear();
   return (
-    <div className="mb-14 mt-4 flex flex-col gap-6 lg:flex-row lg:justify-between">
+    <>
+      <div className="mb-14 mt-4 flex flex-col gap-6 lg:flex-row lg:justify-between">
       {/* Toast notification with drop animation */}
       <div
         className={`toast fixed left-1/2 top-6 z-[9999] w-4/6 -translate-x-1/2 transform transition-all duration-1000 ease-in-out ${
@@ -986,7 +1026,53 @@ const MyBirthCalendar = () => {
           </div>
         </div>
       )}
-    </div>
+      </div>
+
+      {/* Description Modal */}
+      {modalEventId && createPortal(
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+          onClick={closeModal}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100vw',
+            height: '100vh',
+            zIndex: 999999,
+            margin: 0,
+            padding: 0
+          }}
+        >
+          <div
+            className="bg-white rounded-lg p-6 mx-4 max-w-lg w-full max-h-[80vh] overflow-y-auto shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+            style={{ zIndex: 999999 }}
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium text-black">
+                Описание на събитието
+              </h3>
+              <button
+                onClick={closeModal}
+                className="text-gray-500 hover:text-gray-700 text-xl font-bold"
+              >
+                ×
+              </button>
+            </div>
+            <div 
+              className="font-light text-gray-700 text-left"
+              dangerouslySetInnerHTML={{ 
+                __html: events.find(event => event.ID === modalEventId)?.description || '' 
+              }}
+            />
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
   );
 };
 
