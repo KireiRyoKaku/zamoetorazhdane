@@ -43,6 +43,24 @@ const SubscribeAndPay = ({ onClose }) => {
 
   const currentDate = new Date();
 
+  // Function to extract the first sentence in quotes from description
+  const getFirstQuotedSentence = (description) => {
+    if (!description) return "";
+
+    // Remove HTML tags first
+    const textOnly = description.replace(/<[^>]*>/g, "");
+
+    // Look for text between quotes (both " and ")
+    const quotedMatch =
+      textOnly.match(/[""]([^"""]+)[""]/) || textOnly.match(/"([^"]+)"/);
+
+    if (quotedMatch) {
+      return quotedMatch[1].trim();
+    }
+
+    return "";
+  };
+
   // Function to get background color based on event location
   const getEventTypeStyle = () => {
     // Check for Sofia
@@ -269,6 +287,15 @@ const SubscribeAndPay = ({ onClose }) => {
           {eventSummary}
         </p>
 
+        {/* Secondary Title - First quoted sentence from description */}
+        {getFirstQuotedSentence(eventDescription) && (
+          <div className="mt-1 flex w-full justify-center">
+            <div className="px-3 text-center text-base font-light italic leading-relaxed text-moetoRazhdaneWhite">
+              "{getFirstQuotedSentence(eventDescription)}"
+            </div>
+          </div>
+        )}
+
         {/* Event Date, Time and Location - styled like MyBirthCalendar */}
         <div className="mt-4 space-y-2 text-moetoRazhdaneWhite">
           {/* Date */}
@@ -292,9 +319,9 @@ const SubscribeAndPay = ({ onClose }) => {
           <div className="flex items-center justify-center gap-2">
             {/* Use different icons for online vs physical events */}
             {/^https?:\/\/.+/i.test(eventLocation) ? (
-              <FaDesktop className="h-4 w-4 text-text-moetoRazhdaneWhite opacity-75" />
+              <FaDesktop className="text-text-moetoRazhdaneWhite h-4 w-4 opacity-75" />
             ) : (
-              <FaMapMarkerAlt className="h-4 w-4 text-text-moetoRazhdaneWhite opacity-75" />
+              <FaMapMarkerAlt className="text-text-moetoRazhdaneWhite h-4 w-4 opacity-75" />
             )}
             <div className="text-lg font-medium">
               {/* Check if location is a URL, show "онлайн събитие", otherwise make it a Google Maps link */}
