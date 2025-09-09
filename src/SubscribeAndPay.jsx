@@ -4,6 +4,12 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { differenceInHours } from "date-fns";
 import { API_URL } from "../utils/apiConfig.js";
+import {
+  FaCalendarAlt,
+  FaClock,
+  FaMapMarkerAlt,
+  FaDesktop,
+} from "react-icons/fa";
 
 const SubscribeAndPay = ({ onClose }) => {
   const location = useLocation();
@@ -36,11 +42,15 @@ const SubscribeAndPay = ({ onClose }) => {
   });
 
   const currentDate = new Date();
-  
+
   // Function to get background color based on event location
   const getEventTypeStyle = () => {
     // Check for Sofia
-    if (eventLocation && (eventLocation.toLowerCase().includes('софия') || eventLocation.toLowerCase().includes('sofia'))) {
+    if (
+      eventLocation &&
+      (eventLocation.toLowerCase().includes("софия") ||
+        eventLocation.toLowerCase().includes("sofia"))
+    ) {
       return "bg-moetoRazhdaneLightGreen text-black"; // Sofia events - light green
     }
     // Check for Plovdiv (default for subscription events)
@@ -48,51 +58,50 @@ const SubscribeAndPay = ({ onClose }) => {
       return "bg-moetoRazhdaneDarkGreen text-white"; // Plovdiv events - dark green
     }
   };
-  
+
   // Create proper event datetime by combining eventDateLocaleString and eventTime
   const getEventDateTime = () => {
-    if (eventDateLocaleString.includes('T')) {
+    if (eventDateLocaleString.includes("T")) {
       // If it's already an ISO string, use it directly
       return new Date(eventDateLocaleString);
     } else {
       // If it's just a date string, combine with time
       const eventDateTime = new Date(eventDateLocaleString);
       if (eventTime) {
-        const [hours, minutes] = eventTime.split(':').map(Number);
+        const [hours, minutes] = eventTime.split(":").map(Number);
         eventDateTime.setHours(hours, minutes, 0, 0);
       }
       return eventDateTime;
     }
   };
 
-    const priceOneTime = () => {
+  const priceOneTime = () => {
     let difference = differenceInHours(getEventDateTime(), currentDate);
     let basePrice = difference < 72 ? 40 : 35;
     let memberPrice = Math.max(20, basePrice - 10);
     const count = formData.participantCount;
-    
+
     // Calculate member pricing: discount for 1 person + regular price for additional participants
-    const memberTotalPrice = memberPrice + (basePrice * (count - 1));
+    const memberTotalPrice = memberPrice + basePrice * (count - 1);
     const nonMemberTotalPrice = basePrice * count;
-    
+
     return (
       <div className="space-y-2">
         <div className="space-y-1">
           <div className="font-bold text-red-600">
-        {count === 1 ? 
-          `Нормална цена: ${nonMemberTotalPrice} лв.` :
-          `Нормална цена: ${nonMemberTotalPrice} лв. (${basePrice} лв. x ${count})`
-        }
+            {count === 1
+              ? `Редовна такса: ${nonMemberTotalPrice} лв.`
+              : `Редовна такса: ${nonMemberTotalPrice} лв. (${basePrice} лв. x ${count})`}
           </div>
           <div className="font-bold text-green-600">
-        {count === 1 ? 
-          `Цена за членове: ${memberTotalPrice} лв.` :
-          `Цена за членове: ${memberTotalPrice} лв. (${memberPrice} лв. + ${basePrice} лв. x ${count - 1})`
-        }
+            {count === 1
+              ? `С отстъпка за членове на "Прегърната": ${memberTotalPrice} лв.`
+              : `С отстъпка за членове на "Прегърната": ${memberTotalPrice} лв. (${memberPrice} лв. + ${basePrice} лв. x ${count - 1})`}
           </div>
         </div>
         <div className="text-sm text-blue-600">
-          * Правилната цена ще бъде изчислена в потвърдителния имейл според членството ти. Само първия участник може да бъде таксуван като член.
+          * Валидната за теб (според членството) крайна сума ще бъде изчислена в
+          потвърдителния имейл. член.
         </div>
       </div>
     );
@@ -103,29 +112,34 @@ const SubscribeAndPay = ({ onClose }) => {
     let basePrice = difference < 72 ? 40 : 35;
     let memberPrice = Math.max(20, basePrice - 10);
     const count = formData.participantCount;
-    
+
     // Calculate member pricing: discount for 1 person + regular price for additional participants
-    const memberTotalPrice = memberPrice + (basePrice * (count - 1));
+    const memberTotalPrice = memberPrice + basePrice * (count - 1);
     const nonMemberTotalPrice = basePrice * count;
-    
-    return `Еднократно: Нечленове ${nonMemberTotalPrice} лв. ${count > 1 ? `(${basePrice} x ${count})` : ''} | Членове ${memberTotalPrice} лв. ${count > 1 ? `(${memberPrice} + ${basePrice} x ${count - 1})` : ''}`;
+
+    return `Еднократно: Нечленове ${nonMemberTotalPrice} лв. ${count > 1 ? `(${basePrice} x ${count})` : ""} | Членове ${memberTotalPrice} лв. ${count > 1 ? `(${memberPrice} + ${basePrice} x ${count - 1})` : ""}`;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     setIsSubmitting(true);
-    
+
     // Calculate price for submission
     const now = new Date();
     const eventDateTime = new Date(eventDate);
     const difference = (eventDateTime - now) / (1000 * 60 * 60); // hours
-    
+
     let basePrice = difference < 72 ? 40 : 35;
     let calculatedPrice = basePrice * formData.participantCount;
-    
-    const submissionData = { ...formData, event: eventSummary, eventDate, price: calculatedPrice };
-    
+
+    const submissionData = {
+      ...formData,
+      event: eventSummary,
+      eventDate,
+      price: calculatedPrice,
+    };
+
     try {
       console.log("Sending form data:", submissionData);
 
@@ -175,19 +189,19 @@ const SubscribeAndPay = ({ onClose }) => {
     // Name field validation function
     const validateNameField = (inputValue) => {
       // Allow Bulgarian Cyrillic, Latin letters, spaces, hyphens, and apostrophes
-      let filtered = inputValue.replace(/[^а-яА-Яa-zA-Z\s\-']/g, '');
-      
+      let filtered = inputValue.replace(/[^а-яА-Яa-zA-Z\s\-']/g, "");
+
       // Limit to reasonable name length
       if (filtered.length > 50) {
         filtered = filtered.slice(0, 50);
       }
-      
+
       // Prevent multiple consecutive spaces
-      filtered = filtered.replace(/\s{2,}/g, ' ');
-      
+      filtered = filtered.replace(/\s{2,}/g, " ");
+
       // Prevent starting with space or hyphen
-      filtered = filtered.replace(/^[\s\-]/, '');
-      
+      filtered = filtered.replace(/^[\s\-]/, "");
+
       return filtered;
     };
 
@@ -241,7 +255,7 @@ const SubscribeAndPay = ({ onClose }) => {
         participantCount: prev.participantCount - 1,
         // Clear the name of the removed participant
         participantNames: prev.participantNames.map((name, index) =>
-          index === prev.participantCount - 1 ? "" : name
+          index === prev.participantCount - 1 ? "" : name,
         ),
       }));
     }
@@ -254,25 +268,68 @@ const SubscribeAndPay = ({ onClose }) => {
         <p className="EventName py-2 text-center font-magnoliaScript text-5xl text-moetoRazhdaneDarkGreen">
           {eventSummary}
         </p>
-        <p className="Date text-center text-3xl font-bold">
-          на {eventDate}
-          <br />
-          от {eventTime}ч. в {eventLocation}
-        </p>
+
+        {/* Event Date, Time and Location - styled like MyBirthCalendar */}
+        <div className="mt-4 space-y-2 text-moetoRazhdaneWhite">
+          {/* Date */}
+          <div className="flex items-center justify-center gap-2">
+            <FaCalendarAlt className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
+            <div className="text-lg font-medium">{eventDate}</div>
+          </div>
+
+          {/* Time */}
+          <div className="flex items-center justify-center gap-2">
+            <FaClock className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
+            <div className="text-lg font-medium">
+              {eventTime}ч.
+              <span className="ml-2 text-sm font-medium text-moetoRazhdaneWhite/70">
+                (България / EEST)
+              </span>
+            </div>
+          </div>
+
+          {/* Location */}
+          <div className="flex items-center justify-center gap-2">
+            {/* Use different icons for online vs physical events */}
+            {/^https?:\/\/.+/i.test(eventLocation) ? (
+              <FaDesktop className="h-4 w-4 text-text-moetoRazhdaneWhite opacity-75" />
+            ) : (
+              <FaMapMarkerAlt className="h-4 w-4 text-text-moetoRazhdaneWhite opacity-75" />
+            )}
+            <div className="text-lg font-medium">
+              {/* Check if location is a URL, show "онлайн събитие", otherwise make it a Google Maps link */}
+              {/^https?:\/\/.+/i.test(eventLocation) ? (
+                <span className="text-text-moetoRazhdaneWhite">
+                  онлайн събитие в Прегърната
+                </span>
+              ) : (
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventLocation)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-text-moetoRazhdaneWhites underline transition-colors duration-200 hover:text-moetoRazhdanePurple"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {eventLocation}
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
       </h1>
       {/* Event Description at the top */}
       {eventDescription && (
         <button
           type="button"
           onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-          className={`event-description mt-4 mb-6 rounded-lg overflow-hidden w-full text-left focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-white transition-all duration-200 hover:opacity-90 ${getEventTypeStyle()}`}
+          className={`event-description mb-6 mt-4 w-full overflow-hidden rounded-lg text-left transition-all duration-200 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${getEventTypeStyle()}`}
         >
           <div className="p-4">
-            <h3 className="text-lg font-bold text-center ">
+            <h3 className="text-center text-lg font-bold">
               {isDescriptionExpanded ? "Описание" : "Описание..."}
             </h3>
             {isDescriptionExpanded && (
-              <div 
+              <div
                 className="text-left"
                 dangerouslySetInnerHTML={{ __html: eventDescription }}
               />
@@ -304,7 +361,7 @@ const SubscribeAndPay = ({ onClose }) => {
         {/* First participant name field - separate and required */}
         <div>
           <label className="block text-xl font-medium text-gray-700">
-            Име и фамилия (Участник 1) <span className="text-red-500">*</span>
+            Име и фамилия<span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -323,97 +380,106 @@ const SubscribeAndPay = ({ onClose }) => {
           <input
             type="tel"
             name="phone"
-              value={formData.phone}
-              onChange={(e) => {
-                let value = e.target.value;
-                
-                // Only allow digits, plus sign, spaces, parentheses, and hyphens
-                value = value.replace(/[^\d+\s()\-]/g, '');
-                
-                // Limit length to reasonable phone number length
-                if (value.length > 20) {
-                  value = value.slice(0, 20);
-                }
-                
-                // Create a synthetic event with the filtered value
-                const syntheticEvent = {
-                  target: {
-                    name: "phone",
-                    value: value,
-                  },
-                };
-                handleChange(syntheticEvent);
-              }}
-              title="Въведете валиден телефонен номер за връзка"
-              required
-              className="mt-1 block w-full rounded-md border-gray-50 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            />
-          </div>
-        
+            value={formData.phone}
+            onChange={(e) => {
+              let value = e.target.value;
+
+              // Only allow digits, plus sign, spaces, parentheses, and hyphens
+              value = value.replace(/[^\d+\s()\-]/g, "");
+
+              // Limit length to reasonable phone number length
+              if (value.length > 20) {
+                value = value.slice(0, 20);
+              }
+
+              // Create a synthetic event with the filtered value
+              const syntheticEvent = {
+                target: {
+                  name: "phone",
+                  value: value,
+                },
+              };
+              handleChange(syntheticEvent);
+            }}
+            title="Въведете валиден телефонен номер за връзка"
+            required
+            className="mt-1 block w-full rounded-md border-gray-50 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+          />
+        </div>
+
         <div>
           <label className="block text-xl font-medium text-gray-700">
-            Запазване на място
+            Цена
           </label>
           <div className="mt-2 space-y-4">
             {/* Pricing display */}
             <div className="rounded-md border border-gray-100 bg-gray-50 p-3">
-              <span className="text-base text-gray-700">
-                {priceOneTime()}
-              </span>
+              <span className="text-base text-gray-700">{priceOneTime()}</span>
             </div>
-            
+            <div className="text-center text-lg text-moetoRazhdaneWhite">
+              От тук можеш да запишеш и допълнителни участници (ако решиш да
+              доведеш приятелка), но само първият участник може да бъде таксуван
+              като член.
+            </div>
             {/* Add participant button */}
             {formData.participantCount < 5 && (
               <button
                 type="button"
                 onClick={addParticipant}
-                className="w-full bg-moetoRazhdaneDarkGreen text-white text-base font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors duration-200 flex items-center justify-center gap-2"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-moetoRazhdaneDarkGreen px-6 py-3 text-base font-bold text-white transition-colors duration-200 hover:bg-opacity-90"
               >
                 <span>+ добави място</span>
                 <span className="text-lg">({formData.participantCount}/5)</span>
               </button>
             )}
-            
+
             {/* Remove participant button (only show if more than 1) */}
             {formData.participantCount > 1 && (
               <button
                 type="button"
                 onClick={removeParticipant}
-                className="w-full bg-red-600 text-white text-xl font-medium py-2 px-4 rounded-lg hover:bg-red-700 transition-colors duration-200"
+                className="w-full rounded-lg bg-red-600 px-4 py-2 text-xl font-medium text-white transition-colors duration-200 hover:bg-red-700"
               >
                 - премахни място ({formData.participantCount}/5)
               </button>
             )}
-            
+
             {/* Dynamic participant name fields - appear below buttons (additional participants only) */}
             {formData.participantCount > 1 && (
-              <div className="space-y-3 mt-4">
-                {Array.from({ length: formData.participantCount - 1 }, (_, index) => {
-                  const actualIndex = index + 1; // Start from participant 2
-                  return (
-                    <div key={actualIndex} className="bg-white border-2 border-gray-200 p-4 rounded-lg shadow-sm">
-                      <label className="block text-base font-medium text-gray-700 mb-2">
-                        Участник {actualIndex + 1} - Име и фамилия
-                      </label>
-                      <input
-                        type="text"
-                        name={`participantName_${actualIndex}`}
-                        value={formData.participantNames[actualIndex] || ""}
-                        onChange={handleChange}
-                        required={false} // Additional participants are not required
-                        className="block w-full rounded-md border-gray-100 text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen p-3"
-                      />
-                    </div>
-                  );
-                })}
+              <div className="mt-4 space-y-3">
+                {Array.from(
+                  { length: formData.participantCount - 1 },
+                  (_, index) => {
+                    const actualIndex = index + 1; // Start from participant 2
+                    return (
+                      <div
+                        key={actualIndex}
+                        className="rounded-lg border-2 border-gray-200 bg-white p-4 shadow-sm"
+                      >
+                        <label className="mb-2 block text-base font-medium text-gray-700">
+                          Участник {actualIndex + 1} - Име и фамилия
+                        </label>
+                        <input
+                          type="text"
+                          name={`participantName_${actualIndex}`}
+                          value={formData.participantNames[actualIndex] || ""}
+                          onChange={handleChange}
+                          required={false} // Additional participants are not required
+                          className="block w-full rounded-md border-gray-100 p-3 text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
+                        />
+                      </div>
+                    );
+                  },
+                )}
               </div>
             )}
           </div>
         </div>
-        
+
         <div>
           <label className="block text-xl font-medium text-gray-700">
-            От къде научи за &quot;Прегърната&quot;? <span className="text-sm text-gray-500">(до 280 символа)</span>
+            От къде научи за &quot;Прегърната&quot;?{" "}
+            <span className="text-sm text-gray-500">(до 280 символа)</span>
           </label>
           <input
             type="text"
