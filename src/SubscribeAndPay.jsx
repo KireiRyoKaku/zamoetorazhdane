@@ -281,9 +281,9 @@ const SubscribeAndPay = ({ onClose }) => {
 
   return (
     <div className="subscribe-and-pay-container z-50 m-auto mb-16 max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-lg sm:mb-24">
-      <h2 className="text-center text-4xl font-bold">Записване за</h2>
+      <h2 className="text-center text-2xl font-bold">Записване за</h2>
       <h1 className="EventSummary">
-        <p className="EventName py-2 text-center font-magnoliaScript text-5xl text-moetoRazhdaneDarkGreen">
+        <p className="EventName py-2 text-center font-magnoliaScript text-3xl text-moetoRazhdaneDarkGreen">
           {eventSummary}
         </p>
 
