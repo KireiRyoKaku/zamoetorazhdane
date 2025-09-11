@@ -320,9 +320,7 @@ const TermsOfService = () => {
           </div>
         </section>
 
-        <p className="mt-8 border-t pt-4 text-sm text-gray-600">
-          Последна актуализация: {new Date().toLocaleDateString("bg-BG")}
-        </p>
+
       </div>
     </div>
   );

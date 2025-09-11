@@ -325,9 +325,7 @@ const PrivacyPolicy = () => {
             поверителност. Промените влизат в сила от момента на публикуването
             им на уебсайта.
           </p>
-          <p className="mt-2 text-sm text-gray-600">
-            Последна актуализация: {new Date().toLocaleDateString("bg-BG")}
-          </p>
+
         </section>
       </div>
     </div>
