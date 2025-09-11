@@ -43,6 +43,9 @@ const PopupMenu = () => {
     "/about": { text: "ЗА НАС", link: null },
     "/partners": { text: "ПАРТНЬОРИ", link: null },
     "/team": { text: "ЕКИП", link: null },
+    "/privacy-policy": { text: "ПОВЕРИТЕЛНОСТ", link: null },
+    "/terms-of-service": { text: "УСЛОВИЯ", link: null },
+    "/cookie-policy": { text: "БИСКВИТКИ", link: null },
   };
 
   // Determine current route text and link
@@ -145,6 +148,28 @@ const PopupMenu = () => {
                   disabled={location.pathname === "/team"}
                 >
                   ЕКИП
+                </button>
+
+                <hr className="border-gray-300" />
+
+                <button
+                  onClick={() => handleNavigation("/privacy-policy")}
+                  className={`text-left transition-colors duration-1000 ${
+                    [
+                      "/privacy-policy",
+                      "/terms-of-service",
+                      "/cookie-policy",
+                    ].includes(location.pathname)
+                      ? "cursor-default font-black text-moetoRazhdaneYellow"
+                      : "text-black hover:text-black/30"
+                  }`}
+                  disabled={[
+                    "/privacy-policy",
+                    "/terms-of-service",
+                    "/cookie-policy",
+                  ].includes(location.pathname)}
+                >
+                  ПРАВНА ИНФОРМАЦИЯ
                 </button>
               </div>
             </div>

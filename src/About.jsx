@@ -74,7 +74,7 @@ const About = ({ onClose = () => {} }) => {
       <div className="fixed inset-0 z-50 flex items-center justify-center px-5 pb-20 md:px-10 md:pb-0 lg:px-20 xl:px-32 2xl:px-48">
         {/* Updated spacing with negative margin instead of padding */}
         <div
-          className={`max-h-[85vh] w-full max-w-3xl lg:max-w-4xl xl:max-w-5xl transform overflow-y-auto rounded-lg bg-slate-50 p-8 md:p-12 lg:p-16 xl:p-20 text-left font-rocaTwoThin text-xl font-light transition-all duration-300 ease-in-out ${
+          className={`max-h-[85vh] w-full max-w-3xl transform overflow-y-auto rounded-lg bg-slate-50 p-8 text-left font-rocaTwoThin text-xl font-light transition-all duration-300 ease-in-out md:p-12 lg:max-w-4xl lg:p-16 xl:max-w-5xl xl:p-20 ${
             isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
           }`}
           ref={contentRef}
@@ -119,8 +119,8 @@ const About = ({ onClose = () => {} }) => {
                 Тук <b>всяка майка има право на подкрепа</b>, разбиране и
                 позволение за собствените си емоции и нужди. Силно вярваме в
                 това, че <b>когато тя е</b>{" "}
-                <span className="font-magnoliaScript">прегърната</span>, може
-                с повече лекота и радост да бъде до своите деца и семейство.
+                <span className="font-magnoliaScript">прегърната</span>, може с
+                повече лекота и радост да бъде до своите деца и семейство.
                 <br />
               </p>
             </h3>
