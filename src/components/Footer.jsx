@@ -85,18 +85,8 @@ const Footer = () => {
                 <br />
                 embraced.mothersclub@gmail.com
               </p>
-              <p>
-                <strong>Телефон:</strong>
-                <br />
-                +359 XXX XXX XXX
-              </p>
-              <p>
-                <strong>Работно време:</strong>
-                <br />
-                Пон-Пет: 09:00-18:00
-                <br />
-                Съб: 10:00-16:00
-              </p>
+
+
             </div>
           </div>
         </div>

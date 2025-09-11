@@ -25,9 +25,7 @@ const PrivacyPolicy = () => {
             <p>
               <strong>E-Mail:</strong> embraced.mothersclub@gmail.com
             </p>
-            <p>
-              <strong>Телефон:</strong> +359 XXX XXX XXX
-            </p>
+
             <p className="mt-2 text-sm">
               <strong>Забележка:</strong> Не сме назначили длъжностно лице по
               защита на данните (DPO), тъй като не попадаме в задължителните
@@ -252,9 +250,7 @@ const PrivacyPolicy = () => {
                 <strong>Адрес:</strong> гр. София 1592, ул. "Проф. Фритьоф
                 Нансен" 2
               </p>
-              <p>
-                <strong>Телефон:</strong> +359 2 915 3518
-              </p>
+
               <p>
                 <strong>Email:</strong> kzld@cpdp.bg
               </p>
@@ -314,16 +310,8 @@ const PrivacyPolicy = () => {
               <p>
                 <strong>Общ Email:</strong> embraced.mothersclub@gmail.com
               </p>
-              <p>
-                <strong>Телефон:</strong> +359 XXX XXX XXX
-              </p>
-              <p>
-                <strong>Пощенски адрес:</strong> "Прегърната" ЕООД, гр. Пловдив,
-                ул. Пример 123
-              </p>
-              <p>
-                <strong>Работно време:</strong> Пон-Пет: 09:00-18:00
-              </p>
+
+
             </div>
           </div>
         </section>

@@ -73,9 +73,7 @@ const TermsOfService = () => {
               <p>
                 <strong>Електронна поща:</strong> embraced.mothersclub@gmail.com
               </p>
-              <p>
-                <strong>Телефон:</strong> +359 XXX XXX XXX
-              </p>
+
               <p>
                 <strong>Контролен орган:</strong> Комисия за защита на
                 потребителите (КЗП)
@@ -313,15 +311,11 @@ const TermsOfService = () => {
               <p>
                 <strong>Email:</strong> embraced.mothersclub@gmail.com
               </p>
-              <p>
-                <strong>Телефон:</strong> +359 XXX XXX XXX
-              </p>
+
               <p>
                 <strong>Адрес:</strong> гр. Пловдив, ул. Пример 123
               </p>
-              <p>
-                <strong>Работно време:</strong> Пон-Пет: 09:00-18:00
-              </p>
+
             </div>
           </div>
         </section>
