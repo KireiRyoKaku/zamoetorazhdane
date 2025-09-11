@@ -3,14 +3,12 @@ import { createPortal } from "react-dom";
 import SubscribeAndPay from "./SubscribeAndPay";
 import { useNavigate, useLocation } from "react-router-dom";
 import calBgImage from "./assets/pictures/logo-and-text-green-outline.png";
-import heartbeatLogo from "./assets/pictures/HeartbeatLogo.png";
 
 import {
   FaCalendarAlt,
   FaClock,
   FaMapMarkerAlt,
   FaDesktop,
-  FaInstagram,
 } from "react-icons/fa";
 import { API_URL } from "../utils/apiConfig.js";
 
