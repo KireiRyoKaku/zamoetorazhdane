@@ -48,10 +48,7 @@ const TermsOfService = () => {
         </section>
         <section>
           {/* Legal Company Information as required by Electronic Commerce Act */}
-          <div
-            ref={(el) => (elementsRef.current[5] = el)}
-            className="mt-8 rounded-lg bg-gray-50 p-6 opacity-0 transition-opacity duration-1000 ease-in-out"
-          >
+          <div className="mt-8 rounded-lg bg-gray-50 p-6">
             <h4 className="mb-4 text-lg font-semibold text-gray-800">
               Правна информация за организацията
             </h4>
@@ -61,7 +58,7 @@ const TermsOfService = () => {
               </p>
 
               <p>
-                <strong>ЕИК:</strong> 
+                <strong>ЕИК:</strong>
               </p>
               <p>
                 <strong>Регистрация:</strong> Търговски регистър при Агенция по
@@ -92,7 +89,6 @@ const TermsOfService = () => {
             <li>
               Плащането се извършва предварително чрез банков превод или онлайн
             </li>
-            <li>При групови записвания се прилагат специални цени</li>
           </ul>
         </section>
 
