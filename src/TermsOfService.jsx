@@ -59,12 +59,9 @@ const TermsOfService = () => {
               <p>
                 <strong>Пълно наименование:</strong> "Прегърната" ЕООД
               </p>
+
               <p>
-                <strong>Седалище и адрес на управление:</strong> гр. Пловдив,
-                ул. Пример 123
-              </p>
-              <p>
-                <strong>ЕИК:</strong> 123456789
+                <strong>ЕИК:</strong> 
               </p>
               <p>
                 <strong>Регистрация:</strong> Търговски регистър при Агенция по
@@ -311,16 +308,9 @@ const TermsOfService = () => {
               <p>
                 <strong>Email:</strong> embraced.mothersclub@gmail.com
               </p>
-
-              <p>
-                <strong>Адрес:</strong> гр. Пловдив, ул. Пример 123
-              </p>
-
             </div>
           </div>
         </section>
-
-
       </div>
     </div>
   );

@@ -16,9 +16,7 @@ const PrivacyPolicy = () => {
             <p>
               <strong>Наименование:</strong> "Прегърната" ЕООД
             </p>
-            <p>
-              <strong>Адрес:</strong> гр. Пловдив, ул. Пример 123
-            </p>
+
             <p>
               <strong>ЕИК:</strong> 123456789
             </p>
@@ -96,21 +94,10 @@ const PrivacyPolicy = () => {
                 <li>Име и фамилия</li>
                 <li>Електронна поща</li>
                 <li>Телефонен номер</li>
-                <li>Информация за бременността (срок, предишни бременности)</li>
-                <li>Медицинска информация (по желание)</li>
               </ul>
             </div>
 
-            <div className="rounded-lg bg-yellow-50 p-3">
-              <h3 className="font-medium text-gray-800">Технически данни:</h3>
-              <ul className="ml-4 mt-1 list-disc space-y-1 text-sm">
-                <li>IP адрес</li>
-                <li>Тип браузър и версия</li>
-                <li>Операционна система</li>
-                <li>Данни от бисквитки</li>
-                <li>Статистика за използване на сайта</li>
-              </ul>
-            </div>
+
           </div>
         </section>
 
@@ -217,20 +204,7 @@ const PrivacyPolicy = () => {
               </div>
             </div>
 
-            <div className="rounded-lg bg-amber-50 p-4">
-              <h3 className="font-medium text-gray-800">
-                Как да упражните правата си:
-              </h3>
-              <ul className="ml-4 mt-2 list-disc space-y-1 text-sm">
-                <li>Изпратете заявка на embraced.mothersclub@gmail.com</li>
-                <li>Обадете се на +359 XXX XXX XXX</li>
-                <li>
-                  Отговаряме в срок до 30 дни (може да бъде удължен до 60 дни
-                  при сложни случаи)
-                </li>
-                <li>Заявките се разглеждат безплатно</li>
-              </ul>
-            </div>
+
           </div>
         </section>
 
@@ -279,23 +253,11 @@ const PrivacyPolicy = () => {
           </ul>
         </section>
 
-        <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
-            9. Бисквитки
-          </h2>
-          <p>
-            Нашият уебсайт използва бисквитки за подобряване на потребителското
-            изживяване. За подробна информация вижте нашата{" "}
-            <a href="/cookie-policy" className="text-blue-600 underline">
-              Политика за бисквитки
-            </a>
-            .
-          </p>
-        </section>
+
 
         <section>
           <h2 className="mb-3 text-xl font-semibold text-gray-800">
-            10. Контакт
+            9. Контакт
           </h2>
           <div className="rounded-lg bg-gray-50 p-4">
             <p className="mb-2">
@@ -318,7 +280,7 @@ const PrivacyPolicy = () => {
 
         <section>
           <h2 className="mb-3 text-xl font-semibold text-gray-800">
-            11. Промени
+            10. Промени
           </h2>
           <p>
             Запазваме си правото да актуализираме тази политика за

@@ -112,23 +112,11 @@ const Footer = () => {
               >
                 Условия
               </Link>
-              <Link
-                to="/cookie-policy"
-                className="transition-colors hover:text-moetoRazhdaneYellow"
-              >
-                Бисквитки
-              </Link>
+
             </div>
           </div>
 
-          {/* GDPR/Legal Notice */}
-          <div className="mt-4 text-center text-xs text-gray-500 md:text-left">
-            <p>
-              Този сайт използва бисквитки за подобряване на потребителското
-              изживяване. Личните данни се обработват в съответствие с GDPR и
-              българското законодателство.
-            </p>
-          </div>
+
         </div>
       </div>
     </footer>
