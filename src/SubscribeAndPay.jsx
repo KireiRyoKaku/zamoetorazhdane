@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { differenceInHours } from "date-fns";
 import { API_URL } from "../utils/apiConfig.js";
+import LoadingSpinner from "./components/LoadingSpinner";
 import {
   FaCalendarAlt,
   FaClock,
@@ -13,6 +14,7 @@ import {
 const SubscribeAndPay = ({ onClose }) => {
   const location = useLocation();
   const { eventId } = useParams(); // Get the eventId from URL params
+  const [isLoading, setIsLoading] = useState(false);
 
   // State to store event details fetched from API
   const [eventDetails, setEventDetails] = useState({
@@ -59,6 +61,7 @@ const SubscribeAndPay = ({ onClose }) => {
     const fetchEventDetails = async () => {
       if (eventId && (!location.state || !location.state.eventSummary)) {
         try {
+          setIsLoading(true);
           console.log(`Fetching events for ID: ${eventId}`);
 
           // Fetch all events and find the one with matching ID
@@ -106,6 +109,8 @@ const SubscribeAndPay = ({ onClose }) => {
           setError(
             "Не можем да намерим детайли за това събитие. Моля проверете URL адреса или изберете събитие от програмата.",
           );
+        } finally {
+          setIsLoading(false);
         }
       }
     };
@@ -353,277 +358,309 @@ const SubscribeAndPay = ({ onClose }) => {
 
   return (
     <div className="subscribe-and-pay-container z-50 m-auto mb-16 max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-lg sm:mb-24">
-      <h2 className="text-center text-2xl font-bold">Записване за</h2>
-      <h1 className="EventSummary">
-        <p className="EventName py-2 text-center font-magnoliaScript text-3xl text-moetoRazhdaneDarkGreen">
-          {eventSummary}
-        </p>
-
-        {/* Secondary Title - First quoted sentence from description */}
-        {getFirstQuotedSentence(eventDescription) && (
-          <div className="mt-1 flex w-full justify-center">
-            <div className="px-3 text-center text-base font-light italic leading-relaxed text-moetoRazhdaneWhite">
-              "{getFirstQuotedSentence(eventDescription)}"
-            </div>
-          </div>
-        )}
-
-        {/* Event Date, Time and Location - styled like MyBirthCalendar */}
-        <div className="mt-4 space-y-2 text-moetoRazhdaneWhite">
-          {/* Date */}
-          <div className="flex items-center justify-center gap-2">
-            <FaCalendarAlt className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
-            <div className="text-lg font-medium">{eventDate}</div>
-          </div>
-
-          {/* Time */}
-          <div className="flex items-center justify-center gap-2">
-            <FaClock className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
-            <div className="text-lg font-medium">
-              {eventTime}ч.
-              <span className="ml-2 text-sm font-medium text-moetoRazhdaneWhite/70">
-                (България / EEST)
-              </span>
-            </div>
-          </div>
-
-          {/* Location */}
-          <div className="flex items-center justify-center gap-2">
-            {/* Use different icons for online vs physical events */}
-            {/^https?:\/\/.+/i.test(eventLocation) ? (
-              <FaDesktop className="text-text-moetoRazhdaneWhite h-4 w-4 opacity-75" />
-            ) : (
-              <FaMapMarkerAlt className="text-text-moetoRazhdaneWhite h-4 w-4 opacity-75" />
-            )}
-            <div className="text-lg font-medium">
-              {/* Check if location is a URL, show "онлайн събитие", otherwise make it a Google Maps link */}
-              {/^https?:\/\/.+/i.test(eventLocation) ? (
-                <span className="text-text-moetoRazhdaneWhite">
-                  онлайн събитие в Прегърната
-                </span>
-              ) : (
-                <a
-                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventLocation)}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-text-moetoRazhdaneWhites underline transition-colors duration-200 hover:text-moetoRazhdanePurple"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {eventLocation}
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      </h1>
-      {/* Event Description at the top */}
-      {eventDescription && (
-        <button
-          type="button"
-          onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-          className={`event-description mb-6 mt-4 w-full overflow-hidden rounded-lg text-left transition-all duration-200 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${getEventTypeStyle()}`}
-        >
-          <div className="p-4">
-            <h3 className="text-center text-lg font-bold">
-              {isDescriptionExpanded ? "Описание" : "Описание..."}
-            </h3>
-            {isDescriptionExpanded && (
-              <div
-                className="text-left"
-                dangerouslySetInnerHTML={{ __html: eventDescription }}
-              />
-            )}
-          </div>
-        </button>
-      )}
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-3 text-4xl font-normal text-gray-700"
-      >
-        {/* Email field - always show first */}
-        <div>
-          <label className="block text-xl font-medium text-gray-700">
-            E-Mail <span className="text-red-500">*</span>
-          </label>
-          <div className="relative">
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full rounded-md border-gray-100 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-            />
-          </div>
-        </div>
-
-        {/* First participant name field - separate and required */}
-        <div>
-          <label className="block text-xl font-medium text-gray-700">
-            Име и фамилия<span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            name="participantName_0"
-            value={formData.participantNames[0] || ""}
-            onChange={handleChange}
-            required
-            className="mt-1 block w-full rounded-md border-gray-50 text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center py-16">
+          <LoadingSpinner
+            size="lg"
+            color="green"
+            text="Зареждане на събитие..."
           />
+          <p className="mt-4 text-center text-moetoRazhdaneWhite">
+            Моля изчакайте, докато зареждаме детайлите за събитието...
+          </p>
         </div>
+      ) : (
+        <>
+          <h2 className="text-center text-2xl font-bold">Записване за</h2>
+          <h1 className="EventSummary">
+            <p className="EventName py-2 text-center font-magnoliaScript text-3xl text-moetoRazhdaneDarkGreen">
+              {eventSummary}
+            </p>
 
-        <div>
-          <label className="block text-xl font-medium text-gray-700">
-            Телефон за връзка <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="tel"
-            name="phone"
-            value={formData.phone}
-            onChange={(e) => {
-              let value = e.target.value;
-
-              // Only allow digits, plus sign, spaces, parentheses, and hyphens
-              value = value.replace(/[^\d+\s()\-]/g, "");
-
-              // Limit length to reasonable phone number length
-              if (value.length > 20) {
-                value = value.slice(0, 20);
-              }
-
-              // Create a synthetic event with the filtered value
-              const syntheticEvent = {
-                target: {
-                  name: "phone",
-                  value: value,
-                },
-              };
-              handleChange(syntheticEvent);
-            }}
-            title="Въведете валиден телефонен номер за връзка"
-            required
-            className="mt-1 block w-full rounded-md border-gray-50 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-xl font-medium text-gray-700">
-            Цена
-          </label>
-          <div className="mt-2 space-y-4">
-            {/* Pricing display */}
-            <div className="rounded-md border border-gray-100 bg-gray-50 p-3">
-              <span className="text-base text-gray-700">{priceOneTime()}</span>
-            </div>
-            <div className="text-center text-lg text-moetoRazhdaneWhite">
-              От тук можеш да запишеш и допълнителни участници (ако решиш да
-              доведеш приятелка), но само първият участник може да бъде таксуван
-              като член.
-            </div>
-            {/* Add participant button */}
-            {formData.participantCount < 5 && (
-              <button
-                type="button"
-                onClick={addParticipant}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-moetoRazhdaneDarkGreen px-6 py-3 text-base font-bold text-white transition-colors duration-200 hover:bg-opacity-90"
-              >
-                <span>+ добави място</span>
-                <span className="text-lg">({formData.participantCount}/5)</span>
-              </button>
-            )}
-
-            {/* Remove participant button (only show if more than 1) */}
-            {formData.participantCount > 1 && (
-              <button
-                type="button"
-                onClick={removeParticipant}
-                className="w-full rounded-lg bg-red-600 px-4 py-2 text-xl font-medium text-white transition-colors duration-200 hover:bg-red-700"
-              >
-                - премахни място ({formData.participantCount}/5)
-              </button>
-            )}
-
-            {/* Dynamic participant name fields - appear below buttons (additional participants only) */}
-            {formData.participantCount > 1 && (
-              <div className="mt-4 space-y-3">
-                {Array.from(
-                  { length: formData.participantCount - 1 },
-                  (_, index) => {
-                    const actualIndex = index + 1; // Start from participant 2
-                    return (
-                      <div
-                        key={actualIndex}
-                        className="rounded-lg border-2 border-gray-200 bg-white p-4 shadow-sm"
-                      >
-                        <label className="mb-2 block text-base font-medium text-gray-700">
-                          Участник {actualIndex + 1} - Име и фамилия
-                        </label>
-                        <input
-                          type="text"
-                          name={`participantName_${actualIndex}`}
-                          value={formData.participantNames[actualIndex] || ""}
-                          onChange={handleChange}
-                          required={false} // Additional participants are not required
-                          className="block w-full rounded-md border-gray-100 p-3 text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
-                        />
-                      </div>
-                    );
-                  },
-                )}
+            {/* Secondary Title - First quoted sentence from description */}
+            {getFirstQuotedSentence(eventDescription) && (
+              <div className="mt-1 flex w-full justify-center">
+                <div className="px-3 text-center text-base font-light italic leading-relaxed text-moetoRazhdaneWhite">
+                  "{getFirstQuotedSentence(eventDescription)}"
+                </div>
               </div>
             )}
-          </div>
-        </div>
 
-        <div>
-          <label className="block text-xl font-medium text-gray-700">
-            От къде научи за &quot;Прегърната&quot;?{" "}
-            <span className="text-sm text-gray-500">(до 280 символа)</span>
-          </label>
-          <input
-            type="text"
-            name="source"
-            value={formData.source}
-            onChange={(e) => {
-              // Limit to 280 characters
-              const value = e.target.value.slice(0, 280);
-              const syntheticEvent = {
-                target: {
-                  name: "source",
-                  value: value,
-                },
-              };
-              handleChange(syntheticEvent);
-            }}
-            maxLength={280}
-            className="mt-1 block w-full rounded-md border-gray-100 text-xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          />
-          <div className="mt-1 text-right text-sm text-gray-500">
-            {formData.source.length}/280 символа
-          </div>
-        </div>
-        {error && (
-          <div
-            className={`mb-4 rounded-md p-4 ${
-              error.includes("Вече съществува регистарция")
-                ? "border border-amber-200 bg-amber-50 text-amber-700"
-                : "border border-red-200 bg-red-50 text-red-700"
-            }`}
-            dangerouslySetInnerHTML={{ __html: error }}
-          />
-        )}
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className={`rounded-3xl bg-moetoRazhdaneYellow px-6 py-2 font-rocaTwoBold text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30 ${
-              isSubmitting ? "cursor-not-allowed opacity-50" : ""
-            }`}
+            {/* Event Date, Time and Location - styled like MyBirthCalendar */}
+            <div className="mt-4 space-y-2 text-moetoRazhdaneWhite">
+              {/* Date */}
+              <div className="flex items-center justify-center gap-2">
+                <FaCalendarAlt className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
+                <div className="text-lg font-medium">{eventDate}</div>
+              </div>
+
+              {/* Time */}
+              <div className="flex items-center justify-center gap-2">
+                <FaClock className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
+                <div className="text-lg font-medium">
+                  {eventTime}ч.
+                  <span className="ml-2 text-sm font-medium text-moetoRazhdaneWhite/70">
+                    (България / EEST)
+                  </span>
+                </div>
+              </div>
+
+              {/* Location */}
+              <div className="flex items-center justify-center gap-2">
+                {/* Use different icons for online vs physical events */}
+                {/^https?:\/\/.+/i.test(eventLocation) ? (
+                  <FaDesktop className="text-text-moetoRazhdaneWhite h-4 w-4 opacity-75" />
+                ) : (
+                  <FaMapMarkerAlt className="text-text-moetoRazhdaneWhite h-4 w-4 opacity-75" />
+                )}
+                <div className="text-lg font-medium">
+                  {/* Check if location is a URL, show "онлайн събитие", otherwise make it a Google Maps link */}
+                  {/^https?:\/\/.+/i.test(eventLocation) ? (
+                    <span className="text-text-moetoRazhdaneWhite">
+                      онлайн събитие в Прегърната
+                    </span>
+                  ) : (
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventLocation)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-text-moetoRazhdaneWhites underline transition-colors duration-200 hover:text-moetoRazhdanePurple"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {eventLocation}
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </h1>
+        </>
+      )}
+      {!isLoading && (
+        <>
+          {/* Event Description at the top */}
+          {eventDescription && (
+            <button
+              type="button"
+              onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+              className={`event-description mb-6 mt-4 w-full overflow-hidden rounded-lg text-left transition-all duration-200 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${getEventTypeStyle()}`}
+            >
+              <div className="p-4">
+                <h3 className="text-center text-lg font-bold">
+                  {isDescriptionExpanded ? "Описание" : "Описание..."}
+                </h3>
+                {isDescriptionExpanded && (
+                  <div
+                    className="text-left"
+                    dangerouslySetInnerHTML={{ __html: eventDescription }}
+                  />
+                )}
+              </div>
+            </button>
+          )}
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-3 text-4xl font-normal text-gray-700"
           >
-            {isSubmitting ? "ЗАПИСВАНЕ..." : "ЗАПИШИ МЕ!"}
-          </button>
-        </div>
-      </form>
+            {/* Email field - always show first */}
+            <div>
+              <label className="block text-xl font-medium text-gray-700">
+                E-Mail <span className="text-red-500">*</span>
+              </label>
+              <div className="relative">
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="mt-1 block w-full rounded-md border-gray-100 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                />
+              </div>
+            </div>
+
+            {/* First participant name field - separate and required */}
+            <div>
+              <label className="block text-xl font-medium text-gray-700">
+                Име и фамилия<span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                name="participantName_0"
+                value={formData.participantNames[0] || ""}
+                onChange={handleChange}
+                required
+                className="mt-1 block w-full rounded-md border-gray-50 text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xl font-medium text-gray-700">
+                Телефон за връзка <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={(e) => {
+                  let value = e.target.value;
+
+                  // Only allow digits, plus sign, spaces, parentheses, and hyphens
+                  value = value.replace(/[^\d+\s()\-]/g, "");
+
+                  // Limit length to reasonable phone number length
+                  if (value.length > 20) {
+                    value = value.slice(0, 20);
+                  }
+
+                  // Create a synthetic event with the filtered value
+                  const syntheticEvent = {
+                    target: {
+                      name: "phone",
+                      value: value,
+                    },
+                  };
+                  handleChange(syntheticEvent);
+                }}
+                title="Въведете валиден телефонен номер за връзка"
+                required
+                className="mt-1 block w-full rounded-md border-gray-50 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xl font-medium text-gray-700">
+                Цена
+              </label>
+              <div className="mt-2 space-y-4">
+                {/* Pricing display */}
+                <div className="rounded-md border border-gray-100 bg-gray-50 p-3">
+                  <span className="text-base text-gray-700">
+                    {priceOneTime()}
+                  </span>
+                </div>
+                <div className="text-center text-lg text-moetoRazhdaneWhite">
+                  От тук можеш да запишеш и допълнителни участници (ако решиш да
+                  доведеш приятелка), но само първият участник може да бъде
+                  таксуван като член.
+                </div>
+                {/* Add participant button */}
+                {formData.participantCount < 5 && (
+                  <button
+                    type="button"
+                    onClick={addParticipant}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-moetoRazhdaneDarkGreen px-6 py-3 text-base font-bold text-white transition-colors duration-200 hover:bg-opacity-90"
+                  >
+                    <span>+ добави място</span>
+                    <span className="text-lg">
+                      ({formData.participantCount}/5)
+                    </span>
+                  </button>
+                )}
+
+                {/* Remove participant button (only show if more than 1) */}
+                {formData.participantCount > 1 && (
+                  <button
+                    type="button"
+                    onClick={removeParticipant}
+                    className="w-full rounded-lg bg-red-600 px-4 py-2 text-xl font-medium text-white transition-colors duration-200 hover:bg-red-700"
+                  >
+                    - премахни място ({formData.participantCount}/5)
+                  </button>
+                )}
+
+                {/* Dynamic participant name fields - appear below buttons (additional participants only) */}
+                {formData.participantCount > 1 && (
+                  <div className="mt-4 space-y-3">
+                    {Array.from(
+                      { length: formData.participantCount - 1 },
+                      (_, index) => {
+                        const actualIndex = index + 1; // Start from participant 2
+                        return (
+                          <div
+                            key={actualIndex}
+                            className="rounded-lg border-2 border-gray-200 bg-white p-4 shadow-sm"
+                          >
+                            <label className="mb-2 block text-base font-medium text-gray-700">
+                              Участник {actualIndex + 1} - Име и фамилия
+                            </label>
+                            <input
+                              type="text"
+                              name={`participantName_${actualIndex}`}
+                              value={
+                                formData.participantNames[actualIndex] || ""
+                              }
+                              onChange={handleChange}
+                              required={false} // Additional participants are not required
+                              className="block w-full rounded-md border-gray-100 p-3 text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
+                            />
+                          </div>
+                        );
+                      },
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-xl font-medium text-gray-700">
+                От къде научи за &quot;Прегърната&quot;?{" "}
+                <span className="text-sm text-gray-500">(до 280 символа)</span>
+              </label>
+              <input
+                type="text"
+                name="source"
+                value={formData.source}
+                onChange={(e) => {
+                  // Limit to 280 characters
+                  const value = e.target.value.slice(0, 280);
+                  const syntheticEvent = {
+                    target: {
+                      name: "source",
+                      value: value,
+                    },
+                  };
+                  handleChange(syntheticEvent);
+                }}
+                maxLength={280}
+                className="mt-1 block w-full rounded-md border-gray-100 text-xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+              />
+              <div className="mt-1 text-right text-sm text-gray-500">
+                {formData.source.length}/280 символа
+              </div>
+            </div>
+            {error && (
+              <div
+                className={`mb-4 rounded-md p-4 ${
+                  error.includes("Вече съществува регистарция")
+                    ? "border border-amber-200 bg-amber-50 text-amber-700"
+                    : "border border-red-200 bg-red-50 text-red-700"
+                }`}
+                dangerouslySetInnerHTML={{ __html: error }}
+              />
+            )}
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`rounded-3xl bg-moetoRazhdaneYellow px-6 py-2 font-rocaTwoBold text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30 ${
+                  isSubmitting ? "cursor-not-allowed opacity-50" : ""
+                }`}
+              >
+                {isSubmitting ? (
+                  <div className="flex items-center">
+                    <div className="mr-3 h-5 w-5 animate-spin rounded-full border-2 border-white border-b-transparent"></div>
+                    ЗАПИСВАНЕ...
+                  </div>
+                ) : (
+                  "ЗАПИШИ МЕ!"
+                )}
+              </button>
+            </div>
+          </form>
+        </>
+      )}
     </div>
   );
 };
