@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { differenceInHours } from "date-fns";
 import { API_URL } from "../utils/apiConfig.js";
 import {
@@ -13,14 +12,28 @@ import {
 
 const SubscribeAndPay = ({ onClose }) => {
   const location = useLocation();
+  const { eventId } = useParams(); // Get the eventId from URL params
+
+  // State to store event details fetched from API
+  const [eventDetails, setEventDetails] = useState({
+    eventSummary: "",
+    eventDate: "",
+    eventDateLocaleString: "",
+    eventTime: "",
+    eventLocation: "",
+    eventDescription: "",
+    eventType: "",
+  });
+
+  // Extract from location.state (if available) or use event details state
   const {
-    eventSummary = "",
-    eventDate = "",
-    eventDateLocaleString = "",
-    eventTime = "",
-    eventLocation = "",
-    eventDescription = "",
-    eventType = "",
+    eventSummary = eventDetails.eventSummary || "",
+    eventDate = eventDetails.eventDate || "",
+    eventDateLocaleString = eventDetails.eventDateLocaleString || "",
+    eventTime = eventDetails.eventTime || "",
+    eventLocation = eventDetails.eventLocation || "",
+    eventDescription = eventDetails.eventDescription || "",
+    eventType = eventDetails.eventType || "",
   } = location.state || {};
 
   const navigate = useNavigate();
@@ -40,6 +53,65 @@ const SubscribeAndPay = ({ onClose }) => {
     participantCount: 1,
     participantNames: ["", "", "", "", ""], // Names for participants 1-5
   });
+
+  // Fetch event details if accessed via URL with eventId
+  useEffect(() => {
+    const fetchEventDetails = async () => {
+      if (eventId && (!location.state || !location.state.eventSummary)) {
+        try {
+          console.log(`Fetching events for ID: ${eventId}`);
+
+          // Fetch all events and find the one with matching ID
+          const response = await fetch(`${API_URL}/events`);
+
+          if (!response.ok) {
+            throw new Error(`Failed to fetch events: ${response.status}`);
+          }
+
+          const events = await response.json();
+          console.log(
+            `Fetched ${events.length} events, looking for event with ID: ${eventId}`,
+          );
+
+          // Find the matching event by cID
+          const event = events.find((ev) => ev.cID === eventId);
+
+          if (event) {
+            console.log("Found event:", event);
+
+            // Update the event details state
+            setEventDetails({
+              eventSummary: event.summary || "",
+              eventDate: event.dateOfEvent || "",
+              eventDateLocaleString: event.dateOfEventLocaleString || "",
+              eventTime: event.timeStart || "",
+              eventLocation: event.location || "",
+              eventDescription: event.description || "",
+              eventType: event.type || "",
+            });
+
+            // Update form data
+            setFormData((prev) => ({
+              ...prev,
+              event: event.summary || "",
+              eventDate: event.dateOfEvent || "",
+              eventTime: event.timeStart || "",
+              eventLocation: event.location || "",
+            }));
+          } else {
+            throw new Error(`Event with ID ${eventId} not found`);
+          }
+        } catch (error) {
+          console.error("Error fetching event details:", error);
+          setError(
+            "Не можем да намерим детайли за това събитие. Моля проверете URL адреса или изберете събитие от програмата.",
+          );
+        }
+      }
+    };
+
+    fetchEventDetails();
+  }, [eventId, location.state, API_URL]);
 
   const currentDate = new Date();
 
@@ -557,6 +629,10 @@ const SubscribeAndPay = ({ onClose }) => {
 };
 
 SubscribeAndPay.propTypes = {
-  onClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
+};
+
+SubscribeAndPay.defaultProps = {
+  onClose: () => {}, // Default empty function if not provided
 };
 export default SubscribeAndPay;
