@@ -13,7 +13,8 @@
 }
 @font-face {
   font-family: "Magnolia Script";
-  src: url("./assets/fonts/MagnoliaScript/MagnoliaScript.otf") format("opentype");
+  src: url("./assets/fonts/MagnoliaScript/MagnoliaScript.otf")
+    format("opentype");
   font-weight: normal;
   font-style: normal;
 }
@@ -153,7 +154,7 @@ body {
   transform: scale(0.8); /* Shrinks to 80% of its size */
 }
 
-.calendar-cell.highlightedPlovdiv {
+.calendar-cell.highlightedOnPremise {
   @apply bg-moetoRazhdaneDarkGreen;
   cursor: pointer;
   @apply text-moetoRazhdaneWhite;
@@ -161,13 +162,6 @@ body {
   transform: scale(0.8); /* Shrinks to 80% of its size */
 }
 
-.calendar-cell.highlightedSofia {
-  @apply bg-moetoRazhdaneLightGreen;
-  cursor: pointer;
-  @apply text-moetoRazhdaneWhite;
-  border-radius: 50%;
-  transform: scale(0.8); /* Shrinks to 80% of its size */
-}
 .calendar-cell.online {
   @apply bg-moetoRazhdanePurple;
   cursor: pointer;
