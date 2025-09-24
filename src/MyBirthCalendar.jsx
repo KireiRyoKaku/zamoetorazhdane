@@ -669,7 +669,7 @@ const MyBirthCalendar = () => {
                 {/^https?:\/\/.+/i.test(event.location) && (
                   <div className="mb-1 mt-2 px-4 text-center text-sm font-light text-moetoRazhdaneDarkGreen">
                     Събитието е достъпно за членове на клуба. Можеш да се
-                    включиш по всяко време
+                    включиш по всяко време.
                   </div>
                 )}
                 <button

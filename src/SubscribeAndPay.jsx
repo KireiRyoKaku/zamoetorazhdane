@@ -217,7 +217,7 @@ const SubscribeAndPay = ({ onClose }) => {
               : `С отстъпка за членове на "Прегърната": ${memberTotalPrice} лв. (${memberPrice} лв. + ${basePrice} лв. x ${count - 1})`}
             {willPriceIncrease && (
               <span className="ml-2 text-xs font-normal text-gray-500">
-                (по-късно: {Math.max(20, basePrice + 5 - 10)} лв.
+                (по-късно: {Math.max(20, basePrice + 5 - 10)} лв.)
               </span>
             )}
           </div>
