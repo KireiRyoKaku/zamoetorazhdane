@@ -22,7 +22,7 @@ const MyBirthCalendar = () => {
   const [isBlurred, setIsBlurred] = useState(true);
   const [showToast, setShowToast] = useState(false);
   const [errorState, setErrorState] = useState(null); // Add error state
-  const [locationFilter, setLocationFilter] = useState(null); // null, 'sofia', 'plovdiv', or 'online'
+  const [locationFilter, setLocationFilter] = useState(null); // null, 'na-zhivo', or 'online'
   const [animatingCalendar, setAnimatingCalendar] = useState(false);
   const [isLoadingEvents, setIsLoadingEvents] = useState(true); // Add loading state
   const [modalEventId, setModalEventId] = useState(null); // Track which event modal is open
@@ -43,59 +43,44 @@ const MyBirthCalendar = () => {
 
   // Function to extract the first sentence in quotes from description
   const getFirstQuotedSentence = (description) => {
-    if (!description) return '';
-    
+    if (!description) return "";
+
     // Remove HTML tags first
-    const textOnly = description.replace(/<[^>]*>/g, '');
-    
+    const textOnly = description.replace(/<[^>]*>/g, "");
+
     // Look for text between quotes (both " and ")
-    const quotedMatch = textOnly.match(/[""]([^"""]+)[""]/) || textOnly.match(/"([^"]+)"/);
-    
+    const quotedMatch =
+      textOnly.match(/[""]([^"""]+)[""]/) || textOnly.match(/"([^"]+)"/);
+
     if (quotedMatch) {
       return quotedMatch[1].trim();
     }
-    
-    return '';
+
+    return "";
   };
 
   // Add escape key handler for modal
   useEffect(() => {
     const handleEscapeKey = (event) => {
-      if (event.key === 'Escape' && modalEventId) {
+      if (event.key === "Escape" && modalEventId) {
         closeModal();
       }
     };
 
-    document.addEventListener('keydown', handleEscapeKey);
+    document.addEventListener("keydown", handleEscapeKey);
     return () => {
-      document.removeEventListener('keydown', handleEscapeKey);
+      document.removeEventListener("keydown", handleEscapeKey);
     };
   }, [modalEventId]);
 
   // Move this function INSIDE the component
   const toggleLocationFilter = (location) => {
-    // Map Latin to Cyrillic location names
-    const locationMap = {
-      sofia: "sofia",
-      plovdiv: "plovdiv",
-      online: "online",
-    };
-
-    // Convert to Cyrillic for comparison (except online which stays the same)
-    const cyrillicLocationMap = {
-      sofia: "софия",
-      plovdiv: "пловдив", 
-      online: "online",
-    };
-
-    const filterValue = cyrillicLocationMap[location];
-
     // Toggle functionality: if same location is clicked, remove filter
-    if (locationFilter === filterValue) {
+    if (locationFilter === location) {
       setLocationFilter(null);
     } else {
       // Otherwise set the new filter
-      setLocationFilter(filterValue);
+      setLocationFilter(location);
     }
   };
 
@@ -149,7 +134,10 @@ const MyBirthCalendar = () => {
     const eventDate = event.dateOfEvent.split(".");
     const eventMonth = parseInt(eventDate[1]) - 1; // Convert to 0-based month
     const eventYear = parseInt(eventDate[2]); // Get the year
-    return eventMonth === currentDate.getMonth() && eventYear === currentDate.getFullYear();
+    return (
+      eventMonth === currentDate.getMonth() &&
+      eventYear === currentDate.getFullYear()
+    );
   });
 
   // Modified function to conditionally enable next month navigation
@@ -208,20 +196,21 @@ const MyBirthCalendar = () => {
     const today = new Date();
     const currentRealYear = today.getFullYear();
     const currentRealMonth = today.getMonth();
-    
+
     return (
       currentDate.getFullYear() < currentRealYear ||
-      (currentDate.getFullYear() === currentRealYear && currentDate.getMonth() < currentRealMonth)
+      (currentDate.getFullYear() === currentRealYear &&
+        currentDate.getMonth() < currentRealMonth)
     );
   };
 
   const handleClickSubscribeAndPay = (event) => {
     // For online events (URLs), open the link directly
     if (/^https?:\/\/.+/i.test(event.location)) {
-      window.open(event.location, '_blank', 'noopener,noreferrer');
+      window.open(event.location, "_blank", "noopener,noreferrer");
       return;
     }
-    
+
     // For regular events, navigate to subscription page
     navigate(`/subscribe-and-pay/${event.cID}`, {
       state: {
@@ -264,8 +253,8 @@ const MyBirthCalendar = () => {
         const dates = events.map((event) => event.dayOfEvent);
         setInteractableDates(dates);
 
-        const onlineDatesArray = events.filter(
-          (event) => /^https?:\/\/.+/i.test(event.location),
+        const onlineDatesArray = events.filter((event) =>
+          /^https?:\/\/.+/i.test(event.location),
         );
         const onlineDates = onlineDatesArray.map((event) => event.dayOfEvent);
         setInteractableDatesOnline(onlineDates);
@@ -374,7 +363,7 @@ const MyBirthCalendar = () => {
   const isDateInPast = (year, month, day) => {
     // Get current date in Bulgaria timezone (Europe/Sofia)
     const nowInBulgaria = new Date().toLocaleString("en-US", {
-      timeZone: "Europe/Sofia"
+      timeZone: "Europe/Sofia",
     });
     const todayInBulgaria = new Date(nowInBulgaria);
     todayInBulgaria.setHours(0, 0, 0, 0); // Reset time to start of day
@@ -395,10 +384,10 @@ const MyBirthCalendar = () => {
 
       // Create event date in Bulgaria timezone (Europe/Sofia)
       const eventDate = new Date(year, month - 1, day); // month is 0-based in JS
-      
+
       // Get current date in Bulgaria timezone (Europe/Sofia)
       const nowInBulgaria = new Date().toLocaleString("en-US", {
-        timeZone: "Europe/Sofia"
+        timeZone: "Europe/Sofia",
       });
       const todayInBulgaria = new Date(nowInBulgaria);
       todayInBulgaria.setHours(0, 0, 0, 0); // Reset time to start of day
@@ -440,7 +429,7 @@ const MyBirthCalendar = () => {
     const currentMonthOnlineDates = currentMonthEvents
       .filter((event) => /^https?:\/\/.+/i.test(event.location))
       .map((event) => event.dayOfEvent);
-    
+
     console.log("🟣 Online events for current month:", currentMonthOnlineDates);
 
     let dayOfMonth = 1;
@@ -457,26 +446,21 @@ const MyBirthCalendar = () => {
           // Get all events for this day
           const dayEvents = currentMonthEvents.filter(
             (event) => parseInt(event.dayOfEvent) === dayOfMonth,
-          ); // Check if there are events for this day matching filter criteria
-          const isHighlightedSofia = dayEvents.some((event) => {
-            const location = event.location.toLowerCase();
-            return location.includes("софия") || location.includes("sofia");
-          });
+          );
 
-          const isHighlightedPlovdiv = dayEvents.some((event) => {
-            const location = event.location.toLowerCase();
-            return location.includes("пловдив") || location.includes("plovdiv");
+          // Check if there are events for this day matching filter criteria
+          const isHighlightedOnPremise = dayEvents.some((event) => {
+            return !/^https?:\/\/.+/i.test(event.location);
           });
 
           const isHighlightedOnline = dayEvents.some((event) => {
             return /^https?:\/\/.+/i.test(event.location);
           });
 
-          // Apply filtering regardless of event type - MODIFIED LOGIC HERE
+          // Apply filtering - simplified for online vs on-premise
           const shouldHighlight =
             !locationFilter || // No filter - show all events
-            (locationFilter === "софия" && isHighlightedSofia) || // Sofia filter
-            (locationFilter === "пловдив" && isHighlightedPlovdiv) || // Plovdiv filter
+            (locationFilter === "na-zhivo" && isHighlightedOnPremise) || // On-premise filter
             (locationFilter === "online" && isHighlightedOnline); // Online filter
 
           // Online events logic - only highlight if it passes the location filter
@@ -494,8 +478,7 @@ const MyBirthCalendar = () => {
           myCalendar[i + 1].push({
             day: dayOfMonth,
             isHighlighted: shouldHighlight, // Simplified
-            isHighlightedPlovdiv: shouldHighlight && isHighlightedPlovdiv,
-            isHighlightedSofia: shouldHighlight && isHighlightedSofia,
+            isHighlightedOnPremise: shouldHighlight && isHighlightedOnPremise,
             isOnline: isOnline, // Always show online styling if event is online, regardless of filter
             isPast,
             isCurrentDay,
@@ -523,25 +506,17 @@ const MyBirthCalendar = () => {
       const eventDate = event.dateOfEvent.split(".");
       const eventMonth = parseInt(eventDate[1]) - 1; // Convert to 0-based month
       const eventYear = parseInt(eventDate[2]); // Get the year
-      return eventMonth === currentDate.getMonth() && eventYear === currentDate.getFullYear();
+      return (
+        eventMonth === currentDate.getMonth() &&
+        eventYear === currentDate.getFullYear()
+      );
     });
 
     // Apply location filter if set
-    if (locationFilter === "софия") {
-      // Filter for Sofia events (both Cyrillic and Latin) - exclude online events
+    if (locationFilter === "na-zhivo") {
+      // Filter for on-premise events (exclude online events)
       filteredEvents = filteredEvents.filter((event) => {
-        const location = event.location.toLowerCase();
-        const isPhysicalSofia = location.includes("софия") || location.includes("sofia");
-        const isOnlineEvent = /^https?:\/\/.+/i.test(event.location);
-        return isPhysicalSofia && !isOnlineEvent;
-      });
-    } else if (locationFilter === "пловдив") {
-      // Filter for Plovdiv events (both Cyrillic and Latin) - exclude online events  
-      filteredEvents = filteredEvents.filter((event) => {
-        const location = event.location.toLowerCase();
-        const isPhysicalPlovdiv = location.includes("пловдив") || location.includes("plovdiv");
-        const isOnlineEvent = /^https?:\/\/.+/i.test(event.location);
-        return isPhysicalPlovdiv && !isOnlineEvent;
+        return !/^https?:\/\/.+/i.test(event.location);
       });
     } else if (locationFilter === "online") {
       // Filter for online events (URLs in location)
@@ -567,51 +542,26 @@ const MyBirthCalendar = () => {
         "EventCircle flex h-10 w-10 items-center justify-center rounded-full text-xl text-white font-rocaTwoRegular";
       if (/^https?:\/\/.+/i.test(event.location)) {
         eventCircleClass += " bg-moetoRazhdanePurple"; // Online events
-      } else if (
-        event.location.toLowerCase().includes("софия") ||
-        event.location.toLowerCase().includes("sofia")
-      ) {
-        eventCircleClass += " bg-moetoRazhdaneLightGreen"; // Sofia events
-      } else if (
-        event.location.toLowerCase().includes("пловдив") ||
-        event.location.toLowerCase().includes("plovdiv")
-      ) {
-        eventCircleClass += " bg-moetoRazhdaneDarkGreen"; // Plovdiv events
+      } else {
+        eventCircleClass += " bg-moetoRazhdaneDarkGreen"; // On-premise events
       }
       let eventTitleClass =
         "EventTitle relative flex items-center justify-start text-right font-magnoliaScript text-2xl ";
       if (/^https?:\/\/.+/i.test(event.location)) {
         eventTitleClass += " text-moetoRazhdanePurple"; // Online events
-      } else if (
-        event.location.toLowerCase().includes("софия") ||
-        event.location.toLowerCase().includes("sofia")
-      ) {
-        eventTitleClass += " text-moetoRazhdaneLightGreen"; // Sofia events - changed to gray for better readability
-      } else if (
-        event.location.toLowerCase().includes("пловдив") ||
-        event.location.toLowerCase().includes("plovdiv")
-      ) {
-        eventTitleClass += " text-moetoRazhdaneDarkGreen"; // Plovdiv events
+      } else {
+        eventTitleClass += " text-moetoRazhdaneDarkGreen"; // On-premise events
       }
-      
+
       // Create subtitle class with event-specific styling
-      let eventSubtitleClass = "text-sm font-light italic text-center px-3 leading-relaxed ";
+      let eventSubtitleClass =
+        "text-sm font-light italic text-center px-3 leading-relaxed ";
       if (/^https?:\/\/.+/i.test(event.location)) {
         eventSubtitleClass += "text-moetoRazhdanePurple/70"; // Online events
-      } else if (
-        event.location.toLowerCase().includes("софия") ||
-        event.location.toLowerCase().includes("sofia")
-      ) {
-        eventSubtitleClass += "text-gray-400/70"; // Sofia events
-      } else if (
-        event.location.toLowerCase().includes("пловдив") ||
-        event.location.toLowerCase().includes("plovdiv")
-      ) {
-        eventSubtitleClass += "text-moetoRazhdaneWhite/50"; // Plovdiv events
       } else {
-        eventSubtitleClass += "text-moetoRazhdaneDarkGreen/70"; // Default
+        eventSubtitleClass += "text-moetoRazhdaneDarkGreen/70"; // On-premise events
       }
-      
+
       return (
         <div
           key={index}
@@ -639,7 +589,7 @@ const MyBirthCalendar = () => {
           </div>
 
           {/* Event Title - Centered */}
-          <div className="mt-2 mx-8 flex w-full justify-center">
+          <div className="mx-8 mt-2 flex w-full justify-center">
             <div
               className={`${eventTitleClass} ${isEventInPast(event) ? "!text-gray-300" : ""} text-center`}
             >
@@ -653,7 +603,7 @@ const MyBirthCalendar = () => {
 
           {/* Secondary Title - First quoted sentence from description */}
           {getFirstQuotedSentence(event.description) && (
-            <div className="mt-1 mx-8 flex w-full justify-center">
+            <div className="mx-8 mt-1 flex w-full justify-center">
               <div className={eventSubtitleClass}>
                 "{getFirstQuotedSentence(event.description)}"
               </div>
@@ -708,36 +658,45 @@ const MyBirthCalendar = () => {
             {/* Description Button */}
             <button
               onClick={(e) => toggleDescriptionModal(event.ID, e)}
-              className="mt-2 w-full text-center font-light text-moetoRazhdaneWhite hover:text-moetoRazhdanePurple transition-colors duration-200 underline"
+              className="mt-2 w-full text-center font-light text-moetoRazhdaneWhite underline transition-colors duration-200 hover:text-moetoRazhdanePurple"
             >
               Виж повече за събитието...
             </button>
             {/* Only show subscribe button for future events */}
-                      {!isEventInPast(event) ? (
-                      <div className="flex w-full justify-center">
-                      <button
-                        className="mt-2 items-center justify-center rounded-2xl bg-moetoRazhdaneYellow p-3 font-rocaTwoRegular text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
-                        onClick={() => handleClickSubscribeAndPay(event)}
-                      >
-                        <div className="flex flex-col items-center gap-2">
-                        {/^https?:\/\/.+/i.test(event.location) ? (
-                        <>
-                        <span className="text-xl">ВКЛЮЧИ СЕ С HEARTBEAT</span>
-                        </>
-                        ) : (
-                        'ЗАПИШИ СЕ'
-                        )}
-                        </div>
-                      </button>
-                      </div>
-                      ) : (
-                      <div className="flex w-full justify-center">
-                      <div className="mt-2 items-center justify-center rounded-2xl border border-moetoRazhdaneWhite bg-moetoRazhdaneYellow p-3 text-center font-rocaTwoThin text-base font-light text-black">
-                    Изминало събитие <br />
+            {!isEventInPast(event) ? (
+              <div className="flex w-full flex-col items-center justify-center">
+                {/* Show club membership message for online events */}
+                {/^https?:\/\/.+/i.test(event.location) && (
+                  <div className="mb-1 mt-2 px-4 text-center text-sm font-light text-moetoRazhdaneDarkGreen">
+                    Събитието е достъпно за членове на клуба. Можеш да се
+                    включиш по всяко време
                   </div>
-                      </div>
-                      )}
-                    </div>
+                )}
+                <button
+                  className="mt-2 items-center justify-center rounded-2xl bg-moetoRazhdaneYellow p-3 font-rocaTwoRegular text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
+                  onClick={() => handleClickSubscribeAndPay(event)}
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    {/^https?:\/\/.+/i.test(event.location) ? (
+                      <>
+                        <span className="text-xl">
+                          СТАНИ ЧАСТ ОТ ПРЕГЪРНАТА
+                        </span>
+                      </>
+                    ) : (
+                      "ЗАПИШИ СЕ"
+                    )}
+                  </div>
+                </button>
+              </div>
+            ) : (
+              <div className="flex w-full justify-center">
+                <div className="mt-2 items-center justify-center rounded-2xl border border-moetoRazhdaneWhite bg-moetoRazhdaneYellow p-3 text-center font-rocaTwoThin text-base font-light text-black">
+                  Изминало събитие <br />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       );
     });
@@ -749,329 +708,305 @@ const MyBirthCalendar = () => {
     currentDate.getMonth(),
     filteredEventsForCalendar,
   );
-  const filterSofiaEvents = events.filter((event) => {
-    const location = event.location.toLowerCase();
-    return location.includes("софия") || location.includes("sofia");
-  });
-
-  const filterShowPlovdivEvents = events.filter((event) => {
-    const location = event.location.toLowerCase();
-    return location.includes("пловдив") || location.includes("plovdiv");
-  });
 
   const monthName = currentDate.toLocaleString("bg-BG", { month: "long" });
   const year = currentDate.getFullYear();
   return (
     <>
       <div className="mb-14 mt-4 flex flex-col gap-6 lg:flex-row lg:justify-between">
-      {/* Toast notification with drop animation */}
-      <div
-        className={`toast fixed left-1/2 top-6 z-[9999] w-4/6 -translate-x-1/2 transform transition-all duration-1000 ease-in-out ${
-          showToast
-            ? "translate-y-0 opacity-100"
-            : "pointer-events-none -translate-y-16 opacity-0"
-        }`}
-      >
-        <button
-          onClick={() => setShowToast(false)}
-          className="flex items-center rounded bg-moetoRazhdaneYellow p-3 px-3 py-3 text-center font-rocaTwoRegular text-xl font-black text-black shadow-lg hover:backdrop-opacity-70"
-        >
-          Записа се успешно! <br />
-          Провери пощата си.
-        </button>
-      </div>
-
-      {/* Display error message if errorState is set */}
-      {errorState && (
+        {/* Toast notification with drop animation */}
         <div
-          className="error-message rounded-lg bg-red-200 p-4 text-center text-red-700"
-          dangerouslySetInnerHTML={{ __html: errorState.message }}
-        />
-      )}
+          className={`toast fixed left-1/2 top-6 z-[9999] w-4/6 -translate-x-1/2 transform transition-all duration-1000 ease-in-out ${
+            showToast
+              ? "translate-y-0 opacity-100"
+              : "pointer-events-none -translate-y-16 opacity-0"
+          }`}
+        >
+          <button
+            onClick={() => setShowToast(false)}
+            className="flex items-center rounded bg-moetoRazhdaneYellow p-3 px-3 py-3 text-center font-rocaTwoRegular text-xl font-black text-black shadow-lg hover:backdrop-opacity-70"
+          >
+            Записа се успешно! <br />
+            Провери пощата си.
+          </button>
+        </div>
 
-      <div className="calendar-container w-full flex-1 font-playfairDisplay lg:w-7/12 lg:sticky lg:top-4 lg:self-start lg:max-h-screen lg:overflow-y-auto">
-        <div className="calendar-header flex-1 flex-col items-center justify-center font-magnoliaScript">
-          <div className="calender-navigation flex items-center justify-center gap-4 p-3 text-center text-6xl">
-            <div>
-              <button
-                onClick={handlePrevMonth}
-                onTouchEnd={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  handlePrevMonth();
-                }}
-                className="min-h-[44px] min-w-[44px] touch-manipulation transition-all duration-300 hover:opacity-30"
-                style={{ WebkitTapHighlightColor: 'transparent' }}
-              >
-                &lt;
-              </button>
-            </div>
-            <div className="calender-year-month relative flex flex-col items-center justify-center">
-              <div className="calender-year absolute -bottom-12 left-1/2 -z-10 -translate-x-1/2 text-9xl leading-none text-gray-300/50">
-                {year}
-              </div>
-              <div className="calender-month relative z-10 text-5xl font-black text-moetoRazhdanePurple">
-                {monthName}
-              </div>
-            </div>
-            <div>
-              {hasFutureEventsOrIsCurrentCalendarMonth() ? (
+        {/* Display error message if errorState is set */}
+        {errorState && (
+          <div
+            className="error-message rounded-lg bg-red-200 p-4 text-center text-red-700"
+            dangerouslySetInnerHTML={{ __html: errorState.message }}
+          />
+        )}
+
+        <div className="calendar-container w-full flex-1 font-playfairDisplay lg:sticky lg:top-4 lg:max-h-screen lg:w-7/12 lg:self-start lg:overflow-y-auto">
+          <div className="calendar-header flex-1 flex-col items-center justify-center font-magnoliaScript">
+            <div className="calender-navigation flex items-center justify-center gap-4 p-3 text-center text-6xl">
+              <div>
                 <button
-                  onClick={handleNextMonth}
+                  onClick={handlePrevMonth}
                   onTouchEnd={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    handleNextMonth();
+                    handlePrevMonth();
                   }}
                   className="min-h-[44px] min-w-[44px] touch-manipulation transition-all duration-300 hover:opacity-30"
-                  style={{ WebkitTapHighlightColor: 'transparent' }}
+                  style={{ WebkitTapHighlightColor: "transparent" }}
                 >
-                  &gt;
+                  &lt;
                 </button>
-              ) : (
-                <div className="group relative">
-                  <button
-                    disabled
-                    className="cursor-not-allowed opacity-10 transition-all duration-300"
-                >
-                  &gt;
-                  </button>
-                  {/* Tooltip */}
-                  <div className="absolute bottom-full right-1/2 z-50 mb-2 -translate-x-0.5 rounded bg-moetoRazhdaneYellow p-3 text-xs font-black text-black opacity-0 shadow-lg transition-opacity duration-300 group-hover:opacity-100">
-                    <div className="whitespace-nowrap font-rocaTwoRegular">
-                      Няма планирани събития
-                      <br /> за следващите месеци.
-                    </div>
-                    {/* Tooltip arrow */}
-                    <div className="absolute -bottom-2 left-1/2 h-0 w-0 -translate-x-1/2 border-8 border-solid border-moetoRazhdaneYellow border-b-transparent border-l-transparent border-r-transparent"></div>
-                  </div>
+              </div>
+              <div className="calender-year-month relative flex flex-col items-center justify-center">
+                <div className="calender-year absolute -bottom-12 left-1/2 -z-10 -translate-x-1/2 text-9xl leading-none text-gray-300/50">
+                  {year}
                 </div>
-              )}
+                <div className="calender-month relative z-10 text-5xl font-black text-moetoRazhdanePurple">
+                  {monthName}
+                </div>
+              </div>
+              <div>
+                {hasFutureEventsOrIsCurrentCalendarMonth() ? (
+                  <button
+                    onClick={handleNextMonth}
+                    onTouchEnd={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      handleNextMonth();
+                    }}
+                    className="min-h-[44px] min-w-[44px] touch-manipulation transition-all duration-300 hover:opacity-30"
+                    style={{ WebkitTapHighlightColor: "transparent" }}
+                  >
+                    &gt;
+                  </button>
+                ) : (
+                  <div className="group relative">
+                    <button
+                      disabled
+                      className="cursor-not-allowed opacity-10 transition-all duration-300"
+                    >
+                      &gt;
+                    </button>
+                    {/* Tooltip */}
+                    <div className="absolute bottom-full right-1/2 z-50 mb-2 -translate-x-0.5 rounded bg-moetoRazhdaneYellow p-3 text-xs font-black text-black opacity-0 shadow-lg transition-opacity duration-300 group-hover:opacity-100">
+                      <div className="whitespace-nowrap font-rocaTwoRegular">
+                        Няма планирани събития
+                        <br /> за следващите месеци.
+                      </div>
+                      {/* Tooltip arrow */}
+                      <div className="absolute -bottom-2 left-1/2 h-0 w-0 -translate-x-1/2 border-8 border-solid border-moetoRazhdaneYellow border-b-transparent border-l-transparent border-r-transparent"></div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="calender-filter mt-4 px-4">
+              <div className="flex items-center justify-center gap-4 font-rocaTwoThin text-base">
+                <button
+                  onClick={() => toggleLocationFilter("na-zhivo")}
+                  className={`rounded-xl px-2 py-1 font-black transition-all duration-300 ${
+                    locationFilter === "na-zhivo"
+                      ? "bg-moetoRazhdaneDarkGreen text-white ring-2 ring-moetoRazhdaneDarkGreen ring-offset-2"
+                      : "bg-gray-100 text-moetoRazhdaneDarkGreen hover:bg-gray-200"
+                  }`}
+                >
+                  Събития на живо
+                </button>
+                <button
+                  onClick={() => toggleLocationFilter("online")}
+                  className={`rounded-xl px-2 py-1 font-black transition-all duration-300 ${
+                    locationFilter === "online"
+                      ? "bg-moetoRazhdanePurple text-white ring-2 ring-moetoRazhdanePurple ring-offset-2"
+                      : "bg-gray-100 text-moetoRazhdanePurple hover:bg-gray-200"
+                  }`}
+                >
+                  Събития на онлайн
+                </button>
+              </div>
             </div>
           </div>
-          <div className="calender-filter mt-4 px-4">
-            <div className="flex items-center justify-center gap-4 font-rocaTwoThin text-base">
-              <button
-                onClick={() => toggleLocationFilter("sofia")}
-                className={`rounded-xl px-2 py-1 font-black transition-all duration-300 ${
-                  locationFilter === "софия"
-                    ? "bg-moetoRazhdaneLightGreen text-white ring-2 ring-moetoRazhdaneLightGreen ring-offset-2"
-                    : "bg-gray-100 text-moetoRazhdaneLightGreen hover:bg-gray-200"
-                }`}
-              >
-                Събития в София
-              </button>
-              <button
-                onClick={() => toggleLocationFilter("plovdiv")}
-                className={`rounded-xl px-2 py-1 font-black transition-all duration-300 ${
-                  locationFilter === "пловдив"
-                    ? "bg-moetoRazhdaneDarkGreen text-white ring-2 ring-moetoRazhdaneDarkGreen ring-offset-2"
-                    : "bg-gray-100 text-moetoRazhdaneDarkGreen hover:bg-gray-200"
-                }`}
-              >
-                Събития в Пловдив
-              </button>
-              <button
-                onClick={() => toggleLocationFilter("online")}
-                className={`rounded-xl px-2 py-1 font-black transition-all duration-300 ${
-                  locationFilter === "online"
-                    ? "bg-moetoRazhdanePurple text-white ring-2 ring-moetoRazhdanePurple ring-offset-2"
-                    : "bg-gray-100 text-moetoRazhdanePurple hover:bg-gray-200"
-                }`}
-              >
-                Онлайн събития
-              </button>
-            </div>
-          </div>
-        </div>
-        <div className="myCalendar relative mt-2 flex w-full flex-col items-center">
-          <div
-            className="calBackground absolute inset-0 left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2 opacity-10"
-            style={{
-              backgroundImage: `url(${calBgImage})`,
-              backgroundPosition: "center",
-              backgroundRepeat: "no-repeat",
-              backgroundSize: "contain",
-              width: "75%",
-            }}
-          ></div>
-          <table className="w-full max-w-3xl text-center font-rocaTwoRegular">
-            <tbody>
-              {myCalendar.map((week, weekIndex) => (
-                <tr key={weekIndex} className="flex justify-center">
-                  {week.map((day, dayIndex) => (
-                    <td
-                      key={dayIndex}
-                      className={`calendar-cell flex h-12 w-12 items-center justify-center transition-all duration-500 ${
-                        day.isHeader
-                          ? "font-rocaTwoRegular text-xl font-bold text-moetoRazhdaneDarkGreen"
-                          : day.day === ""
-                            ? "pointer-events-none font-light"
-                            : day.isPast &&
-                                !day.isHighlightedSofia &&
-                                !day.isHighlightedPlovdiv &&
-                                !day.isOnline
-                              ? "cursor-pointer opacity-25"
-                              : day.isPast
-                                ? "highlightedPast cursor-pointer opacity-25"
-                                : day.isCurrentDay && day.isOnline
-                                  ? "online ring-bg-sky-200 scale-75 rounded-full ring ring-offset-2"
-                                  : day.isCurrentDay && day.isHighlightedSofia
-                                    ? "highlightedSofia ring-bg-sky-200 scale-75 rounded-full ring ring-offset-2"
+          <div className="myCalendar relative mt-2 flex w-full flex-col items-center">
+            <div
+              className="calBackground absolute inset-0 left-1/2 top-1/2 -z-10 -translate-x-1/2 -translate-y-1/2 opacity-10"
+              style={{
+                backgroundImage: `url(${calBgImage})`,
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "contain",
+                width: "75%",
+              }}
+            ></div>
+            <table className="w-full max-w-3xl text-center font-rocaTwoRegular">
+              <tbody>
+                {myCalendar.map((week, weekIndex) => (
+                  <tr key={weekIndex} className="flex justify-center">
+                    {week.map((day, dayIndex) => (
+                      <td
+                        key={dayIndex}
+                        className={`calendar-cell flex h-12 w-12 items-center justify-center transition-all duration-500 ${
+                          day.isHeader
+                            ? "font-rocaTwoRegular text-xl font-bold text-moetoRazhdaneDarkGreen"
+                            : day.day === ""
+                              ? "pointer-events-none font-light"
+                              : day.isPast &&
+                                  !day.isHighlightedOnPremise &&
+                                  !day.isOnline
+                                ? "cursor-pointer opacity-25"
+                                : day.isPast
+                                  ? "highlightedPast cursor-pointer opacity-25"
+                                  : day.isCurrentDay && day.isOnline
+                                    ? "online ring-bg-sky-200 scale-75 rounded-full ring ring-offset-2"
                                     : day.isCurrentDay &&
-                                        day.isHighlightedPlovdiv
-                                      ? "highlightedPlovdiv ring-bg-sky-200 scale-75 rounded-full ring ring-offset-2"
+                                        day.isHighlightedOnPremise
+                                      ? "highlightedOnPremise ring-bg-sky-200 scale-75 rounded-full ring ring-offset-2"
                                       : day.isCurrentDay
                                         ? "ring-bg-sky-200 scale-75 rounded-full ring ring-offset-2"
                                         : day.isOnline
                                           ? "online cursor-pointer"
-                                          : day.isHighlightedPlovdiv
-                                            ? "highlightedPlovdiv cursor-pointer"
-                                            : day.isHighlightedSofia
-                                              ? "highlightedSofia cursor-pointer"
-                                              : "cursor-default"
-                      } ${
-                        (day.isHighlightedSofia ||
-                          day.isHighlightedPlovdiv ||
-                          day.isOnline) &&
-                        animatingCalendar
-                          ? "animate-event-pop"
-                          : ""
-                      }`}
-                      onClick={() =>
-                        !day.isHeader &&
-                        day.day !== "" &&
-                        (day.isHighlighted || !day.isPast) && // Only allow clicking on days with events or future days
-                        handleDayClick(day.day)
-                      }
-                    >
-                      {day.day}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                                          : day.isHighlightedOnPremise
+                                            ? "highlightedOnPremise cursor-pointer"
+                                            : "cursor-default"
+                        } ${
+                          (day.isHighlightedOnPremise || day.isOnline) &&
+                          animatingCalendar
+                            ? "animate-event-pop"
+                            : ""
+                        }`}
+                        onClick={() =>
+                          !day.isHeader &&
+                          day.day !== "" &&
+                          (day.isHighlighted || !day.isPast) && // Only allow clicking on days with events or future days
+                          handleDayClick(day.day)
+                        }
+                      >
+                        {day.day}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
 
-      <div className="events-container flex w-full flex-col items-center justify-center lg:mt-0 lg:w-5/12">
-        <div className="mb-8 font-magnoliaScript text-4xl font-bold text-moetoRazhdaneDarkGre
-        en">
-          Събития
-        </div>
-        {isLoadingEvents ? (
-          // Loading state
-          <div
-            className={`event-box mb-4 grid w-full sm:w-80 grid-cols-[auto_1fr] grid-rows-[min-content] rounded bg-white p-3 ring-1 ring-moetoRazhdaneDarkGreen transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] ${
-              showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
-            }`}
-          >
-            <div className="flex h-full items-center">
-              <div className="NoEventDay mr-4 flex items-center justify-center">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-moetoRazhdaneYellow font-rocaTwoRegular text-xl text-black">
-                  <div className="animate-spin">⏳</div>
-                </span>
-              </div>
-              <div className="NoEventSummary flex-1 items-center text-balance font-rocaTwoThin text-3xl text-moetoRazhdaneDarkGreen">
-                Зареждане на събитията в програмата. Това може да отнеме
-                известно време. Моля изчакайте.
+        <div className="events-container flex w-full flex-col items-center justify-center lg:mt-0 lg:w-5/12">
+          <div className="text-moetoRazhdaneDarkGre en mb-8 font-magnoliaScript text-4xl font-bold">
+            Събития
+          </div>
+          {isLoadingEvents ? (
+            // Loading state
+            <div
+              className={`event-box mb-4 grid w-full grid-cols-[auto_1fr] grid-rows-[min-content] rounded bg-white p-3 ring-1 ring-moetoRazhdaneDarkGreen transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] sm:w-80 ${
+                showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
+              }`}
+            >
+              <div className="flex h-full items-center">
+                <div className="NoEventDay mr-4 flex items-center justify-center">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-moetoRazhdaneYellow font-rocaTwoRegular text-xl text-black">
+                    <div className="animate-spin">⏳</div>
+                  </span>
+                </div>
+                <div className="NoEventSummary flex-1 items-center text-balance font-rocaTwoThin text-3xl text-moetoRazhdaneDarkGreen">
+                  Зареждане на събитията в програмата. Това може да отнеме
+                  известно време. Моля изчакайте.
+                </div>
               </div>
             </div>
-          </div>
-        ) : currentMonthEvents.length > 0 ? (
-          createEventList()
-        ) : (
-          // No events state (only shown after loading is complete)
+          ) : currentMonthEvents.length > 0 ? (
+            createEventList()
+          ) : (
+            // No events state (only shown after loading is complete)
+            <div
+              className={`event-box mb-4 grid w-full grid-cols-[auto_1fr] grid-rows-[min-content] rounded bg-white p-3 ring-1 ring-moetoRazhdaneDarkGreen transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] sm:w-80 ${
+                showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
+              }`}
+            >
+              <div className="flex h-full items-center">
+                <div className="NoEventDay mr-4 flex items-center justify-center">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-moetoRazhdaneDarkGreen font-rocaTwoRegular text-xl text-white">
+                    <div className="mb-2">
+                      {isCurrentMonthInPast() ? "📅" : "😿"}
+                    </div>
+                  </span>
+                </div>
+                <div className="NoEventSummary flex-1 items-center text-balance font-rocaTwoThin text-3xl text-moetoRazhdaneDarkGreen">
+                  {isCurrentMonthInPast()
+                    ? // Past month message
+                      locationFilter
+                      ? `Няма събития ${locationFilter === "na-zhivo" ? "на живо" : "онлайн"} за този месец в миналото.`
+                      : "Няма записани събития за този месец в миналото."
+                    : // Future month message
+                      locationFilter
+                      ? `Няма събития ${locationFilter === "na-zhivo" ? "на живо" : "онлайн"} за този месец.`
+                      : "Все още няма събития за този месец. Проверете скоро отново!"}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        {ShowSubscribeAndPay && (
           <div
-            className={`event-box mb-4 grid w-full sm:w-80 grid-cols-[auto_1fr] grid-rows-[min-content] rounded bg-white p-3 ring-1 ring-moetoRazhdaneDarkGreen transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] ${
-              showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
+            className={`fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-0 transition-all duration-300 ${
+              isBlurred ? "opacity-0" : "opacity-100"
             }`}
           >
-            <div className="flex h-full items-center">
-              <div className="NoEventDay mr-4 flex items-center justify-center">
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-moetoRazhdaneDarkGreen font-rocaTwoRegular text-xl text-white">
-                  <div className="mb-2">{isCurrentMonthInPast() ? "📅" : "😿"}</div>
-                </span>
-              </div>
-              <div className="NoEventSummary flex-1 items-center text-balance font-rocaTwoThin text-3xl text-moetoRazhdaneDarkGreen">
-                {isCurrentMonthInPast() ? (
-                  // Past month message
-                  locationFilter
-                    ? `Няма събития ${locationFilter === "софия" ? "в София" : locationFilter === "пловдив" ? "в Пловдив" : "онлайн"} за този месец в миналото.`
-                    : "Няма записани събития за този месец в миналото."
-                ) : (
-                  // Future month message  
-                  locationFilter
-                    ? `Няма събития ${locationFilter === "софия" ? "в София" : locationFilter === "пловдив" ? "в Пловдив" : "онлайн"} за този месец.`
-                    : "Все още няма събития за този месец. Проверете скоро отново!"
-                )}
-              </div>
+            <div
+              className={`font-montserrat max-w-full rounded bg-slate-50 p-10 transition-all duration-300 ${
+                isBlurred ? "scale-95 blur-md" : "scale-100 blur-0"
+              }`}
+            >
+              <SubscribeAndPay onClose={() => setShowSubscribeAndPay(false)} />
             </div>
           </div>
         )}
       </div>
-      {ShowSubscribeAndPay && (
-        <div
-          className={`fixed left-0 top-0 z-50 flex h-full w-full items-center justify-center bg-black bg-opacity-0 transition-all duration-300 ${
-            isBlurred ? "opacity-0" : "opacity-100"
-          }`}
-        >
-          <div
-            className={`font-montserrat max-w-full rounded bg-slate-50 p-10 transition-all duration-300 ${
-              isBlurred ? "scale-95 blur-md" : "scale-100 blur-0"
-            }`}
-          >
-            <SubscribeAndPay onClose={() => setShowSubscribeAndPay(false)} />
-          </div>
-        </div>
-      )}
-      </div>
 
       {/* Description Modal */}
-      {modalEventId && createPortal(
-        <div
-          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-          onClick={closeModal}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            width: '100vw',
-            height: '100vh',
-            zIndex: 999999,
-            margin: 0,
-            padding: 0
-          }}
-        >
+      {modalEventId &&
+        createPortal(
           <div
-            className="bg-white rounded-lg p-6 mx-4 max-w-lg w-full max-h-[80vh] overflow-y-auto shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-            style={{ zIndex: 999999 }}
+            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+            onClick={closeModal}
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              width: "100vw",
+              height: "100vh",
+              zIndex: 999999,
+              margin: 0,
+              padding: 0,
+            }}
           >
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-black">
-                Описание на събитието
-              </h3>
-              <button
-                onClick={closeModal}
-                className="text-gray-500 hover:text-gray-700 text-xl font-bold"
-              >
-                ×
-              </button>
+            <div
+              className="mx-4 max-h-[80vh] w-full max-w-lg overflow-y-auto rounded-lg bg-white p-6 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+              style={{ zIndex: 999999 }}
+            >
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="text-lg font-medium text-black">
+                  Описание на събитието
+                </h3>
+                <button
+                  onClick={closeModal}
+                  className="text-xl font-bold text-gray-500 hover:text-gray-700"
+                >
+                  ×
+                </button>
+              </div>
+              <div
+                className="text-left font-light text-gray-700"
+                dangerouslySetInnerHTML={{
+                  __html:
+                    events.find((event) => event.ID === modalEventId)
+                      ?.description || "",
+                }}
+              />
             </div>
-            <div 
-              className="font-light text-gray-700 text-left"
-              dangerouslySetInnerHTML={{ 
-                __html: events.find(event => event.ID === modalEventId)?.description || '' 
-              }}
-            />
-          </div>
-        </div>,
-        document.body
-      )}
+          </div>,
+          document.body,
+        )}
     </>
   );
 };
