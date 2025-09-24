@@ -42,6 +42,8 @@ const SubscribeAndPay = ({ onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [showParticipantInfoPopup, setShowParticipantInfoPopup] =
+    useState(false);
 
   const [formData, setFormData] = useState({
     event: eventSummary || "",
@@ -180,23 +182,49 @@ const SubscribeAndPay = ({ onClose }) => {
     const memberTotalPrice = memberPrice + basePrice * (count - 1);
     const nonMemberTotalPrice = basePrice * count;
 
+    // Calculate hours until price increases (if applicable)
+    const hoursUntilIncrease = Math.max(0, difference - 72);
+    const daysUntilIncrease = Math.ceil(hoursUntilIncrease / 24);
+    const willPriceIncrease = difference > 72;
+
     return (
       <div className="space-y-2">
+        {/* Price increase warning - only show if price will increase */}
+        {willPriceIncrease && (
+          <div className="rounded-md border border-gray-200 bg-gray-50 p-2">
+            <p className="text-base text-gray-600">
+              💡Таксата ще се увеличи с 5 лв. след {daysUntilIncrease}{" "}
+              {daysUntilIncrease === 1 ? "ден" : "дни"} (72 часа преди
+              събитието)
+            </p>
+          </div>
+        )}
+
         <div className="space-y-1">
-          <div className="font-bold text-red-600">
+          <div className="font-bold text-moetoRazhdanePurple">
             {count === 1
               ? `Редовна такса: ${nonMemberTotalPrice} лв.`
               : `Редовна такса: ${nonMemberTotalPrice} лв. (${basePrice} лв. x ${count})`}
+            {willPriceIncrease && (
+              <span className="ml-2 text-xs font-normal text-gray-500">
+                (по-късно: {basePrice + 5} лв.)
+              </span>
+            )}
           </div>
-          <div className="font-bold text-green-600">
+          <div className="font-bold text-moetoRazhdaneWhite">
             {count === 1
               ? `С отстъпка за членове на "Прегърната": ${memberTotalPrice} лв.`
               : `С отстъпка за членове на "Прегърната": ${memberTotalPrice} лв. (${memberPrice} лв. + ${basePrice} лв. x ${count - 1})`}
+            {willPriceIncrease && (
+              <span className="ml-2 text-xs font-normal text-gray-500">
+                (по-късно: {Math.max(20, basePrice + 5 - 10)} лв.
+              </span>
+            )}
           </div>
         </div>
-        <div className="text-sm text-blue-600">
+        <div className="text-sm text-moetoRazhdaneWhite">
           * Валидната за теб (според членството) крайна сума ще бъде изчислена в
-          потвърдителния имейл. член.
+          потвърдителния имейл.
         </div>
       </div>
     );
@@ -335,6 +363,11 @@ const SubscribeAndPay = ({ onClose }) => {
   // Function to add another participant
   const addParticipant = () => {
     if (formData.participantCount < 5) {
+      // Check if we're adding the first additional participant (going from 1 to 2)
+      if (formData.participantCount === 1) {
+        setShowParticipantInfoPopup(true);
+      }
+
       setFormData((prev) => ({
         ...prev,
         participantCount: prev.participantCount + 1,
@@ -342,6 +375,7 @@ const SubscribeAndPay = ({ onClose }) => {
     }
   };
 
+  // Function to remove a participant
   // Function to remove a participant
   const removeParticipant = () => {
     if (formData.participantCount > 1) {
@@ -387,18 +421,18 @@ const SubscribeAndPay = ({ onClose }) => {
             )}
 
             {/* Event Date, Time and Location - styled like MyBirthCalendar */}
-            <div className="mt-4 space-y-2 text-moetoRazhdaneWhite">
+            <div className="mt-4 space-y-0 text-moetoRazhdaneWhite">
               {/* Date */}
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center gap-2 border-t pt-1">
                 <FaCalendarAlt className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
-                <div className="text-lg font-medium">{eventDate}</div>
+                <div className="EventDescriptionDate">{eventDate}</div>
               </div>
 
               {/* Time */}
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center gap-2 pb-1">
                 <FaClock className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
-                <div className="text-lg font-medium">
-                  {eventTime}ч.
+                <div className="EventDescriptionTime">
+                  {eventTime}
                   <span className="ml-2 text-sm font-medium text-moetoRazhdaneWhite/70">
                     (България / EEST)
                   </span>
@@ -406,17 +440,17 @@ const SubscribeAndPay = ({ onClose }) => {
               </div>
 
               {/* Location */}
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center gap-2 border-b pb-1">
                 {/* Use different icons for online vs physical events */}
                 {/^https?:\/\/.+/i.test(eventLocation) ? (
-                  <FaDesktop className="text-text-moetoRazhdaneWhite h-4 w-4 opacity-75" />
+                  <FaDesktop className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
                 ) : (
-                  <FaMapMarkerAlt className="text-text-moetoRazhdaneWhite h-4 w-4 opacity-75" />
+                  <FaMapMarkerAlt className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
                 )}
-                <div className="text-lg font-medium">
+                <div className="EventDescriptionLocation text-left">
                   {/* Check if location is a URL, show "онлайн събитие", otherwise make it a Google Maps link */}
                   {/^https?:\/\/.+/i.test(eventLocation) ? (
-                    <span className="text-text-moetoRazhdaneWhite">
+                    <span className="text-moetoRazhdaneWhite">
                       онлайн събитие в Прегърната
                     </span>
                   ) : (
@@ -424,7 +458,7 @@ const SubscribeAndPay = ({ onClose }) => {
                       href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventLocation)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-text-moetoRazhdaneWhites underline transition-colors duration-200 hover:text-moetoRazhdanePurple"
+                      className="text-moetoRazhdaneWhite underline transition-colors duration-200 hover:text-moetoRazhdanePurple"
                       onClick={(e) => e.stopPropagation()}
                     >
                       {eventLocation}
@@ -447,7 +481,9 @@ const SubscribeAndPay = ({ onClose }) => {
             >
               <div className="p-4">
                 <h3 className="text-center text-lg font-bold">
-                  {isDescriptionExpanded ? "Описание" : "Описание..."}
+                  {isDescriptionExpanded
+                    ? "Описание"
+                    : "Виж повече за събитето..."}
                 </h3>
                 {isDescriptionExpanded && (
                   <div
@@ -474,7 +510,7 @@ const SubscribeAndPay = ({ onClose }) => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="mt-1 block w-full rounded-md border-gray-100 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                  className="mt-1 block w-full rounded-md border text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
                 />
               </div>
             </div>
@@ -490,7 +526,7 @@ const SubscribeAndPay = ({ onClose }) => {
                 value={formData.participantNames[0] || ""}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full rounded-md border-gray-50 text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
+                className="mt-1 block w-full rounded-md border text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
               />
             </div>
 
@@ -524,14 +560,11 @@ const SubscribeAndPay = ({ onClose }) => {
                 }}
                 title="Въведете валиден телефонен номер за връзка"
                 required
-                className="mt-1 block w-full rounded-md border-gray-50 text-base shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
               />
             </div>
 
             <div>
-              <label className="block text-xl font-medium text-gray-700">
-                Цена
-              </label>
               <div className="mt-2 space-y-4">
                 {/* Pricing display */}
                 <div className="rounded-md border border-gray-100 bg-gray-50 p-3">
@@ -539,11 +572,55 @@ const SubscribeAndPay = ({ onClose }) => {
                     {priceOneTime()}
                   </span>
                 </div>
-                <div className="text-center text-lg text-moetoRazhdaneWhite">
-                  От тук можеш да запишеш и допълнителни участници (ако решиш да
-                  доведеш приятелка), но само първият участник може да бъде
-                  таксуван като член.
-                </div>
+
+                {/* Simple notification popup - appears only after adding first additional participant */}
+                {showParticipantInfoPopup && (
+                  <div className="rounded-lg border-l-4 border-moetoRazhdaneDarkGreen bg-moetoRazhdaneLightGreen p-4 shadow-md">
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0">
+                        <svg
+                          className="h-5 w-5 text-moetoRazhdaneDarkGreen"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                      <div className="ml-3 flex-1">
+                        <div className="text-sm font-medium text-moetoRazhdaneWhite">
+                          От тук можеш да запишеш и допълнителни участници (ако
+                          решиш да доведеш приятелка), но само първият участник
+                          може да бъде таксуван като член.
+                        </div>
+                      </div>
+                      <div className="ml-auto pl-3">
+                        <button
+                          type="button"
+                          className="inline-flex rounded-md bg-moetoRazhdaneLightGreen text-moetoRazhdaneWhite hover:text-moetoRazhdaneDarkGreen focus:outline-none focus:ring-2 focus:ring-moetoRazhdaneDarkGreen focus:ring-offset-2 focus:ring-offset-moetoRazhdaneLightGreen"
+                          onClick={() => setShowParticipantInfoPopup(false)}
+                        >
+                          <span className="sr-only">Затвори</span>
+                          <svg
+                            className="h-5 w-5"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* Add participant button */}
                 {formData.participantCount < 5 && (
                   <button
@@ -555,6 +632,28 @@ const SubscribeAndPay = ({ onClose }) => {
                     <span className="text-lg">
                       ({formData.participantCount}/5)
                     </span>
+                    {/* Information icon button inside the add button */}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent triggering the parent button
+                        setShowParticipantInfoPopup(true);
+                      }}
+                      className="flex rounded-full bg-white bg-opacity-20 p-1 transition-colors duration-200 hover:bg-opacity-30"
+                      title="Информация за допълнителни участници"
+                    >
+                      <svg
+                        className="h-4 w-4 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
                   </button>
                 )}
 
@@ -579,7 +678,7 @@ const SubscribeAndPay = ({ onClose }) => {
                         return (
                           <div
                             key={actualIndex}
-                            className="rounded-lg border-2 border-gray-200 bg-white p-4 shadow-sm"
+                            className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
                           >
                             <label className="mb-2 block text-base font-medium text-gray-700">
                               Участник {actualIndex + 1} - Име и фамилия
@@ -624,7 +723,7 @@ const SubscribeAndPay = ({ onClose }) => {
                   handleChange(syntheticEvent);
                 }}
                 maxLength={280}
-                className="mt-1 block w-full rounded-md border-gray-100 text-xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block w-full rounded-md border text-xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
               <div className="mt-1 text-right text-sm text-gray-500">
                 {formData.source.length}/280 символа
