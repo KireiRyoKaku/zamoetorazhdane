@@ -819,7 +819,7 @@ const MyBirthCalendar = () => {
                       : "bg-gray-100 text-moetoRazhdanePurple hover:bg-gray-200"
                   }`}
                 >
-                  Събития на онлайн
+                  Онлайн събития
                 </button>
               </div>
             </div>
