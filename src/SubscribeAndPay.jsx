@@ -187,15 +187,26 @@ const SubscribeAndPay = ({ onClose }) => {
     const daysUntilIncrease = Math.ceil(hoursUntilIncrease / 24);
     const willPriceIncrease = difference > 72;
 
+    // Calculate the actual date when price will increase (72 hours before event)
+    const priceIncreaseDate = new Date(getEventDateTime());
+    priceIncreaseDate.setHours(priceIncreaseDate.getHours() - 72);
+    const priceIncreaseDateString = priceIncreaseDate.toLocaleDateString(
+      "bg-BG",
+      {
+        day: "numeric",
+        month: "numeric",
+        year: "numeric",
+      },
+    );
+
     return (
       <div className="space-y-2">
         {/* Price increase warning - only show if price will increase */}
         {willPriceIncrease && (
           <div className="rounded-md border border-gray-200 bg-gray-50 p-2">
             <p className="text-base text-gray-600">
-              💡Таксата ще се увеличи с 5 лв. след {daysUntilIncrease}{" "}
-              {daysUntilIncrease === 1 ? "ден" : "дни"} (72 часа преди
-              събитието)
+              💡Таксата ще се увеличи с 5 лв. на {priceIncreaseDateString} (72
+              часа преди събитието)
             </p>
           </div>
         )}
