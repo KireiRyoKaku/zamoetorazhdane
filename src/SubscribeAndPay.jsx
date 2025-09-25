@@ -10,6 +10,7 @@ import {
   FaMapMarkerAlt,
   FaDesktop,
 } from "react-icons/fa";
+import { p } from "framer-motion/client";
 
 const SubscribeAndPay = ({ onClose }) => {
   const location = useLocation();
@@ -204,9 +205,12 @@ const SubscribeAndPay = ({ onClose }) => {
         {/* Price increase warning - only show if price will increase */}
         {willPriceIncrease && (
           <div className="rounded-md border border-gray-200 bg-gray-50 p-2">
-            <p className="text-base text-gray-600">
-              💡Таксата ще се увеличи с 5 лв. на {priceIncreaseDateString} (72
-              часа преди събитието)
+            <p className="text-center text-base text-gray-600">
+              💡Таксата ще се увеличи в последните 3 дни преди преди събитието,
+              на{" "}
+            </p>
+            <p className="text-center">
+              <b>{priceIncreaseDateString}</b>
             </p>
           </div>
         )}
@@ -218,7 +222,7 @@ const SubscribeAndPay = ({ onClose }) => {
               : `Редовна такса: ${nonMemberTotalPrice} лв. (${basePrice} лв. x ${count})`}
             {willPriceIncrease && (
               <span className="ml-2 text-xs font-normal text-gray-500">
-                (по-късно: {basePrice + 5} лв.)
+                (или {(basePrice + 5) * count} лв. при късно запсиване)
               </span>
             )}
           </div>
@@ -227,15 +231,25 @@ const SubscribeAndPay = ({ onClose }) => {
               ? `С отстъпка за членове на "Прегърната": ${memberTotalPrice} лв.`
               : `С отстъпка за членове на "Прегърната": ${memberTotalPrice} лв. (${memberPrice} лв. + ${basePrice} лв. x ${count - 1})`}
             {willPriceIncrease && (
-              <span className="ml-2 text-xs font-normal text-gray-500">
-                (по-късно: {Math.max(20, basePrice + 5 - 10)} лв.)
-              </span>
+              <p>
+                <span className="ml-2 text-xs font-normal text-gray-500">
+                  (или{" "}
+                  {Math.max(20, basePrice + 5 - 10) +
+                    (basePrice + 5) * (count - 1)}{" "}
+                  лв. при късно запсиване)
+                </span>
+              </p>
+            )}
+            {count > 1 && (
+              <div className="mt-1 text-sm font-normal text-moetoRazhdaneWhite">
+                * само първият участник може да бъде таксуван като член
+              </div>
             )}
           </div>
         </div>
         <div className="text-sm text-moetoRazhdaneWhite">
-          * Валидната за теб (според членството) крайна сума ще бъде изчислена в
-          потвърдителния имейл.
+          * Валидната за теб крайна сума ще бъде изчислена според членството ти
+          в потвърдителния имейл.
         </div>
       </div>
     );
@@ -604,8 +618,7 @@ const SubscribeAndPay = ({ onClose }) => {
                       <div className="ml-3 flex-1">
                         <div className="text-sm font-medium text-moetoRazhdaneWhite">
                           От тук можеш да запишеш и допълнителни участници (ако
-                          решиш да доведеш приятелка), но само първият участник
-                          може да бъде таксуван като член.
+                          решиш да доведеш приятелка).
                         </div>
                       </div>
                       <div className="ml-auto pl-3">
