@@ -297,6 +297,39 @@ app.post("/submit-form", async (req, res) => {
     let basePrice = hoursUntilEvent < 72 ? 40 : 35; // Late: 40 lv, On-time: 35 lv
     let finalPriceForSheets;
 
+    // Calculate payment deadline (72 hours before event) and late fees
+    const paymentDeadline = new Date(eventDateTime - 72 * 60 * 60 * 1000);
+    const isCurrentlyOnTime = hoursUntilEvent >= 72;
+
+    let paymentDeadlineMessage = null;
+    let lateFeeAmount = null;
+
+    if (isCurrentlyOnTime) {
+      // Show deadline warning only if currently in on-time period
+      const lateMemberPrice = 30;
+      const lateNonMemberPrice = 40;
+
+      if (isMember) {
+        if (participantCount === 1) {
+          lateFeeAmount = `${lateMemberPrice} лв. (членска отстъпка)`;
+        } else {
+          const lateTotalPrice =
+            lateMemberPrice + lateNonMemberPrice * (participantCount - 1);
+          lateFeeAmount = `${lateTotalPrice} лв. (${lateMemberPrice} лв. членска отстъпка + ${lateNonMemberPrice} лв. x ${participantCount - 1} участника)`;
+        }
+      } else {
+        lateFeeAmount = `${lateNonMemberPrice * participantCount} лв. (${lateNonMemberPrice} лв. x ${participantCount} участника)`;
+      }
+
+      paymentDeadlineMessage = paymentDeadline.toLocaleDateString("bg-BG", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
     if (isMember) {
       const memberPrice = hoursUntilEvent < 72 ? 30 : 25; // Late: 30 lv, On-time: 25 lv for members
       // Member discount only applies to one person, others pay regular price
@@ -359,7 +392,7 @@ app.post("/submit-form", async (req, res) => {
       try {
         // Use the variables we already calculated above
         const emailData = {
-          name: allParticipantNames || formData.name,
+          name: formData.name, // Always use the name of the person who filled out the form
           event: formData.event,
           eventDate: formData.eventDate,
           eventTime: formData.eventTime,
@@ -370,6 +403,8 @@ app.post("/submit-form", async (req, res) => {
           finalPrice: finalPriceForSheets,
           participantCount: participantCount,
           participantNames: formData.participantNames || [formData.name],
+          paymentDeadline: paymentDeadlineMessage,
+          lateFee: lateFeeAmount,
         };
 
         // Send confirmation email to user
