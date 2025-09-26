@@ -175,8 +175,8 @@ const SubscribeAndPay = ({ onClose }) => {
 
   const priceOneTime = () => {
     let difference = differenceInHours(getEventDateTime(), currentDate);
-    let basePrice = difference < 72 ? 40 : 35;
-    let memberPrice = Math.max(20, basePrice - 10);
+    let basePrice = difference < 72 ? 40 : 35; // Late: 40 lv, On-time: 35 lv
+    let memberPrice = difference < 72 ? 30 : 25; // Late: 30 lv, On-time: 25 lv for members
     const count = formData.participantCount;
 
     // Calculate member pricing: discount for 1 person + regular price for additional participants
@@ -257,8 +257,8 @@ const SubscribeAndPay = ({ onClose }) => {
 
   const handlePrice = () => {
     let difference = differenceInHours(getEventDateTime(), currentDate);
-    let basePrice = difference < 72 ? 40 : 35;
-    let memberPrice = Math.max(20, basePrice - 10);
+    let basePrice = difference < 72 ? 40 : 35; // Late: 40 lv, On-time: 35 lv
+    let memberPrice = difference < 72 ? 30 : 25; // Late: 30 lv, On-time: 25 lv for members
     const count = formData.participantCount;
 
     // Calculate member pricing: discount for 1 person + regular price for additional participants
@@ -278,7 +278,7 @@ const SubscribeAndPay = ({ onClose }) => {
     const eventDateTime = new Date(eventDate);
     const difference = (eventDateTime - now) / (1000 * 60 * 60); // hours
 
-    let basePrice = difference < 72 ? 40 : 35;
+    let basePrice = difference < 72 ? 40 : 35; // Late: 40 lv, On-time: 35 lv
     let calculatedPrice = basePrice * formData.participantCount;
 
     const submissionData = {

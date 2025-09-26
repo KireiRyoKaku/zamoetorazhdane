@@ -240,19 +240,19 @@ try {
 
 // Member check endpoint
 // Route to check if user is a member
-app.post('/check-member', async (req, res) => {
+app.post("/check-member", async (req, res) => {
   const { email } = req.body;
-  
+
   if (!email) {
-    return res.status(400).json({ error: 'Email is required' });
+    return res.status(400).json({ error: "Email is required" });
   }
 
   try {
     const isMember = await checkMemberInSheets(email);
     res.json({ isMember });
   } catch (error) {
-    console.error('Error checking member status:', error);
-    res.status(500).json({ error: 'Failed to check member status' });
+    console.error("Error checking member status:", error);
+    res.status(500).json({ error: "Failed to check member status" });
   }
 });
 
@@ -276,36 +276,36 @@ app.post("/submit-form", async (req, res) => {
     // Check if user is a member first - this is needed for both sheets and email
     const isMember = await checkMemberInSheets(email);
     console.log(`Member check for ${email}: ${isMember}`);
-    
+
     // Calculate pricing (needed for both sheets and email)
     const participantCount = formData.participantCount || 1;
-    
+
     // Parse event date to calculate hours until event - handle Bulgarian format
     let eventDateTime;
     try {
       // Handle Bulgarian date format like "12.05.2025, понеделник"
-      const dateOnly = formData.eventDate.split(',')[0].trim(); // Extract "12.05.2025"
-      const [day, month, year] = dateOnly.split('.');
-      const [hours, minutes] = (formData.eventTime || '18:00').split(':');
+      const dateOnly = formData.eventDate.split(",")[0].trim(); // Extract "12.05.2025"
+      const [day, month, year] = dateOnly.split(".");
+      const [hours, minutes] = (formData.eventTime || "18:00").split(":");
       eventDateTime = new Date(year, month - 1, day, hours, minutes);
     } catch (error) {
-      console.error('Date parsing error:', error);
+      console.error("Date parsing error:", error);
       eventDateTime = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // Default to 7 days from now
     }
-    
+
     const now = new Date();
     const hoursUntilEvent = (eventDateTime - now) / (1000 * 60 * 60);
-    
-    let basePrice = hoursUntilEvent < 72 ? 40 : 35;
+
+    let basePrice = hoursUntilEvent < 72 ? 40 : 35; // Late: 40 lv, On-time: 35 lv
     let finalPriceForSheets;
-    
+
     if (isMember) {
-      const memberPrice = Math.max(20, basePrice - 10);
+      const memberPrice = hoursUntilEvent < 72 ? 30 : 25; // Late: 30 lv, On-time: 25 lv for members
       // Member discount only applies to one person, others pay regular price
       if (participantCount === 1) {
         finalPriceForSheets = `${memberPrice} лв. (членска отстъпка)`;
       } else {
-        const totalPrice = memberPrice + (basePrice * (participantCount - 1));
+        const totalPrice = memberPrice + basePrice * (participantCount - 1);
         finalPriceForSheets = `${totalPrice} лв. (${memberPrice} лв. членска отстъпка + ${basePrice} лв. x ${participantCount - 1} участника)`;
       }
     } else {
@@ -314,8 +314,8 @@ app.post("/submit-form", async (req, res) => {
 
     // Check if Google Sheets is available for saving
     // Combine all participant names into one string for the name field
-    const allParticipantNames = formData.participantNames 
-      ? formData.participantNames.filter(name => name.trim()).join(', ')
+    const allParticipantNames = formData.participantNames
+      ? formData.participantNames.filter((name) => name.trim()).join(", ")
       : formData.name || "";
 
     if (sheetsAvailable && client) {
@@ -339,7 +339,7 @@ app.post("/submit-form", async (req, res) => {
                 formData.source || "", // Column G: Source (moved from J to G)
                 new Date().toISOString(), // Column H: Timestamp (moved from K to H)
                 formData.eventTime || "", // Column I: Event Time (moved from L to I)
-                isMember ? 'Да' : 'Не', // Column J: Member status
+                isMember ? "Да" : "Не", // Column J: Member status
                 finalPriceForSheets || "", // Column K: Final price to be paid
               ],
             ],
@@ -404,7 +404,7 @@ app.post("/submit-form", async (req, res) => {
           isMember: isMember,
           finalPrice: finalPriceForSheets,
           participantCount: participantCount,
-          participantNames: formData.participantNames
+          participantNames: formData.participantNames,
         };
 
         const adminMailOptions = {
@@ -450,7 +450,7 @@ app.post("/submit-form", async (req, res) => {
 async function checkMemberInSheets(email) {
   try {
     if (!sheetsAvailable || !client) {
-      console.log('Google Sheets not available for member check');
+      console.log("Google Sheets not available for member check");
       return false;
     }
 
@@ -463,22 +463,22 @@ async function checkMemberInSheets(email) {
     // Get member emails from the Members sheet
     const memberRows = await gsapi.spreadsheets.values.get({
       spreadsheetId: process.env.SHEETS_ID,
-      range: 'Members!A:A',
+      range: "Members!A:A",
     });
-    
+
     const memberEmails = memberRows.data.values?.flat().filter(Boolean) || [];
     console.log(`Found ${memberEmails.length} members in Members sheet`);
-    
+
     // Check if the email exists in the members list
-    const isMember = memberEmails.some(memberEmail => 
-      memberEmail.toLowerCase().trim() === email.toLowerCase().trim()
+    const isMember = memberEmails.some(
+      (memberEmail) =>
+        memberEmail.toLowerCase().trim() === email.toLowerCase().trim(),
     );
-    
+
     console.log(`Member check result for ${email}: ${isMember}`);
     return isMember;
-    
   } catch (error) {
-    console.error('Error checking member in sheets:', error);
+    console.error("Error checking member in sheets:", error);
     return false;
   }
 }
