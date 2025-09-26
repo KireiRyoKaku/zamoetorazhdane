@@ -6,9 +6,7 @@ import { google } from "googleapis";
 import nodemailer from "nodemailer";
 import {
   getConfirmationEmailHTML,
-  getConfirmationEmailText,
   getAdminNotificationHTML,
-  getAdminNotificationText,
 } from "./emailTemplates/confirmationEmail.js";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -380,7 +378,6 @@ app.post("/submit-form", async (req, res) => {
           to: email,
           replyTo: process.env.REPLY_TO,
           subject: `Успешна регистрация: "${event}" на ${eventDate}, ${formData.eventTime}`,
-          text: getConfirmationEmailText(emailData),
           html: getConfirmationEmailHTML(emailData),
           attachments: [
             {
@@ -411,7 +408,6 @@ app.post("/submit-form", async (req, res) => {
           from: process.env.SENDER_EMAIL,
           to: process.env.ADMIN_EMAIL,
           subject: `🎉 Нова регистрация: "${event}" - ${participantCount} участници`,
-          text: getAdminNotificationText(adminEmailData),
           html: getAdminNotificationHTML(adminEmailData),
         };
 

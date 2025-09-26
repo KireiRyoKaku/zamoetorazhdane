@@ -6,12 +6,9 @@ console.log(
 );
 
 // Use dynamic import to bypass caching
-const {
-  getConfirmationEmailHTML,
-  getConfirmationEmailText,
-  getAdminNotificationHTML,
-  getAdminNotificationText,
-} = await import(`./emailTemplates/confirmationEmail.js?t=${Date.now()}`);
+const { getConfirmationEmailHTML, getAdminNotificationHTML } = await import(
+  `./emailTemplates/confirmationEmail.js?t=${Date.now()}`
+);
 
 // Sample data for multiple participants - member with discount (on-time pricing)
 const sampleDataMultiple = {
