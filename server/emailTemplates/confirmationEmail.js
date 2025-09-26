@@ -4,8 +4,21 @@
  * @returns {String} HTML content for the email
  */
 export function getConfirmationEmailHTML(data) {
-  const { name, event, eventDate, eventTime, eventLocation, participation, phone, source, isMember, finalPrice, participantCount, participantNames} = data;
-  
+  const {
+    name,
+    event,
+    eventDate,
+    eventTime,
+    eventLocation,
+    participation,
+    phone,
+    source,
+    isMember,
+    finalPrice,
+    participantCount,
+    participantNames,
+  } = data;
+
   return `<!DOCTYPE html>
 <html lang="bg">
 <head>
@@ -117,13 +130,20 @@ export function getConfirmationEmailHTML(data) {
     </div>
     
     <div class="content">
-      <p>Здравей, </p>
+      <p>Здравей! </p>
       
-      <p>Благодарим ти за интереса. Ти успешно се записа за "<strong>${event}</strong>" на <strong>${eventDate} от ${eventTime} часа</strong> в <strong>${eventLocation}</strong>.</p>
-      
+      <p>Благодарим ти за интереса и записването за:</p>
+
+      <div class="bank-details">
+        <p> "<strong>${event}</strong>"
+        <br>на <strong>${eventDate} </strong>
+        <br>от <strong>${eventTime} часа</strong> 
+        <br>в <strong>${eventLocation}</strong>.</p>
+      </div>
+
+${isMember ? "✓ Поздравления! Разпознахме те като член на общността и получаваш отстъпка." : "Към момента нямаш активно членнство в общността. За членове на Прегърната има намаление от намаление за всяко събитие на живо."}
+
       <p>За да бъде регистрацията ти завършена, а мястото ти - резервирано, заплати таксата от <strong>${finalPrice}</strong> като използваш следните банкови данни:</p>
-      
-      ${isMember ? '<p style="color: #B0C4B1; font-weight: bold;">✓ Поздравления! Разпознахме те като член на общносттa. Крайната цена на резервацията ти е изчислена с отстъпка.</p>' : '<p>Не си член на общността. За да получиш отстъпка за следващи събития, <a href="https://zamoetorazhdane.com" style="color: #B0C4B1; font-weight: bold;">стани член</a>.</p>'}
       
       <div class="bank-details">
         <p><strong>IBAN:</strong> BG42STSA93000018035708</p>
@@ -131,24 +151,25 @@ export function getConfirmationEmailHTML(data) {
         <p><strong>Основание:</strong> Среща на ${eventDate.slice(0, 10)}</p>
       </div>
       
-      <p class="important">Имай предвид, че регистрацията ти ще бъде валидна само след постъпило плащане.</p>
+      <p class="important">Моля, имай предвид, че регистрацията ти ще бъде валидна само след постъпило плащане.</p>
       
       <p>При записването ти използва следните данни:</p>
       <div class="filled-out-form">
         <p><strong>Брой участници:</strong> ${participantCount}</p>
-        ${participantCount > 1 ? `<p><strong>Допълнителни места:</strong> ${participantCount - 1} допълнителни участника</p>` : ''}
+        ${participantCount > 1 ? `<p><strong>Допълнителни места:</strong> ${participantCount - 1} допълнителни участника</p>` : ""}
         ${(() => {
           if (participantNames && participantNames.length > 0) {
             const namedParticipants = [];
             for (let i = 0; i < participantCount; i++) {
-              const participantName = participantNames[i] && participantNames[i].trim();
+              const participantName =
+                participantNames[i] && participantNames[i].trim();
               if (participantName) {
                 namedParticipants.push(participantName);
               } else {
                 namedParticipants.push(`Участник ${i + 1}`);
               }
             }
-            return `<p><strong>Участници:</strong> ${namedParticipants.join(', ')}</p>`;
+            return `<p><strong>Участници:</strong> ${namedParticipants.join(", ")}</p>`;
           } else {
             return `<p><strong>Участник:</strong> ${name}</p>`;
           }
@@ -157,11 +178,12 @@ export function getConfirmationEmailHTML(data) {
         <p><strong>От къде научи за "Прегърната"?:</strong> ${source || "Полето не беше попълнено"}</p>
       </div>
 
-      <p>СЛЕДИ СВОЯ ИМЕЙЛ - тук ще ти изпратим потвърждение за твоята регистрация при постъпило плащане и ще те известим в случай на промени.</p>
+      <p><strong>Следи своя мейл</strong> - тук ще ти изпратим потвърждение за твоята регистрация при постъпило плащане и ще те известим в случай на промени.</p>
 
       <p>Благодарим ти!</p>
       
-      <p>Екипът на "Прегърната"</p>
+      <p><br>Слънчев ден,</br>
+      eкипът на "Прегърната"</p>
 
       <div class="social-links">
             <p>Последвай ни в социалните мрежи!</p>
@@ -187,15 +209,28 @@ export function getConfirmationEmailHTML(data) {
  * @returns {String} Plain text content for the email
  */
 export function getConfirmationEmailText(data) {
-  const { name, event, eventDate, eventTime, eventLocation, participation, phone, source, isMember, finalPrice, participantCount, participantNames} = data;
-  
-  return `Здравейте ${name},
+  const {
+    name,
+    event,
+    eventDate,
+    eventTime,
+    eventLocation,
+    participation,
+    phone,
+    source,
+    isMember,
+    finalPrice,
+    participantCount,
+    participantNames,
+  } = data;
+
+  return `Здравей ${name},
 
 Благодарим ти за регистрацията. Ти успешно се записа за "${event}" на ${eventDate}, ${eventTime} в ${eventLocation}.
 
-За да бъде регистрацията ти завършена, а мястото ти - резервирано, заплати таксата от ${finalPrice} като използваш следните банкови данни:
+${isMember ? "✓ Поздравления! Разпознахме те като член на общността и получаваш отстъпка." : "Към момента нямаш активно членнство в общността. За членове на Прегърната има намаление от намаление за всяко събитие на живо. Можеш да станеш член тук: https://zamoetorazhdane.com."}
 
-${isMember ? '✓ Поздравления! Разпознахме те като член на общността и получаваш отстъпка.' : 'Не си член на общността. За да получиш отстъпка за следващи събития, посети zamoetorazhdane.com.'}
+За да бъде регистрацията ти завършена, а мястото ти - резервирано, заплати таксата от ${finalPrice} като използваш следните банкови данни:
 
 IBAN: BG42STSA93000018035708
 Получател: Катя Ушева
@@ -205,10 +240,12 @@ IBAN: BG42STSA93000018035708
 
 При записването ти използва следните данни:
 Брой участници: ${participantCount}
-${participantNames && participantNames.filter(n => n.trim()).length > 0 ? 
-  `Участници: ${participantNames.filter(n => n.trim()).join(', ')}` : 
-  `Участник: ${name}`}
-${participantCount > 1 ? `Допълнителни места: ${participantCount - 1} допълнителни участника` : ''}
+${
+  participantNames && participantNames.filter((n) => n.trim()).length > 0
+    ? `Участници: ${participantNames.filter((n) => n.trim()).join(", ")}`
+    : `Участник: ${name}`
+}
+${participantCount > 1 ? `Допълнителни места: ${participantCount - 1} допълнителни участника` : ""}
 Телефон: ${phone}
 От къде научи за "Прегърната"?: ${source || "Полето не беше попълнено"}
 
@@ -226,16 +263,36 @@ zamoetorazhdane.com`;
  * @returns {String} Admin notification email content
  */
 export function getAdminNotificationHTML(data) {
-  const { name, event, eventDate, eventTime, eventLocation, phone, source, isMember, finalPrice, participantCount, participantNames, email } = data;
-  
+  const {
+    name,
+    event,
+    eventDate,
+    eventTime,
+    eventLocation,
+    phone,
+    source,
+    isMember,
+    finalPrice,
+    participantCount,
+    participantNames,
+    email,
+  } = data;
+
   // Format participant list
-  let participantList = '';
-  if (participantCount > 1 && participantNames && participantNames.filter(n => n.trim()).length > 0) {
-    const validNames = participantNames.filter(n => n.trim());
-    participantList = validNames.map((participant, index) => 
-      `<li><strong>Участник ${index + 1}:</strong> ${participant}</li>`
-    ).join('');
-    
+  let participantList = "";
+  if (
+    participantCount > 1 &&
+    participantNames &&
+    participantNames.filter((n) => n.trim()).length > 0
+  ) {
+    const validNames = participantNames.filter((n) => n.trim());
+    participantList = validNames
+      .map(
+        (participant, index) =>
+          `<li><strong>Участник ${index + 1}:</strong> ${participant}</li>`,
+      )
+      .join("");
+
     // Add unnamed participants if count exceeds named participants
     if (participantCount > validNames.length) {
       for (let i = validNames.length; i < participantCount; i++) {
@@ -247,9 +304,11 @@ export function getAdminNotificationHTML(data) {
   }
 
   // Pre-calculate member status styling to avoid template literal scoping issues
-  const memberStatusBg = isMember ? '#d4edda' : '#f8d7da';
-  const memberStatusColor = isMember ? '#155724' : '#721c24';
-  const memberStatusText = isMember ? '✅ ЧЛЕН НА ОБЩНОСТТА' : '❌ НЕ Е ЧЛЕН НА ОБЩНОСТТА';
+  const memberStatusBg = isMember ? "#d4edda" : "#f8d7da";
+  const memberStatusColor = isMember ? "#155724" : "#721c24";
+  const memberStatusText = isMember
+    ? "✅ ЧЛЕН НА ОБЩНОСТТА"
+    : "❌ НЕ Е ЧЛЕН НА ОБЩНОСТТА";
 
   return `<!DOCTYPE html>
 <html lang="bg">
@@ -360,7 +419,7 @@ export function getAdminNotificationHTML(data) {
       <h3>📞 Контактна информация:</h3>
       <p><strong>Имейл:</strong> <a href="mailto:${email}">${email}</a></p>
       <p><strong>Телефон:</strong> ${phone}</p>
-      <p><strong>Източник:</strong> ${source || 'Неизвестен'}</p>
+      <p><strong>Източник:</strong> ${source || "Неизвестен"}</p>
     </div>
 
     <div class="member-status">
@@ -372,7 +431,7 @@ export function getAdminNotificationHTML(data) {
     </div>
 
     <div class="timestamp">
-      Регистрация получена на: ${new Date().toLocaleString('bg-BG')}
+      Регистрация получена на: ${new Date().toLocaleString("bg-BG")}
     </div>
   </div>
 </body>
@@ -381,20 +440,37 @@ export function getAdminNotificationHTML(data) {
 
 /**
  * Generate plain text admin notification email
- * @param {Object} data - Registration data  
+ * @param {Object} data - Registration data
  * @returns {String} Plain text admin notification
  */
 export function getAdminNotificationText(data) {
-  const { name, event, eventDate, eventTime, eventLocation, phone, source, isMember, finalPrice, participantCount, participantNames, email } = data;
-  
+  const {
+    name,
+    event,
+    eventDate,
+    eventTime,
+    eventLocation,
+    phone,
+    source,
+    isMember,
+    finalPrice,
+    participantCount,
+    participantNames,
+    email,
+  } = data;
+
   // Format participant list
-  let participantList = '';
-  if (participantCount > 1 && participantNames && participantNames.filter(n => n.trim()).length > 0) {
-    const validNames = participantNames.filter(n => n.trim());
-    participantList = validNames.map((participant, index) => 
-      `  ${index + 1}. ${participant}`
-    ).join('\n');
-    
+  let participantList = "";
+  if (
+    participantCount > 1 &&
+    participantNames &&
+    participantNames.filter((n) => n.trim()).length > 0
+  ) {
+    const validNames = participantNames.filter((n) => n.trim());
+    participantList = validNames
+      .map((participant, index) => `  ${index + 1}. ${participant}`)
+      .join("\n");
+
     // Add unnamed participants if count exceeds named participants
     if (participantCount > validNames.length) {
       for (let i = validNames.length; i < participantCount; i++) {
@@ -406,7 +482,7 @@ export function getAdminNotificationText(data) {
   }
 
   // Pre-calculate member status text
-  const memberStatusText = isMember ? '✅ ЧЛЕН' : '❌ НЕ Е ЧЛЕН';
+  const memberStatusText = isMember ? "✅ ЧЛЕН" : "❌ НЕ Е ЧЛЕН";
 
   return `🎉 НОВА РЕГИСТРАЦИЯ ЗА СЪБИТИЕ!
 
@@ -421,11 +497,11 @@ ${participantList}
 📞 КОНТАКТНА ИНФОРМАЦИЯ:
 Имейл: ${email}
 Телефон: ${phone}
-Източник: ${source || 'Неизвестен'}
+Източник: ${source || "Неизвестен"}
 
 💳 СТАТУС НА ЧЛЕНСТВО: ${memberStatusText}
 💰 ЦЕНА ЗА ПЛАЩАНЕ: ${finalPrice}
 
 ---
-Регистрация получена на: ${new Date().toLocaleString('bg-BG')}`;
+Регистрация получена на: ${new Date().toLocaleString("bg-BG")}`;
 }
