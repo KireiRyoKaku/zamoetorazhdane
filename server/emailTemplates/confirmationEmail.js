@@ -148,6 +148,7 @@ ${isMember ? "✓ Поздравления! Разпознахме те като
         <p><strong>IBAN:</strong> BG42STSA93000018035708</p>
         <p><strong>Получател:</strong> Катя Ушева</p>
         <p><strong>Основание:</strong> Среща на ${eventDate.slice(0, 10)}</p>
+        <p><strong>Сума:</strong> ${finalPrice}</p>
       </div>
       
       ${data.paymentDeadline && data.lateFee ? `<p><strong>⚠️ Важно:</strong> Ако преводът не бъде направен до ${data.paymentDeadline}, дължимата сума е ${data.lateFee} лв.</p>` : ""}
