@@ -88,6 +88,10 @@
   height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: "Roca Two Regular", sans-serif;
   @apply bg-bodyBackground transition-colors duration-300;

@@ -42,10 +42,10 @@ const PopupMenu = () => {
     "/events": { text: "СЪБИТИЯ", link: null },
     "/about": { text: "ЗА НАС", link: null },
     "/partners": { text: "ПАРТНЬОРИ", link: null },
-    "/team": { text: "ЕКИП", link: null },
     "/privacy-policy": { text: "ПОВЕРИТЕЛНОСТ", link: null },
     "/terms-of-service": { text: "УСЛОВИЯ", link: null },
     "/cookie-policy": { text: "БИСКВИТКИ", link: null },
+    "/test": { text: "TEST", link: null },
   };
 
   // Determine current route text and link
@@ -137,17 +137,16 @@ const PopupMenu = () => {
                 >
                   ПАРТНЬОРИ
                 </button>
-
                 <button
-                  onClick={() => handleNavigation("/team")}
+                  onClick={() => handleNavigation("/Test")}
                   className={`text-left transition-colors duration-1000 ${
-                    location.pathname === "/team"
+                    location.pathname === "/partners"
                       ? "cursor-default font-black text-moetoRazhdaneYellow"
                       : "text-black hover:text-black/30"
                   }`}
-                  disabled={location.pathname === "/team"}
+                  disabled={location.pathname === "/partners"}
                 >
-                  ЕКИП
+                  TEST
                 </button>
 
                 <hr className="border-gray-300" />

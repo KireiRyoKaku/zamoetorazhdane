@@ -13,6 +13,10 @@ export const theme = {
       },
       
     },
+    transitionDuration: {
+      1500: '1500ms',
+      2000: '2000ms',
+    },
     fontFamily: {
       makLight: ["MakLight", "sans-serif"],
       hitchHike: ["Hitch Hike", "sans-serif"],

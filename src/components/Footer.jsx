@@ -43,12 +43,6 @@ const Footer = () => {
                 За нас
               </Link>
               <Link
-                to="/team"
-                className="text-sm text-gray-300 transition-colors hover:text-moetoRazhdaneYellow"
-              >
-                Екип
-              </Link>
-              <Link
                 to="/partners"
                 className="text-sm text-gray-300 transition-colors hover:text-moetoRazhdaneYellow"
               >

@@ -2,12 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import logoImage from "./assets/pictures/PregurnataLogoPinkNoText.png"; // Updated to use pink logo without text
+import Team from "./Team";
 
 const About = ({ onClose = () => {} }) => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
   const [scrollTop, setScrollTop] = useState(0);
   const contentRef = useRef(null);
+  const teamSectionRef = useRef(null);
   const elementsRef = useRef([]);
 
   const handleClickEventProgram = () => {
@@ -16,8 +18,12 @@ const About = ({ onClose = () => {} }) => {
   };
 
   const handleClickEventTeam = () => {
-    navigate("/team");
-    if (onClose) onClose(); // Add safety check
+    if (contentRef.current && teamSectionRef.current) {
+      contentRef.current.scrollTo({
+        top: teamSectionRef.current.offsetTop - 24,
+        behavior: "smooth",
+      });
+    }
   };
 
   useEffect(() => {
@@ -147,6 +153,23 @@ const About = ({ onClose = () => {} }) => {
               </button>
             </div>
           </div>
+
+          <section
+            ref={teamSectionRef}
+            className="mt-16 border-t border-moetoRazhdanePurple/20 pt-10"
+            aria-labelledby="team-heading"
+          >
+            <h2
+              id="team-heading"
+              className="text-center font-magnoliaScript text-5xl text-moetoRazhdanePurple md:text-6xl"
+            >
+              Нашият екип
+            </h2>
+            <p className="mx-auto mt-3 max-w-2xl text-center text-lg text-[#4E5F4C]/80">
+              Запознайте се с хората, които създават пространството на „Прегърната“.
+            </p>
+            <Team />
+          </section>
 
           {showScrollDownMessage && (
             <div className="absolute bottom-0 left-0 h-16 w-full bg-gradient-to-t from-slate-50 to-transparent p-8 text-center text-gray-500 transition-opacity duration-500 ease-in-out"></div>
