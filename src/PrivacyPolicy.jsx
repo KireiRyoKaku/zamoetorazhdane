@@ -7,12 +7,12 @@ const PrivacyPolicy = () => {
         Политика за поверителност
       </h1>
 
-      <div className="space-y-6 leading-relaxed text-gray-700">
+      <div className="space-y-6 leading-relaxed text-fourth">
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             1. Идентичност на администратора на данни
           </h2>
-          <div className="rounded-lg bg-blue-50 p-4">
+          <div className="rounded-lg bg-primary p-4">
             <p>
               <strong>Наименование:</strong> "Прегърната" ЕООД
             </p>
@@ -33,12 +33,12 @@ const PrivacyPolicy = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             2. Цел и правно основание на обработката
           </h2>
           <div className="space-y-4">
-            <div className="rounded-lg bg-gray-50 p-4">
-              <h3 className="font-medium text-gray-800">
+            <div className="rounded-lg bg-primary p-4">
+              <h3 className="font-medium text-fourth">
                 Записване за събития и курсове
               </h3>
               <p className="mt-1 text-sm">
@@ -51,8 +51,8 @@ const PrivacyPolicy = () => {
               </p>
             </div>
 
-            <div className="rounded-lg bg-gray-50 p-4">
-              <h3 className="font-medium text-gray-800">
+            <div className="rounded-lg bg-primary p-4">
+              <h3 className="font-medium text-fourth">
                 Маркетингови комуникации
               </h3>
               <p className="mt-1 text-sm">
@@ -65,8 +65,8 @@ const PrivacyPolicy = () => {
               </p>
             </div>
 
-            <div className="rounded-lg bg-gray-50 p-4">
-              <h3 className="font-medium text-gray-800">
+            <div className="rounded-lg bg-primary p-4">
+              <h3 className="font-medium text-fourth">
                 Подобряване на услугите
               </h3>
               <p className="mt-1 text-sm">
@@ -82,12 +82,12 @@ const PrivacyPolicy = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             3. Видове събирани данни
           </h2>
           <div className="space-y-3">
-            <div className="rounded-lg bg-yellow-50 p-3">
-              <h3 className="font-medium text-gray-800">
+            <div className="rounded-lg bg-third p-3">
+              <h3 className="font-medium text-fourth">
                 Лични данни при регистрация:
               </h3>
               <ul className="ml-4 mt-1 list-disc space-y-1 text-sm">
@@ -102,12 +102,12 @@ const PrivacyPolicy = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             4. Срок на съхранение
           </h2>
           <div className="space-y-3">
-            <div className="rounded-lg bg-green-50 p-4">
-              <h3 className="font-medium text-gray-800">
+            <div className="rounded-lg bg-secondary p-4">
+              <h3 className="font-medium text-fourth">
                 Принципи за съхранение:
               </h3>
               <ul className="ml-4 mt-2 list-disc space-y-1 text-sm">
@@ -133,7 +133,7 @@ const PrivacyPolicy = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             5. Получатели на данните
           </h2>
           <p>Вашите лични данни могат да бъдат споделени с:</p>
@@ -155,19 +155,19 @@ const PrivacyPolicy = () => {
               събития
             </li>
           </ul>
-          <p className="mt-2 text-sm text-gray-600">
+          <p className="mt-2 text-sm text-fourth">
             <strong>Забележка:</strong> Всички трети страни са договорно
             задължени да спазват стандартите за защита на данни.
           </p>
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             6. Пълен списък с правата на субектите на данни
           </h2>
           <div className="space-y-4">
-            <div className="rounded-lg bg-blue-50 p-4">
-              <h3 className="font-medium text-gray-800">
+            <div className="rounded-lg bg-primary p-4">
+              <h3 className="font-medium text-fourth">
                 Основни права според GDPR:
               </h3>
               <div className="mt-2 space-y-2 text-sm">
@@ -209,10 +209,10 @@ const PrivacyPolicy = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             7. Данни за връзка с КЗЛД
           </h2>
-          <div className="rounded-lg bg-gray-50 p-4">
+          <div className="rounded-lg bg-primary p-4">
             <p className="mb-2">
               При нарушения на вашите права можете да подадете жалба до:
             </p>
@@ -236,7 +236,7 @@ const PrivacyPolicy = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             8. Сигурност
           </h2>
           <p>
@@ -256,10 +256,10 @@ const PrivacyPolicy = () => {
 
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             9. Контакт
           </h2>
-          <div className="rounded-lg bg-gray-50 p-4">
+          <div className="rounded-lg bg-primary p-4">
             <p className="mb-2">
               За въпроси относно тази политика за поверителност или за
               упражняване на правата си, моля свържете се с нас на:
@@ -279,7 +279,7 @@ const PrivacyPolicy = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             10. Промени
           </h2>
           <p>

@@ -2,6 +2,18 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+.event-description-content,
+.event-description-content * {
+  max-width: 100%;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.event-description-content img {
+  height: auto;
+}
+
 @font-face {
   font-family: "MakLight";
   src: url("./assets/fonts/Mak/MAK-bold.woff") format("woff");
@@ -73,11 +85,11 @@
 }
 
 .fade-in {
-  animation: fade-in 5s ease-in-out;
+  animation: fade-in 1s ease-in-out;
 }
 
 .background-logo {
-  background-image: url("./assets/pictures/logo-and-text-white-outline.png");
+  background-image: url("./assets/pictures/logo-and-text-green-outline.png");
   background-repeat: no-repeat;
   background-size: 100%;
   background-position: center;
@@ -88,17 +100,39 @@
   height: 100%;
 }
 
+.services-hero-band {
+  background: var(--banner-bg-color, var(--title-bg-color));
+}
+
+.home-partner-background {
+  background: var(--title-bg-color);
+}
+
+.title-section-background {
+  background: var(--title-bg-color);
+}
+
+.home-hero-background {
+  background: theme("colors.primary");
+}
+
+@media (min-width: 768px) {
+  .home-hero-background {
+    background: var(--title-bg-color);
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
   font-family: "Roca Two Regular", sans-serif;
-  @apply bg-bodyBackground transition-colors duration-300;
+  @apply bg-section-background text-fourth transition-colors duration-300;
 }
 
 .dropdown-menu button:hover {
-  background-color: #e0e0e0;
+  background-color: theme("colors.primary");
 }
 
 .dropdown-menu {
@@ -114,13 +148,13 @@ body {
 }
 
 .dropdown-menu button {
-  @apply bg-moetoRazhdaneYellow;
+  @apply bg-third;
   border: none;
   padding: 5px 10px;
   font-size: 2rem;
   cursor: pointer;
   border-style: solid;
-  @apply border-moetoRazhdaneDarkGreen text-moetoRazhdaneDarkGreen;
+  @apply border-primary text-fourth;
 }
 
 .transition-all {
@@ -142,51 +176,138 @@ body {
   line-height: 1.75rem /* 28px */;
 }
 
+.program-calendar .calendar-cell {
+  padding: 0.25rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
 .calendar-cell:active {
-  @apply bg-moetoRazhdaneYellow;
+  @apply bg-third;
   cursor: pointer;
-  color: black;
+  color: theme("colors.fourth");
   border-radius: 50%;
   transform: scale(0.5); /* Shrinks to 80% of its size */
 }
 
 .calendar-cell.highlightedPast {
-  @apply bg-black;
+  @apply bg-primary;
   cursor: pointer;
-  @apply text-moetoRazhdaneWhite;
+  @apply text-fourth;
   border-radius: 50%;
   transform: scale(0.8); /* Shrinks to 80% of its size */
 }
 
 .calendar-cell.highlightedOnPremise {
-  @apply bg-moetoRazhdaneDarkGreen;
+  @apply bg-primary;
   cursor: pointer;
-  @apply text-moetoRazhdaneWhite;
+  @apply text-fourth;
   border-radius: 50%;
   transform: scale(0.8); /* Shrinks to 80% of its size */
 }
 
 .calendar-cell.online {
-  @apply bg-moetoRazhdanePurple;
+  @apply bg-secondary;
   cursor: pointer;
-  @apply text-moetoRazhdaneWhite;
+  @apply text-fourth;
   border-radius: 50%;
   transform: scale(0.8); /* Shrinks to 80% of its size */
 }
-.calendar-cell:hover {
-  background-color: rgba(0, 0, 0, 0.5); /* Subtle background darkening */
-  cursor: pointer;
-  @apply bg-black text-moetoRazhdaneWhite;
-  border-radius: 50%;
-  transform: scale(0.8); /* Shrinks to 80% of its size */
-}
-
 .calendar-cell.cursor-pointer:hover {
   opacity: 0.8;
   transform: scale(1.1);
+  filter: brightness(0.95);
   transition: all 0.2s ease-in-out;
 }
 
+.service-carousel-scrollbar-hidden {
+  scrollbar-width: none;
+}
+
+.service-carousel-scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.partner-ticker-orbit {
+  position: relative;
+  top: clamp(-300px, -24vw, -120px);
+  height: 140px;
+}
+
+@media (max-width: 767px) {
+  .partner-ticker-orbit {
+    top: calc(-1 * min(18vw, 240px));
+    height: max(5rem, calc(min(18vw, 240px) - 20px));
+  }
+}
+
+.partner-ticker-item:hover,
+.partner-ticker-item:focus-within {
+  z-index: 40;
+}
+
+.partner-ticker-item {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+
+.partner-ticker-logo {
+  filter: grayscale(1) sepia(0.45) saturate(1.35) hue-rotate(325deg)
+    brightness(0.72);
+  opacity: 0.85;
+  transition:
+    filter 200ms ease,
+    opacity 200ms ease;
+}
+
+.partner-ticker-item:hover .partner-ticker-logo,
+.partner-ticker-item:focus-within .partner-ticker-logo {
+  filter: none;
+  opacity: 1;
+}
+
+.partner-ticker-popover {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.partner-ticker-item:hover .partner-ticker-popover,
+.partner-ticker-item:focus-within .partner-ticker-popover {
+  visibility: visible;
+  pointer-events: auto;
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .partner-ticker {
+    overflow-x: visible;
+  }
+}
+
+.service-card {
+  transition:
+    transform 1.1s ease-in-out,
+    box-shadow 1.1s ease-in-out;
+}
+
+.service-card.is-revealed {
+  z-index: 10;
+  transform: scale(1.05);
+}
+
+.service-card:focus-visible {
+  outline: 3px solid theme("colors.fourth");
+  outline-offset: 4px;
+}
+
+@media (hover: hover) and (min-width: 1024px) {
+  .service-card:hover {
+    z-index: 10;
+    transform: scale(1.05);
+  }
+}
 .event-box {
   transition: transform 0.2s ease-out;
 }
@@ -228,7 +349,7 @@ body {
 .slick-prev:before,
 .slick-next:before {
   font-size: 40px;
-  @apply text-moetoRazhdaneLightGreen;
+  @apply text-fourth;
   opacity: 0.75;
   transition: opacity 0.3s ease;
 }
@@ -240,7 +361,11 @@ body {
 
 .team-member {
   border-radius: 50% / 25%;
-  background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+  background: linear-gradient(
+    135deg,
+    theme("colors.primary"),
+    theme("colors.third")
+  );
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 

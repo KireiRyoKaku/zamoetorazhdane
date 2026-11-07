@@ -1,25 +1,15 @@
-import { useEffect } from "react";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const Background = () => {
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      const element = document.querySelector(".background-logo");
+  const { pathname } = useLocation();
+  const [animateOnLoad] = useState(() => pathname === "/");
 
-      if (document.visibilityState === "visible") {
-        element.classList.add("fade-in");
-      } else {
-        element.classList.remove("fade-in");
-      }
-    };
-
-    window.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      window.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, []);
-
-  return <div className="background-logo opacity-25"></div>;
+  return (
+    <div
+      className={`background-logo opacity-25 ${animateOnLoad ? "fade-in" : ""}`}
+    ></div>
+  );
 };
 
 export default Background;

@@ -49,12 +49,12 @@ const EventsNew = ({ onClose }) => {
               // Fallback to icon component if image fails to load
               e.target.style.display = "none";
               e.target.parentNode.innerHTML =
-                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-moetoRazhdanePurple"><MdOutlineSelfImprovement /></svg>';
+                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-fourth"><MdOutlineSelfImprovement /></svg>';
             }}
           />
         </div>
       ),
-      iconColor: "text-moetoRazhdanePurple",
+      iconColor: "text-fourth",
       description:
         "Групови практики (само за майки, без деца), в които пълним своите чашки с любов и грижа към себе си. Нека това бъдат твоите 90 минути в месеца, в които да се обърнеш навътре към себе си, да си подариш грижата, от която имаш нужда и да си благодариш за всичко, което си",
     },
@@ -70,12 +70,12 @@ const EventsNew = ({ onClose }) => {
             onError={(e) => {
               e.target.style.display = "none";
               e.target.parentNode.innerHTML =
-                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-moetoRazhdaneGreen"><FaPeopleGroup /></svg>';
+                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-fourth"><FaPeopleGroup /></svg>';
             }}
           />
         </div>
       ),
-      iconColor: "text-moetoRazhdaneGreen",
+      iconColor: "text-fourth",
       description:
         'Събираме се (със своите бебета/малки деца) и си говорим открито и задълбочено по дадена тема от майчинството. Но не в лекционен формат - тук силно застъпена е дискусионната част и споделянето. На фокус е подкрепата и приемането, че всички сме различни и че няма "правилен" и "грешен" път.',
     },
@@ -93,12 +93,12 @@ const EventsNew = ({ onClose }) => {
               // Fallback to icon component if image fails to load
               e.target.style.display = "none";
               e.target.parentNode.innerHTML =
-                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-moetoRazhdanePurple"><MdOutlineSelfImprovement /></svg>';
+                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-fourth"><MdOutlineSelfImprovement /></svg>';
             }}
           />
         </div>
       ),
-      iconColor: "text-moetoRazhdaneYellow",
+      iconColor: "text-fourth",
       description:
         "Периодично в програмата ни присъства поне едно специално събитие или творилница. Събираме се и творим с ръцете си нещо красиво и/или практично, което да отнесем със себе си към вкъщи след това. Вдъхновяваме се взаимно, черпим от женската енергия и се зареждаме чрез изкуство. И най-вече: говорим си, разпускаме и се забавляваме.",
     },
@@ -116,12 +116,12 @@ const EventsNew = ({ onClose }) => {
               // Fallback to icon component if image fails to load
               e.target.style.display = "none";
               e.target.parentNode.innerHTML =
-                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-moetoRazhdanePurple"><MdOutlineSelfImprovement /></svg>';
+                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-fourth"><MdOutlineSelfImprovement /></svg>';
             }}
           />
         </div>
       ),
-      iconColor: "text-moetoRazhdaneYellow",
+      iconColor: "text-fourth",
       description:
         "В клуба те очакват вдъхновяващи срещи с различни специалисти, които ще споделят своето знание, опит и гледни точки, за да обогатят ежедневието ти с нови идеи, практики и подкрепа.",
     },
@@ -139,12 +139,12 @@ const EventsNew = ({ onClose }) => {
               // Fallback to icon component if image fails to load
               e.target.style.display = "none";
               e.target.parentNode.innerHTML =
-                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-moetoRazhdanePurple"><MdOutlineSelfImprovement /></svg>';
+                '<svg class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-fourth"><MdOutlineSelfImprovement /></svg>';
             }}
           />
         </div>
       ),
-      iconColor: "text-moetoRazhdaneYellow",
+      iconColor: "text-fourth",
       description:
         "Периодични срещи, където можеш да попиташ всичко, което те вълнува. Ние, като екип от специалисти, ще сме там да ти отговорим с внимание, разбиране и практични насоки. Твоите въпроси са важни, защото отварят пространство за истински разговор и подкрепа.",
     },
@@ -246,7 +246,7 @@ const EventsNew = ({ onClose }) => {
   const card = eventCards[activeIndex];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-auto bg-white md:flex md:items-center md:justify-center">
+    <div className="fixed inset-0 z-50 overflow-auto bg-primary md:flex md:items-center md:justify-center">
       <div className="mx-auto max-w-6xl px-8 pb-4 pt-8 sm:px-6 lg:px-8">
         {/* Navigation header with arrow buttons */}
         <div
@@ -279,7 +279,7 @@ const EventsNew = ({ onClose }) => {
             {/* Left arrow */}
             <button
               onClick={goToPrevious}
-              className="mr-8 flex h-12 w-12 items-center justify-center rounded-full bg-moetoRazhdaneDarkGreen/10 text-moetoRazhdaneDarkGreen transition-all hover:bg-moetoRazhdaneDarkGreen/20 sm:h-14 sm:w-14 md:mr-16"
+              className="mr-8 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-fourth transition-all hover:bg-primary/20 sm:h-14 sm:w-14 md:mr-16"
               aria-label="Previous"
             >
               <IoChevronBack className="text-xl sm:text-2xl" />
@@ -299,7 +299,7 @@ const EventsNew = ({ onClose }) => {
             {/* Right arrow */}
             <button
               onClick={goToNext}
-              className="ml-8 flex h-12 w-12 items-center justify-center rounded-full bg-moetoRazhdaneDarkGreen/10 text-moetoRazhdaneDarkGreen transition-all hover:bg-moetoRazhdaneDarkGreen/20 sm:h-14 sm:w-14 md:ml-16"
+              className="ml-8 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-fourth transition-all hover:bg-primary/20 sm:h-14 sm:w-14 md:ml-16"
               aria-label="Next"
             >
               <IoChevronForward className="text-xl sm:text-2xl" />
@@ -313,8 +313,8 @@ const EventsNew = ({ onClose }) => {
                 to={`/events/${card.id}`}
                 className={`h-3 w-3 rounded-full transition-all duration-300 ${
                   activeIndex === index
-                    ? "scale-110 bg-moetoRazhdaneDarkGreen"
-                    : "bg-gray-300 hover:bg-gray-400"
+                    ? "scale-110 bg-primary"
+                    : "bg-secondary hover:bg-secondary"
                 }`}
                 aria-label={`Navigate to ${card.title}`}
               />
@@ -322,7 +322,7 @@ const EventsNew = ({ onClose }) => {
           </div>
           {/* Title */}
           <h2
-            className={`mb-4 transform text-center font-magnoliaScript text-4xl text-moetoRazhdaneDarkGreen transition-all duration-500 ease-out ${
+            className={`mb-4 transform text-center font-magnoliaScript text-4xl text-fourth transition-all duration-500 ease-out ${
               titleVisible
                 ? "translate-y-0 opacity-100"
                 : "translate-y-8 opacity-0"
@@ -339,7 +339,7 @@ const EventsNew = ({ onClose }) => {
                 : "translate-y-8 opacity-0"
             }`}
           >
-            <p className="text-left font-rocaTwoThin text-lg font-light text-gray-700">
+            <p className="text-left font-rocaTwoThin text-lg font-light text-fourth">
               {card.description}
             </p>
           </div>
@@ -353,7 +353,7 @@ const EventsNew = ({ onClose }) => {
             }`}
           >
             <button
-              className="rounded-3xl bg-moetoRazhdaneYellow px-6 py-2 font-rocaTwoRegular text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30"
+              className="rounded-3xl bg-third px-6 py-2 font-rocaTwoRegular text-2xl font-black text-fourth transition-all duration-500 ease-in-out hover:bg-transparent hover:text-fourth/30"
               onClick={() => {
                 setIsClosing(true);
                 setTimeout(() => {

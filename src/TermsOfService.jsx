@@ -5,9 +5,9 @@ const TermsOfService = () => {
     <div className="container mx-auto max-w-4xl px-4 py-8">
       <h1 className="mb-8 text-center text-3xl font-bold">Общи условия</h1>
 
-      <div className="space-y-6 leading-relaxed text-gray-700">
+      <div className="space-y-6 leading-relaxed text-fourth">
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             1. Общи разпоредби
           </h2>
           <p>
@@ -18,7 +18,7 @@ const TermsOfService = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             2. Описание на услугите
           </h2>
           <p>
@@ -32,8 +32,8 @@ const TermsOfService = () => {
             <li>Информационни ресурси</li>
           </ul>
 
-          <div className="mt-4 rounded-lg bg-blue-50 p-4">
-            <h3 className="mb-2 font-medium text-gray-800">
+          <div className="mt-4 rounded-lg bg-primary p-4">
+            <h3 className="mb-2 font-medium text-fourth">
               Технически стъпки за сключване на договор:
             </h3>
             <ol className="ml-6 list-decimal space-y-1 text-sm">
@@ -48,11 +48,11 @@ const TermsOfService = () => {
         </section>
         <section>
           {/* Legal Company Information as required by Electronic Commerce Act */}
-          <div className="mt-8 rounded-lg bg-gray-50 p-6">
-            <h4 className="mb-4 text-lg font-semibold text-gray-800">
+          <div className="mt-8 rounded-lg bg-primary p-6">
+            <h4 className="mb-4 text-lg font-semibold text-fourth">
               Правна информация за организацията
             </h4>
-            <div className="space-y-2 text-sm text-gray-700">
+            <div className="space-y-2 text-sm text-fourth">
               <p>
                 <strong>Пълно наименование:</strong> "Прегърната" ЕООД
               </p>
@@ -76,7 +76,7 @@ const TermsOfService = () => {
           </div>
         </section>
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             3. Информация за цени и такси
           </h2>
           <p>
@@ -93,11 +93,11 @@ const TermsOfService = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             4. Право на отказ и промяна
           </h2>
           <div className="rounded-lg bg-amber-50 p-4">
-            <h3 className="mb-2 font-medium text-gray-800">
+            <h3 className="mb-2 font-medium text-fourth">
               Условия за отказ от договора:
             </h3>
             <ul className="ml-6 list-disc space-y-1 text-sm">
@@ -117,7 +117,7 @@ const TermsOfService = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             5. Регистрация и акаунт
           </h2>
           <p>
@@ -132,13 +132,13 @@ const TermsOfService = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             6. Права и задължения на страните
           </h2>
 
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-lg bg-green-50 p-4">
-              <h3 className="mb-2 font-medium text-gray-800">
+            <div className="rounded-lg bg-secondary p-4">
+              <h3 className="mb-2 font-medium text-fourth">
                 Права на потребителя:
               </h3>
               <ul className="ml-4 list-disc space-y-1 text-sm">
@@ -150,8 +150,8 @@ const TermsOfService = () => {
               </ul>
             </div>
 
-            <div className="rounded-lg bg-blue-50 p-4">
-              <h3 className="mb-2 font-medium text-gray-800">
+            <div className="rounded-lg bg-primary p-4">
+              <h3 className="mb-2 font-medium text-fourth">
                 Задължения на доставчика:
               </h3>
               <ul className="ml-4 list-disc space-y-1 text-sm">
@@ -166,12 +166,12 @@ const TermsOfService = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             7. Механизми за разрешаване на спорове
           </h2>
           <div className="space-y-3">
-            <div className="rounded-lg bg-gray-50 p-4">
-              <h3 className="mb-2 font-medium text-gray-800">
+            <div className="rounded-lg bg-primary p-4">
+              <h3 className="mb-2 font-medium text-fourth">
                 Стъпки за решаване на спорове:
               </h3>
               <ol className="ml-6 list-decimal space-y-1 text-sm">
@@ -189,7 +189,7 @@ const TermsOfService = () => {
                 </li>
               </ol>
             </div>
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-fourth">
               <strong>Забележка:</strong> Потребителите могат да се обърнат към
               КЗП за безплатна помощ при спорове.
             </p>
@@ -197,7 +197,7 @@ const TermsOfService = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             8. Съхранение и възпроизвеждане на договора
           </h2>
           <p>
@@ -216,7 +216,7 @@ const TermsOfService = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             9. Използване на сайта
           </h2>
           <p>Вие се задължавате да:</p>
@@ -229,7 +229,7 @@ const TermsOfService = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             10. Записване за събития
           </h2>
           <p>При записване за събития и курсове:</p>
@@ -242,7 +242,7 @@ const TermsOfService = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             11. Плащания и възстановявания
           </h2>
           <p>
@@ -252,10 +252,10 @@ const TermsOfService = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             12. Медицински отказ от отговорност
           </h2>
-          <p className="rounded border-l-4 border-yellow-400 bg-yellow-50 p-4">
+          <p className="rounded border-l-4 border-yellow-400 bg-third p-4">
             <strong>Важно:</strong> Информацията на този сайт е с образователна
             цел и не заменя професионален медицински съвет. Винаги се
             консултирайте с лекар или акушерка за медицински въпроси.
@@ -263,7 +263,7 @@ const TermsOfService = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             13. Авторски права
           </h2>
           <p>
@@ -274,7 +274,7 @@ const TermsOfService = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             14. Ограничение на отговорността
           </h2>
           <p>
@@ -285,7 +285,7 @@ const TermsOfService = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             15. Приложимо право
           </h2>
           <p>
@@ -295,10 +295,10 @@ const TermsOfService = () => {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xl font-semibold text-gray-800">
+          <h2 className="mb-3 text-xl font-semibold text-fourth">
             16. Контакт
           </h2>
-          <div className="rounded-lg bg-gray-50 p-4">
+          <div className="rounded-lg bg-primary p-4">
             <p>За въпроси относно тези условия се обърнете към нас:</p>
             <div className="mt-2 space-y-1">
               <p>

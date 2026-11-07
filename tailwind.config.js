@@ -3,19 +3,17 @@ export const content = ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"];
 export const theme = {
   extend: {
     colors: {
-      moetoRazhdanePurple: "#EDAFB8",
-      moetoRazhdaneDarkGreen: "#B0C4B1",
-      moetoRazhdaneLightGreen: "#DEDBD2",
-      moetoRazhdaneYellow: "#F7E1D7",
-      moetoRazhdaneWhite: "#4E5F4C",
-      bodyBackground: {
-        DEFAULT: "#EDAFB8", // default color
-      },
-      
+      primary: "#d4dee0ff",   //bluish
+      secondary: "#edafb8ff", //pinkish
+      third: "#f7e1d7ff", //yellowisch 
+      fourth: "#6c698dff",  //purplish
+      white: "#ffffff",   //white
+      "section-background": "#d4dee0ff",
+      "banner-background": "#edafb8ff",
     },
     transitionDuration: {
-      1500: '1500ms',
-      2000: '2000ms',
+      1500: "1500ms",
+      2000: "2000ms",
     },
     fontFamily: {
       makLight: ["MakLight", "sans-serif"],
@@ -41,7 +39,7 @@ export const theme = {
       full: "100%",
     },
     dropShadow: {
-      "2xl": "0.75rem 0.5rem #4e5f4c",
+      "2xl": "0 25px 25px rgb(0 0 0 / 0.15)",
     },
     fontSize: {
       "2.5xl": "1.70rem",

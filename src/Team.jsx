@@ -20,6 +20,9 @@ const TeamMember = React.forwardRef(
       linkWebsite,
       linkVibergroup,
       totalMembers,
+      isHugged,
+      onHugStart,
+      onHugEnd,
     },
     ref,
   ) => {
@@ -76,10 +79,14 @@ const TeamMember = React.forwardRef(
     return (
       <div
         ref={ref}
-        className={`relative flex-shrink-0 items-center justify-center overflow-hidden rounded-md shadow-lg transition-all duration-700 ${
+        className={`relative flex-shrink-0 items-center justify-center overflow-hidden rounded-md transition-all duration-1000 ease-in-out ${
+          isHugged
+            ? "z-10 scale-[1.06] shadow-[0_0_0_3px_rgba(255,255,255,0.95),0_0_24px_8px_rgba(255,235,150,0.75),0_0_60px_20px_rgba(255,220,120,0.4)]"
+            : "scale-100 shadow-lg"
+        } ${
           isExpanded
-            ? "h-[calc(100dvh-128px)] w-full max-w-[75%] bg-moetoRazhdaneYellow md:h-[600px] md:max-w-[400px]"
-            : "h-[calc(100dvh-128px)] bg-white md:h-[600px] md:w-36"
+            ? "h-[calc(100dvh-128px)] w-full max-w-[75%] bg-third md:h-[600px] md:max-w-[400px]"
+            : "h-[calc(100dvh-128px)] bg-primary md:h-[600px] md:w-36"
         }`}
         style={{
           // Apply width constraints on all viewports when collapsed
@@ -99,6 +106,8 @@ const TeamMember = React.forwardRef(
           }),
         }}
         onClick={onClick}
+        onMouseEnter={onHugStart}
+        onMouseLeave={onHugEnd}
       >
         <img
           src={image}
@@ -120,7 +129,7 @@ const TeamMember = React.forwardRef(
         {!isExpanded && (
           <div className="absolute left-0 top-4 z-10 w-full p-5 text-center">
             <div
-              className={`rotate-90 transform font-magnoliaScript text-4xl font-bold text-black transition-all duration-700 ease-in-out  ${
+              className={`rotate-90 transform font-magnoliaScript text-4xl font-bold text-fourth transition-all duration-700 ease-in-out  ${
                 showCollapsedName
                   ? "translate-y-0 opacity-100"
                   : "translate-y-4 opacity-0"
@@ -135,7 +144,7 @@ const TeamMember = React.forwardRef(
           <>
             <div className="absolute left-0 top-0 m-5 w-full">
               <h3
-                className={`transform font-magnoliaScript text-3xl font-bold text-black drop-shadow-lg transition-all duration-700 ease-in-out sm:text-2xl md:text-3xl ${
+                className={`transform font-magnoliaScript text-3xl font-bold text-fourth drop-shadow-lg transition-all duration-700 ease-in-out sm:text-2xl md:text-3xl ${
                   showName
                     ? "translate-y-0 opacity-100"
                     : "translate-y-4 opacity-0"
@@ -144,7 +153,7 @@ const TeamMember = React.forwardRef(
                 {title} {firstName} {lastName}
               </h3>
               <p
-                className={`max-w-[90%] transform whitespace-normal break-words pt-4 text-base font-rocaTwoThin text-black drop-shadow-lg transition-all duration-700 ease-in-out ${
+                className={`max-w-[90%] transform whitespace-normal break-words pt-4 text-base font-rocaTwoThin text-fourth drop-shadow-lg transition-all duration-700 ease-in-out ${
                   showRole
                     ? "translate-y-0 opacity-100"
                     : "translate-y-4 opacity-0"
@@ -162,13 +171,13 @@ const TeamMember = React.forwardRef(
                 }`}
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="flex items-center gap-4 whitespace-nowrap rounded-3xl bg-moetoRazhdaneLightGreen px-5 py-3 shadow-lg ring-4 ring-white">
+                <div className="flex items-center gap-4 whitespace-nowrap rounded-3xl bg-primary px-5 py-3 shadow-lg ring-4 ring-primary">
                   {linkInsta && (
                     <a
                       href={linkInsta}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transform-gpu transition-all duration-500 ease-in-out hover:text-moetoRazhdanePurple"
+                      className="transform-gpu transition-all duration-500 ease-in-out hover:text-fourth"
                     >
                       <FaInstagram className="h-6 w-6" />
                     </a>
@@ -178,7 +187,7 @@ const TeamMember = React.forwardRef(
                       href={linkFacebook}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transform-gpu transition-all duration-500 ease-in-out hover:text-blue-600"
+                      className="transform-gpu transition-all duration-500 ease-in-out hover:text-fourth"
                     >
                       <FaFacebook className="h-6 w-6" />
                     </a>
@@ -188,7 +197,7 @@ const TeamMember = React.forwardRef(
                       href={linkWebsite}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="transition-all duration-500 ease-in-out hover:text-white"
+                      className="transition-all duration-500 ease-in-out hover:text-fourth"
                     >
                       <FaGlobe className="h-6 w-6" />
                     </a>
@@ -253,8 +262,44 @@ const teamMembers = [
 const Team = () => {
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [huggedIndex, setHuggedIndex] = useState(null);
   const containerRef = useRef(null);
   const memberRefs = useRef([]);
+
+  // Mobile: hug the single card closest to the container's center
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const updateHug = () => {
+      if (window.innerWidth >= 768) return;
+      const cRect = container.getBoundingClientRect();
+      const centerX = cRect.left + cRect.width / 2;
+      let best = null;
+      let bestDist = Infinity;
+      memberRefs.current.forEach((el, i) => {
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        if (r.right < cRect.left || r.left > cRect.right) return;
+        const dist = Math.abs(r.left + r.width / 2 - centerX);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = i;
+        }
+      });
+      setHuggedIndex(best);
+    };
+
+    updateHug();
+    container.addEventListener("scroll", updateHug, { passive: true });
+    window.addEventListener("resize", updateHug);
+    return () => {
+      container.removeEventListener("scroll", updateHug);
+      window.removeEventListener("resize", updateHug);
+    };
+  }, []);
+
+  const hugEnabled = () => window.innerWidth >= 768;
 
   // Set up refs for team members
   useEffect(() => {
@@ -339,6 +384,12 @@ const Team = () => {
             isExpanded={expandedIndex === index}
             onClick={() => handleToggleExpand(index)}
             totalMembers={teamMembers.length}
+            isHugged={huggedIndex === index}
+            onHugStart={() => hugEnabled() && setHuggedIndex(index)}
+            onHugEnd={() =>
+              hugEnabled() &&
+              setHuggedIndex((cur) => (cur === index ? null : cur))
+            }
           />
         ))}
       </div>

@@ -15,9 +15,9 @@ const LoadingSpinner = ({
 
   // Color classes
   const colorClasses = {
-    green: "border-moetoRazhdaneDarkGreen border-t-moetoRazhdaneLightGreen",
-    pink: "border-moetoRazhdanePurple border-t-moetoRazhdanePurpleLighter",
-    yellow: "border-moetoRazhdaneYellow border-t-moetoRazhdaneDarkGreen",
+    green: "border-primary border-t-primary",
+    pink: "border-secondary border-t-secondary",
+    yellow: "border-third border-t-primary",
   };
 
   return (
@@ -25,7 +25,7 @@ const LoadingSpinner = ({
       <div
         className={` ${sizeClasses[size] || sizeClasses.md} ${colorClasses[color] || colorClasses.green} animate-spin rounded-full border-4`}
       ></div>
-      {text && <p className="mt-3 text-lg text-moetoRazhdaneWhite">{text}</p>}
+      {text && <p className="mt-3 text-lg text-fourth">{text}</p>}
     </div>
   );
 };

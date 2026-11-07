@@ -1,14 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import sgusheniImage from "./assets/pictures/partners/sgusheni-logo-H.png";
-import bendidaImage from "./assets/pictures/partners/bendida.png";
-import svetlanaImage from "./assets/pictures/partners/svetlana nencheva.png";
-import nutrimamaImage from "./assets/pictures/partners/nutrimama.png";
-import pekarnatanadaniImage from "./assets/pictures/partners/pekarnata na Dani.png";
-import lekanoshtmilozaicheImage from "./assets/pictures/partners/lekanosht.png";
-import greenrevoluciaImage from "./assets/pictures/partners/green revolucia.png";
-import carrydanceImage from "./assets/pictures/partners/carrydanceImage.jpg";
 import { FaGlobe, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
+import { partnersAll } from "./partnerData";
 
 // Single Partner Card Component
 const PartnerCard = ({
@@ -42,11 +35,11 @@ const PartnerCard = ({
           className="h-auto w-full object-contain p-1"
         />
       </div>
-      <h3 className="mt-4 text-center font-magnoliaScript text-3xl font-bold text-black">
+      <h3 className="mt-4 text-center font-magnoliaScript text-3xl font-bold text-fourth">
         {partnerName}
       </h3>
       {description && (
-        <p className="mt-2 text-center font-rocaTwoThin text-lg font-light text-gray-600">
+        <p className="mt-2 text-center font-rocaTwoThin text-lg font-light text-fourth">
           {description}
         </p>
       )}
@@ -57,7 +50,7 @@ const PartnerCard = ({
               href={linkWeb}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-black hover:text-gray-500"
+              className="text-fourth hover:text-fourth"
             >
               <FaGlobe className="h-6 w-6" />
             </a>
@@ -67,7 +60,7 @@ const PartnerCard = ({
               href={linkInsta}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-black hover:text-gray-500"
+              className="text-fourth hover:text-fourth"
             >
               <FaInstagram className="h-6 w-6" />
             </a>
@@ -77,7 +70,7 @@ const PartnerCard = ({
               href={linkFace}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-black hover:text-gray-500"
+              className="text-fourth hover:text-fourth"
             >
               <FaFacebook className="h-6 w-6" />
             </a>
@@ -87,7 +80,7 @@ const PartnerCard = ({
               href={linkYoutube}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-black hover:text-gray-500"
+              className="text-fourth hover:text-fourth"
             >
               <FaYoutube className="h-6 w-6" />
             </a>
@@ -150,60 +143,6 @@ const Partners = ({ onClose }) => {
       clearTimeout(timer);
     };
   }, []);
-
-  // ================ PARTNERS DATA ================
-  const partnersAll = [
-    {
-      partnerName: "Сгушени",
-      description:
-        "Всичко необходимо за гардероба на бременната, кърмеща и бебеносеща майка.",
-      image: sgusheniImage,
-      link: "https://sgusheni.com/",
-    },
-    {
-      partnerName: "Бендида",
-      description: "Храни за женски хормонален баланс.",
-      image: bendidaImage,
-      link: "https://bendidawellness.com/",
-    },
-    {
-      partnerName: "Нутри Мама",
-      description: "Здравословно хапване за цялото семейство.",
-      image: nutrimamaImage,
-      link: "https://www.instagram.com/nutrimamabg/",
-    },
-    {
-      partnerName: "Светлана Ненчева",
-      description: "Консултант женско здраве, Нутриционист, Треньор",
-      image: svetlanaImage,
-      link: "https://www.instagram.com/svetlana_nencheva/",
-    },
-    {
-      partnerName: "Лека нощ, мило зайче",
-      description:
-        "Консултантска практика в подкрепа на ранното детско развитие, храненето и съня.",
-      image: lekanoshtmilozaicheImage,
-      link: "https://www.lekanoshtmilozaiche.com/",
-    },
-    {
-      partnerName: "Пекарната на Дани",
-      description: "В синхрон с природата, сезоните и хората, творяща с любов.",
-      image: pekarnatanadaniImage,
-      link: "https://www.facebook.com/TheDanisBakery/?locale=bg_BG",
-    },
-    {
-      partnerName: "Green Revolucia",
-      description: "Първият онлайн магазин с Нулев Отпадък в България",
-      image: greenrevoluciaImage,
-      link: "https://www.greenrevolucia.com/",
-    },
-    {
-      partnerName: "Carry Dance",
-      description: "Активности за мама и бебе",
-      image: carrydanceImage,
-      link: "https://www.facebook.com/people/Carry-Dance-Sofia-%D0%90%D0%BA%D1%82%D0%B8%D0%B2%D0%BD%D0%BE%D1%81%D1%82%D0%B8-%D0%B7%D0%B0-%D0%BC%D0%B0%D0%BC%D0%B0-%D0%B8-%D0%B1%D0%B5%D0%B1%D0%B5/61552205436719/",
-    },
-  ];
 
   return (
     <div className="flex flex-col items-center">

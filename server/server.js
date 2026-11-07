@@ -113,6 +113,54 @@ app.get("/test", (req, res) => {
   });
 });
 
+const getImageAttachmentUrl = (attachment) => {
+  const attachments = Array.isArray(attachment) ? attachment : [attachment];
+
+  for (const item of attachments) {
+    const value = typeof item === "string" ? item : item?.val;
+    const params = typeof item === "object" && item ? item.params : null;
+    const mimeType = Object.entries(params || {}).find(
+      ([key]) => key.toLowerCase() === "fmttype",
+    )?.[1];
+    const filename = Object.entries(params || {}).find(
+      ([key]) => key.toLowerCase() === "filename",
+    )?.[1];
+
+    if (typeof value !== "string") {
+      continue;
+    }
+
+    try {
+      const url = new URL(value);
+      const hasImageExtension =
+        /\.(?:avif|gif|jpe?g|png|svg|webp)$/i.test(url.pathname) ||
+        (typeof filename === "string" &&
+          /\.(?:avif|gif|jpe?g|png|svg|webp)$/i.test(filename));
+      const isGoogleDrive = /(^|\.)drive\.google\.com$/i.test(url.hostname);
+      const driveFileId =
+        url.searchParams.get("id") ||
+        url.pathname.match(/\/file\/d\/([^/]+)/)?.[1];
+
+      if (
+        url.protocol === "https:" &&
+        !url.username &&
+        !url.password &&
+        (/^image\//i.test(mimeType || "") || hasImageExtension)
+      ) {
+        if (isGoogleDrive && driveFileId) {
+          return `https://drive.google.com/thumbnail?id=${encodeURIComponent(driveFileId)}&sz=w480`;
+        }
+
+        return url.toString();
+      }
+    } catch {
+      // Ignore malformed attachment URLs.
+    }
+  }
+
+  return "";
+};
+
 /**
  * Handles GET requests to the "/events" endpoint, fetching and parsing calendar events from an ICS URL.
  *
@@ -130,9 +178,22 @@ app.get("/events", async (req, res) => {
 
   ical.async.fromURL(icsUrl, {}, function (err, data) {
     if (err) {
-      console.error("Error fetching or parsing ICS file:", err);
+      const status = err.response?.status;
+      console.error(
+        status === 404
+          ? "Google Calendar returned HTTP 404 for the configured ICS feed."
+          : `Error fetching or parsing ICS file${status ? ` (HTTP ${status})` : ""}:`,
+        err.message,
+      );
+      if (status === 404) {
+        return res.status(502).json({
+          error: "Calendar feed not found",
+          message:
+            "Google Calendar returned HTTP 404. Verify that CALENDAR_ICS_URL is the current iCal feed URL and that the calendar is accessible.",
+        });
+      }
       return res
-        .status(500)
+        .status(502)
         .json({ error: "Error fetching or parsing calendar data" });
     }
 
@@ -140,6 +201,16 @@ app.get("/events", async (req, res) => {
       if (Object.prototype.hasOwnProperty.call(data, k)) {
         const ev = data[k];
         if (ev.type == "VEVENT") {
+          const location = ev.location?.trim();
+          if (
+            !location ||
+            /локацията за тази среща все още избира|проверете по-късно пак/i.test(
+              location,
+            )
+          ) {
+            continue;
+          }
+
           let summary = ev.summary;
           let type = "Regular";
           if (summary.startsWith("S:")) {
@@ -179,9 +250,7 @@ app.get("/events", async (req, res) => {
               ev.description?.trim() ||
               "Описанието за тази среща, все още се пише. Проверете по-късно пак!",
             ID: ev.uid,
-            location:
-              ev.location?.trim() ||
-              "Локацията за тази среща все още избира 🌏 . Проверете по-късно пак!",
+            location: location,
             timeStart: ev.start.toLocaleTimeString("bg-BG", {
               timeStyle: "short",
               timeZone: "Europe/Sofia",
@@ -193,6 +262,7 @@ app.get("/events", async (req, res) => {
             }),
             type: type,
             cID: cID,
+            attachmentUrl: getImageAttachmentUrl(ev.attach),
           });
         }
       }
@@ -204,6 +274,152 @@ app.get("/events", async (req, res) => {
     res.setHeader("Content-Type", "application/json");
     res.json(events);
   });
+});
+
+const SPOTIFY_PODCAST_URL =
+  "https://open.spotify.com/show/1RFiM8DDswRJohQiczd4R7";
+const PODCAST_CACHE_TTL_MS = 10 * 60 * 1000;
+let podcastEpisodesCache = null;
+let podcastEpisodesCacheExpiresAt = 0;
+let podcastEpisodesRequest = null;
+
+const decodeHtmlEntities = (value) =>
+  value
+    .replace(/&#(\d+);/g, (_, code) =>
+      String.fromCodePoint(Number.parseInt(code, 10)),
+    )
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) =>
+      String.fromCodePoint(Number.parseInt(code, 16)),
+    )
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
+
+const extractHtmlText = (html) =>
+  decodeHtmlEntities(
+    html
+      .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, " ")
+      .replace(/<[^>]*>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim(),
+  );
+
+const getHtmlAttribute = (html, tagName, attributeName) => {
+  const tag = html.match(new RegExp(`<${tagName}\\b[^>]*>`, "i"))?.[0];
+  if (!tag) return "";
+  const escapedName = attributeName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const value = tag.match(
+    new RegExp(`\\b${escapedName}=["']([^"']*)["']`, "i"),
+  )?.[1];
+  return value ? decodeHtmlEntities(value) : "";
+};
+
+const parseSpotifyEpisodes = (html) => {
+  const episodeMarkers = [
+    ...html.matchAll(/data-testid=["']episode-\d+["']/g),
+  ].slice(0, 3);
+
+  const episodes = episodeMarkers.flatMap((marker, index) => {
+    const start = marker.index;
+    const end = episodeMarkers[index + 1]?.index ?? html.length;
+    const card = html.slice(start, end);
+    const episodeId = card.match(
+      /<a\b[^>]*href=["']\/episode\/([A-Za-z0-9]+)["']/i,
+    )?.[1];
+    const title = getHtmlAttribute(card, "img", "alt");
+    const imageUrl = getHtmlAttribute(card, "img", "src");
+    const paragraphs = [
+      ...card.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi),
+    ].map((match) => extractHtmlText(match[1]));
+    const durationIndex = paragraphs.findIndex((text) =>
+      /^(?:(?:\d+)\s*hr\s*)?\d+\s*min$/i.test(text),
+    );
+    const duration =
+      durationIndex >= 0 ? paragraphs[durationIndex] : "";
+    const description =
+      paragraphs.find(
+        (text, paragraphIndex) =>
+          paragraphIndex !== durationIndex && text.length > 0,
+      ) || "";
+    const publishedAt =
+      paragraphs.find(
+        (text, paragraphIndex) =>
+          paragraphIndex !== durationIndex && text !== description,
+      ) || "";
+
+    if (!episodeId || !title) return [];
+
+    return [
+      {
+        id: episodeId,
+        title,
+        description,
+        publishedAt,
+        duration,
+        imageUrl: imageUrl.startsWith("https://i.scdn.co/image/")
+          ? imageUrl
+          : "",
+        url: `https://open.spotify.com/episode/${episodeId}`,
+      },
+    ];
+  });
+
+  if (episodes.length === 0) {
+    throw new Error("Spotify episode data was not found on the show page");
+  }
+
+  return episodes;
+};
+
+const fetchSpotifyEpisodes = async () => {
+  const response = await fetch(SPOTIFY_PODCAST_URL, {
+    headers: {
+      Accept: "text/html",
+      "User-Agent": "Mozilla/5.0 (compatible; ZamoetorazhdanePodcastFeed/1.0)",
+    },
+    signal: AbortSignal.timeout(10000),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Spotify returned HTTP ${response.status}`);
+  }
+
+  const html = await response.text();
+  if (html.length > 5_000_000) {
+    throw new Error("Spotify show page exceeded the expected size");
+  }
+
+  return parseSpotifyEpisodes(html);
+};
+
+app.get("/podcast-episodes", async (req, res) => {
+  if (podcastEpisodesCache && Date.now() < podcastEpisodesCacheExpiresAt) {
+    return res.json({ episodes: podcastEpisodesCache });
+  }
+
+  try {
+    if (!podcastEpisodesRequest) {
+      podcastEpisodesRequest = fetchSpotifyEpisodes()
+        .then((episodes) => {
+          podcastEpisodesCache = episodes;
+          podcastEpisodesCacheExpiresAt = Date.now() + PODCAST_CACHE_TTL_MS;
+          return episodes;
+        })
+        .finally(() => {
+          podcastEpisodesRequest = null;
+        });
+    }
+
+    const episodes = await podcastEpisodesRequest;
+    return res.json({ episodes });
+  } catch (error) {
+    console.error("Failed to fetch Spotify podcast episodes:", error.message);
+    return res.status(502).json({
+      error: "Podcast episodes are temporarily unavailable",
+    });
+  }
 });
 
 // Email transporter setup

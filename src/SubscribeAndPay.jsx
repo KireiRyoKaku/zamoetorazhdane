@@ -1,5 +1,5 @@
-import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { differenceInHours } from "date-fns";
 import { API_URL } from "../utils/apiConfig.js";
@@ -10,9 +10,9 @@ import {
   FaMapMarkerAlt,
   FaDesktop,
 } from "react-icons/fa";
-import { p } from "framer-motion/client";
+import { IoClose } from "react-icons/io5";
 
-const SubscribeAndPay = ({ onClose }) => {
+const SubscribeAndPay = () => {
   const location = useLocation();
   const { eventId } = useParams(); // Get the eventId from URL params
   const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +26,7 @@ const SubscribeAndPay = ({ onClose }) => {
     eventLocation: "",
     eventDescription: "",
     eventType: "",
+    attachmentUrl: "",
   });
 
   // Extract from location.state (if available) or use event details state
@@ -37,6 +38,7 @@ const SubscribeAndPay = ({ onClose }) => {
     eventLocation = eventDetails.eventLocation || "",
     eventDescription = eventDetails.eventDescription || "",
     eventType = eventDetails.eventType || "",
+    attachmentUrl = eventDetails.attachmentUrl || "",
   } = location.state || {};
 
   const navigate = useNavigate();
@@ -45,6 +47,20 @@ const SubscribeAndPay = ({ onClose }) => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [showParticipantInfoPopup, setShowParticipantInfoPopup] =
     useState(false);
+
+  useEffect(() => {
+    const { body, documentElement } = document;
+    const previousBodyOverflow = body.style.overflow;
+    const previousDocumentOverflow = documentElement.style.overflow;
+
+    body.style.overflow = "hidden";
+    documentElement.style.overflow = "hidden";
+
+    return () => {
+      body.style.overflow = previousBodyOverflow;
+      documentElement.style.overflow = previousDocumentOverflow;
+    };
+  }, []);
 
   const [formData, setFormData] = useState({
     event: eventSummary || "",
@@ -94,6 +110,7 @@ const SubscribeAndPay = ({ onClose }) => {
               eventLocation: event.location || "",
               eventDescription: event.description || "",
               eventType: event.type || "",
+              attachmentUrl: event.attachmentUrl || "",
             });
 
             // Update form data
@@ -149,11 +166,11 @@ const SubscribeAndPay = ({ onClose }) => {
       (eventLocation.toLowerCase().includes("софия") ||
         eventLocation.toLowerCase().includes("sofia"))
     ) {
-      return "bg-moetoRazhdaneLightGreen text-black"; // Sofia events - light green
+      return "bg-primary text-fourth"; // Sofia events - light green
     }
     // Check for Plovdiv (default for subscription events)
     else {
-      return "bg-moetoRazhdaneDarkGreen text-white"; // Plovdiv events - dark green
+      return "bg-primary text-fourth"; // Plovdiv events
     }
   };
 
@@ -204,8 +221,8 @@ const SubscribeAndPay = ({ onClose }) => {
       <div className="space-y-2">
         {/* Price increase warning - only show if price will increase */}
         {willPriceIncrease && (
-          <div className="rounded-md border border-gray-200 bg-gray-50 p-2">
-            <p className="text-center text-base text-gray-600">
+          <div className="rounded-md border border-primary bg-primary p-2">
+            <p className="text-center text-base text-fourth">
               💡Таксата ще се увеличи в последните 3 дни преди преди събитието,
               на{" "}
             </p>
@@ -216,23 +233,23 @@ const SubscribeAndPay = ({ onClose }) => {
         )}
 
         <div className="space-y-1">
-          <div className="font-bold text-moetoRazhdanePurple">
+          <div className="font-bold text-fourth">
             {count === 1
               ? `Редовна такса: ${nonMemberTotalPrice} лв.`
               : `Редовна такса: ${nonMemberTotalPrice} лв. (${basePrice} лв. x ${count})`}
             {willPriceIncrease && (
-              <span className="ml-2 text-xs font-normal text-gray-500">
+              <span className="ml-2 text-xs font-normal text-fourth">
                 (или {(basePrice + 5) * count} лв. при късно запсиване)
               </span>
             )}
           </div>
-          <div className="font-bold text-moetoRazhdaneWhite">
+          <div className="font-bold text-fourth">
             {count === 1
               ? `С отстъпка за членове на "Прегърната": ${memberTotalPrice} лв.`
               : `С отстъпка за членове на "Прегърната": ${memberTotalPrice} лв. (${memberPrice} лв. + ${basePrice} лв. x ${count - 1})`}
             {willPriceIncrease && (
               <p>
-                <span className="ml-2 text-xs font-normal text-gray-500">
+                <span className="ml-2 text-xs font-normal text-fourth">
                   (или{" "}
                   {Math.max(20, basePrice + 5 - 10) +
                     (basePrice + 5) * (count - 1)}{" "}
@@ -241,13 +258,13 @@ const SubscribeAndPay = ({ onClose }) => {
               </p>
             )}
             {count > 1 && (
-              <div className="mt-1 text-sm font-normal text-moetoRazhdaneWhite">
+              <div className="mt-1 text-sm font-normal text-fourth">
                 * само първият участник може да бъде таксуван като член
               </div>
             )}
           </div>
         </div>
-        <div className="text-sm text-moetoRazhdaneWhite">
+        <div className="text-sm text-fourth">
           * Валидната за теб крайна сума ще бъде изчислена според членството ти
           в потвърдителния имейл.
         </div>
@@ -416,7 +433,18 @@ const SubscribeAndPay = ({ onClose }) => {
   };
 
   return (
-    <div className="subscribe-and-pay-container z-50 m-auto mb-16 max-w-2xl overflow-y-auto rounded-xl bg-white p-6 shadow-lg sm:mb-24">
+    createPortal(
+    <div className="fixed inset-0 z-[10000] h-[100dvh] w-screen overflow-hidden bg-primary/60">
+      <div className="subscribe-and-pay-container h-full w-full overflow-x-hidden overflow-y-auto bg-primary p-5 shadow-lg sm:p-6">
+      <button
+        type="button"
+        onClick={() => navigate("/program")}
+        className="fixed right-3 top-3 z-[10001] flex h-11 w-11 items-center justify-center rounded-full bg-primary text-3xl text-fourth shadow-md transition-colors hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary"
+        aria-label="Затвори прозореца"
+        title="Затвори"
+      >
+        <IoClose aria-hidden="true" />
+      </button>
       {isLoading ? (
         <div className="flex flex-col items-center justify-center py-16">
           <LoadingSpinner
@@ -424,42 +452,52 @@ const SubscribeAndPay = ({ onClose }) => {
             color="green"
             text="Зареждане на събитие..."
           />
-          <p className="mt-4 text-center text-moetoRazhdaneWhite">
+          <p className="mt-4 text-center text-fourth">
             Моля изчакайте, докато зареждаме детайлите за събитието...
           </p>
         </div>
       ) : (
         <>
           <h2 className="text-center text-2xl font-bold">Записване за</h2>
-          <h1 className="EventSummary">
-            <p className="EventName py-2 text-center font-magnoliaScript text-3xl text-moetoRazhdaneDarkGreen">
+          {attachmentUrl && (
+            <img
+              src={attachmentUrl}
+              alt=""
+              className="mx-auto mt-3 h-36 w-full max-w-2xl rounded-lg object-cover"
+              onError={(e) => {
+                e.currentTarget.style.display = "none";
+              }}
+            />
+          )}
+          <h1 className="EventSummary min-w-0 max-w-full">
+            <p className="EventName min-w-0 max-w-full break-words py-2 text-center font-magnoliaScript text-3xl text-fourth [overflow-wrap:anywhere]">
               {eventSummary}
             </p>
 
             {/* Secondary Title - First quoted sentence from description */}
             {getFirstQuotedSentence(eventDescription) && (
-              <div className="mt-1 flex w-full justify-center">
-                <div className="px-3 text-center text-base font-light italic leading-relaxed text-moetoRazhdaneWhite">
+              <div className="mt-1 flex min-w-0 w-full justify-center">
+                <div className="min-w-0 max-w-full break-words px-3 text-center text-base font-light italic leading-relaxed text-fourth [overflow-wrap:anywhere]">
                   "{getFirstQuotedSentence(eventDescription)}"
                 </div>
               </div>
             )}
 
             {/* Event Date, Time and Location - styled like MyBirthCalendar */}
-            <div className="mt-4 space-y-0 text-moetoRazhdaneWhite">
+            <div className="mt-4 space-y-0 text-fourth">
               {/* Date */}
               <div className="flex items-center gap-2 border-t pt-1">
-                <FaCalendarAlt className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
+                <FaCalendarAlt className="h-4 w-4 text-fourth opacity-75" />
                 <div className="EventDescriptionDate">{eventDate}</div>
               </div>
 
               {/* Time */}
               <div className="flex items-center gap-2 pb-1">
-                <FaClock className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
+                <FaClock className="h-4 w-4 text-fourth opacity-75" />
                 <div className="EventDescriptionTime">
                   {eventTime}
-                  <span className="ml-2 text-sm font-medium text-moetoRazhdaneWhite/70">
-                    (България / EEST)
+                  <span className="ml-2 text-sm font-medium text-fourth/70">
+                    (UTC+3)
                   </span>
                 </div>
               </div>
@@ -468,14 +506,14 @@ const SubscribeAndPay = ({ onClose }) => {
               <div className="flex items-center gap-2 border-b pb-1">
                 {/* Use different icons for online vs physical events */}
                 {/^https?:\/\/.+/i.test(eventLocation) ? (
-                  <FaDesktop className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
+                  <FaDesktop className="h-4 w-4 text-fourth opacity-75" />
                 ) : (
-                  <FaMapMarkerAlt className="h-4 w-4 text-moetoRazhdaneWhite opacity-75" />
+                  <FaMapMarkerAlt className="h-4 w-4 text-fourth opacity-75" />
                 )}
                 <div className="EventDescriptionLocation text-left">
                   {/* Check if location is a URL, show "онлайн събитие", otherwise make it a Google Maps link */}
                   {/^https?:\/\/.+/i.test(eventLocation) ? (
-                    <span className="text-moetoRazhdaneWhite">
+                    <span className="text-fourth">
                       онлайн събитие в Прегърната
                     </span>
                   ) : (
@@ -483,7 +521,7 @@ const SubscribeAndPay = ({ onClose }) => {
                       href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eventLocation)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-moetoRazhdaneWhite underline transition-colors duration-200 hover:text-moetoRazhdanePurple"
+                      className="min-w-0 break-words text-fourth underline transition-colors duration-200 hover:text-fourth [overflow-wrap:anywhere]"
                       onClick={(e) => e.stopPropagation()}
                     >
                       {eventLocation}
@@ -499,33 +537,36 @@ const SubscribeAndPay = ({ onClose }) => {
         <>
           {/* Event Description at the top */}
           {eventDescription && (
-            <button
-              type="button"
-              onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-              className={`event-description mb-6 mt-4 w-full overflow-hidden rounded-lg text-left transition-all duration-200 hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-white focus:ring-opacity-50 ${getEventTypeStyle()}`}
+            <section
+              className={`event-description mb-6 mt-4 min-w-0 w-full overflow-hidden rounded-lg ${getEventTypeStyle()}`}
             >
               <div className="p-4">
-                <h3 className="text-center text-lg font-bold">
+                <button
+                  type="button"
+                  onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                  className="w-full text-center text-lg font-bold transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
+                  aria-expanded={isDescriptionExpanded}
+                >
                   {isDescriptionExpanded
                     ? "Описание"
                     : "Виж повече за събитето..."}
-                </h3>
+                </button>
                 {isDescriptionExpanded && (
                   <div
-                    className="text-left"
+                    className="event-description-content mt-3 min-w-0 max-w-full break-words text-left [overflow-wrap:anywhere]"
                     dangerouslySetInnerHTML={{ __html: eventDescription }}
                   />
                 )}
               </div>
-            </button>
+            </section>
           )}
           <form
             onSubmit={handleSubmit}
-            className="space-y-3 text-4xl font-normal text-gray-700"
+            className="space-y-3 text-4xl font-normal text-fourth"
           >
             {/* Email field - always show first */}
             <div>
-              <label className="block text-xl font-medium text-gray-700">
+              <label className="block text-xl font-medium text-fourth">
                 E-Mail <span className="text-red-500">*</span>
               </label>
               <div className="relative">
@@ -535,14 +576,14 @@ const SubscribeAndPay = ({ onClose }) => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="mt-1 block w-full rounded-md border text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
+                  className="mt-1 block w-full rounded-md border text-base shadow-sm focus:border-primary focus:ring-primary"
                 />
               </div>
             </div>
 
             {/* First participant name field - separate and required */}
             <div>
-              <label className="block text-xl font-medium text-gray-700">
+              <label className="block text-xl font-medium text-fourth">
                 Име и фамилия<span className="text-red-500">*</span>
               </label>
               <input
@@ -551,12 +592,12 @@ const SubscribeAndPay = ({ onClose }) => {
                 value={formData.participantNames[0] || ""}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full rounded-md border text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
+                className="mt-1 block w-full rounded-md border text-base shadow-sm focus:border-primary focus:ring-primary"
               />
             </div>
 
             <div>
-              <label className="block text-xl font-medium text-gray-700">
+              <label className="block text-xl font-medium text-fourth">
                 Телефон за връзка <span className="text-red-500">*</span>
               </label>
               <input
@@ -585,26 +626,26 @@ const SubscribeAndPay = ({ onClose }) => {
                 }}
                 title="Въведете валиден телефонен номер за връзка"
                 required
-                className="mt-1 block w-full rounded-md border text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
+                className="mt-1 block w-full rounded-md border text-base shadow-sm focus:border-primary focus:ring-primary"
               />
             </div>
 
             <div>
               <div className="mt-2 space-y-4">
                 {/* Pricing display */}
-                <div className="rounded-md border border-gray-100 bg-gray-50 p-3">
-                  <span className="text-base text-gray-700">
+                <div className="rounded-md border border-primary bg-primary p-3">
+                  <span className="text-base text-fourth">
                     {priceOneTime()}
                   </span>
                 </div>
 
                 {/* Simple notification popup - appears only after adding first additional participant */}
                 {showParticipantInfoPopup && (
-                  <div className="rounded-lg border-l-4 border-moetoRazhdaneDarkGreen bg-moetoRazhdaneLightGreen p-4 shadow-md">
+                  <div className="rounded-lg border-l-4 border-primary bg-primary p-4 shadow-md">
                     <div className="flex items-start">
                       <div className="flex-shrink-0">
                         <svg
-                          className="h-5 w-5 text-moetoRazhdaneDarkGreen"
+                          className="h-5 w-5 text-fourth"
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -616,7 +657,7 @@ const SubscribeAndPay = ({ onClose }) => {
                         </svg>
                       </div>
                       <div className="ml-3 flex-1">
-                        <div className="text-sm font-medium text-moetoRazhdaneWhite">
+                        <div className="text-sm font-medium text-fourth">
                           От тук можеш да запишеш и допълнителни участници (ако
                           решиш да доведеш приятелка).
                         </div>
@@ -624,7 +665,7 @@ const SubscribeAndPay = ({ onClose }) => {
                       <div className="ml-auto pl-3">
                         <button
                           type="button"
-                          className="inline-flex rounded-md bg-moetoRazhdaneLightGreen text-moetoRazhdaneWhite hover:text-moetoRazhdaneDarkGreen focus:outline-none focus:ring-2 focus:ring-moetoRazhdaneDarkGreen focus:ring-offset-2 focus:ring-offset-moetoRazhdaneLightGreen"
+                          className="inline-flex rounded-md bg-primary text-fourth hover:text-fourth focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-primary"
                           onClick={() => setShowParticipantInfoPopup(false)}
                         >
                           <span className="sr-only">Затвори</span>
@@ -650,7 +691,7 @@ const SubscribeAndPay = ({ onClose }) => {
                   <button
                     type="button"
                     onClick={addParticipant}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-moetoRazhdaneDarkGreen px-6 py-3 text-base font-bold text-white transition-colors duration-200 hover:bg-opacity-90"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-bold text-fourth transition-colors duration-200 hover:bg-primary"
                   >
                     <span>+ добави място</span>
                     <span className="text-lg">
@@ -663,11 +704,11 @@ const SubscribeAndPay = ({ onClose }) => {
                         e.stopPropagation(); // Prevent triggering the parent button
                         setShowParticipantInfoPopup(true);
                       }}
-                      className="flex rounded-full bg-white bg-opacity-20 p-1 transition-colors duration-200 hover:bg-opacity-30"
+                      className="flex rounded-full bg-primary bg-opacity-20 p-1 transition-colors duration-200 hover:bg-opacity-30"
                       title="Информация за допълнителни участници"
                     >
                       <svg
-                        className="h-4 w-4 text-white"
+                        className="h-4 w-4 text-fourth"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -686,7 +727,7 @@ const SubscribeAndPay = ({ onClose }) => {
                   <button
                     type="button"
                     onClick={removeParticipant}
-                    className="w-full rounded-lg bg-red-600 px-4 py-2 text-xl font-medium text-white transition-colors duration-200 hover:bg-red-700"
+                    className="w-full rounded-lg bg-red-600 px-4 py-2 text-xl font-medium text-fourth transition-colors duration-200 hover:bg-red-700"
                   >
                     - премахни място ({formData.participantCount}/5)
                   </button>
@@ -702,9 +743,9 @@ const SubscribeAndPay = ({ onClose }) => {
                         return (
                           <div
                             key={actualIndex}
-                            className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+                            className="rounded-lg border border-primary bg-primary p-4 shadow-sm"
                           >
-                            <label className="mb-2 block text-base font-medium text-gray-700">
+                            <label className="mb-2 block text-base font-medium text-fourth">
                               Участник {actualIndex + 1} - Име и фамилия
                             </label>
                             <input
@@ -715,7 +756,7 @@ const SubscribeAndPay = ({ onClose }) => {
                               }
                               onChange={handleChange}
                               required={false} // Additional participants are not required
-                              className="block w-full rounded-md border-gray-100 p-3 text-base shadow-sm focus:border-moetoRazhdaneDarkGreen focus:ring-moetoRazhdaneDarkGreen"
+                              className="block w-full rounded-md border-primary p-3 text-base shadow-sm focus:border-primary focus:ring-primary"
                             />
                           </div>
                         );
@@ -727,9 +768,9 @@ const SubscribeAndPay = ({ onClose }) => {
             </div>
 
             <div>
-              <label className="block text-xl font-medium text-gray-700">
+              <label className="block text-xl font-medium text-fourth">
                 От къде научи за &quot;Прегърната&quot;?{" "}
-                <span className="text-sm text-gray-500">(до 280 символа)</span>
+                <span className="text-sm text-fourth">(до 280 символа)</span>
               </label>
               <input
                 type="text"
@@ -749,7 +790,7 @@ const SubscribeAndPay = ({ onClose }) => {
                 maxLength={280}
                 className="mt-1 block w-full rounded-md border text-xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
-              <div className="mt-1 text-right text-sm text-gray-500">
+              <div className="mt-1 text-right text-sm text-fourth">
                 {formData.source.length}/280 символа
               </div>
             </div>
@@ -767,13 +808,13 @@ const SubscribeAndPay = ({ onClose }) => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`rounded-3xl bg-moetoRazhdaneYellow px-6 py-2 font-rocaTwoBold text-2xl font-black text-black transition-all duration-500 ease-in-out hover:bg-transparent hover:text-black/30 ${
+                className={`rounded-3xl bg-third px-6 py-2 font-rocaTwoBold text-2xl font-black text-fourth transition-all duration-500 ease-in-out hover:bg-transparent hover:text-fourth/30 ${
                   isSubmitting ? "cursor-not-allowed opacity-50" : ""
                 }`}
               >
                 {isSubmitting ? (
                   <div className="flex items-center">
-                    <div className="mr-3 h-5 w-5 animate-spin rounded-full border-2 border-white border-b-transparent"></div>
+                    <div className="mr-3 h-5 w-5 animate-spin rounded-full border-2 border-primary border-b-transparent"></div>
                     ЗАПИСВАНЕ...
                   </div>
                 ) : (
@@ -781,18 +822,23 @@ const SubscribeAndPay = ({ onClose }) => {
                 )}
               </button>
             </div>
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={() => navigate("/program")}
+                className="rounded-3xl bg-secondary px-3 py-1 font-rocaTwoBold text-base font-bold text-fourth transition-colors hover:bg-secondary"
+              >
+                {"<- избери друго"}
+              </button>
+            </div>
           </form>
         </>
       )}
-    </div>
+      </div>
+    </div>,
+    document.body,
+    )
   );
 };
 
-SubscribeAndPay.propTypes = {
-  onClose: PropTypes.func,
-};
-
-SubscribeAndPay.defaultProps = {
-  onClose: () => {}, // Default empty function if not provided
-};
 export default SubscribeAndPay;

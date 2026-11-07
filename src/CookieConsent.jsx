@@ -28,19 +28,19 @@ const CookieConsent = () => {
   return (
     <div className="fixed left-0 right-0 top-0 z-[10000] mx-auto w-full bg-white/95 p-4 font-rocaTwoRegular shadow-lg backdrop-blur-sm">
       <div className="mx-auto flex max-w-xl flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        <p className="max-w-md text-left text-sm text-black/80">
+        <p className="max-w-md text-left text-sm text-fourth/80">
           Този сайт използва бисквитки, за да подобри вашето преживяване.
         </p>
         <div className="sx:flex-row flex w-full flex-col gap-2 self-stretch sm:w-auto sm:self-auto">
           <button
             onClick={handleAccept}
-            className="w-full whitespace-nowrap rounded-lg bg-moetoRazhdaneYellow px-4 py-2 text-black transition-colors duration-300 hover:bg-moetoRazhdaneLightGreen sm:w-auto"
+            className="w-full whitespace-nowrap rounded-lg bg-third px-4 py-2 text-fourth transition-colors duration-300 hover:bg-primary sm:w-auto"
           >
             Приемам
           </button>
           <button
             onClick={handleDecline}
-            className="w-full whitespace-nowrap rounded-lg bg-gray-200 px-4 py-2 text-black transition-colors duration-300 hover:bg-gray-300 sm:w-auto"
+            className="w-full whitespace-nowrap rounded-lg bg-primary px-4 py-2 text-fourth transition-colors duration-300 hover:bg-secondary sm:w-auto"
           >
             Отказвам
           </button>

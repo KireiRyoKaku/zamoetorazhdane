@@ -1,286 +1,362 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import logoSmall from "./assets/pictures/logo-green-outline.png"; // Updated to use pink logo without text
+import logoSmall from "./assets/pictures/PregurnataLogoPinkNoText.png";
+
+// Logo animation: change the duration for speed and the end offset to move the
+// lettering's final position along the SVG track.
+const LOGO_ANIMATION_DURATION_MS = 2000;
+const LOGO_TEXT_END_OFFSET = 300;
+
+const links = [
+  { label: "ПРОГРАМА", path: "/program" },
+  { label: "СЪБИТИЯ", path: "/events" },
+  { label: "ЗА НАС", path: "/about" },
+  { label: "ПАРТНЬОРИ", path: "/partners" },
+  { label: "TEST", path: "/test" },
+  {
+    label: "ПРАВНА ИНФОРМАЦИЯ",
+    path: "/privacy-policy",
+    also: ["/terms-of-service", "/cookie-policy"],
+  },
+];
 
 const PopupMenu = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [homeIntroStage, setHomeIntroStage] = useState(
+    location.pathname === "/" ? 0 : 2,
+  );
+  const logoTrackRef = useRef(null);
+  const logoTextPathRef = useRef(null);
+  const animationFrameRef = useRef(null);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target) &&
-        isMenuOpen
-      ) {
-        setIsMenuOpen(false);
+    setIsOpen(false);
+    if (location.pathname !== "/") {
+      setHomeIntroStage(2);
+      return;
+    }
+
+    setHomeIntroStage(0);
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setHomeIntroStage(2);
+      return;
+    }
+    const logoTimer = window.setTimeout(() => setHomeIntroStage(1), 100);
+    const menuTimer = window.setTimeout(() => setHomeIntroStage(2), 3350);
+    return () => {
+      window.clearTimeout(logoTimer);
+      window.clearTimeout(menuTimer);
+    };
+  }, [location.pathname]);
+
+  const startLogoAnimation = useCallback(() => {
+    const track = logoTrackRef.current;
+    const textPath = logoTextPathRef.current;
+    if (!track || !textPath) return;
+
+    if (animationFrameRef.current !== null) {
+      cancelAnimationFrame(animationFrameRef.current);
+    }
+
+    const endOffset = Math.min(LOGO_TEXT_END_OFFSET, track.getTotalLength());
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      textPath.setAttribute("startOffset", String(endOffset));
+      return;
+    }
+
+    const startOffset = track.getTotalLength();
+    const duration = LOGO_ANIMATION_DURATION_MS;
+    let startTime = null;
+
+    textPath.setAttribute("startOffset", String(startOffset));
+    const step = (timestamp) => {
+      if (startTime === null) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      // Replace this easing curve to change how the lettering accelerates.
+      const eased =
+        progress < 0.5
+          ? 4 * progress * progress * progress
+          : 1 - Math.pow(-2 * progress + 2, 3) / 2;
+
+      textPath.setAttribute(
+        "startOffset",
+        String(startOffset + (endOffset - startOffset) * eased),
+      );
+
+      if (progress < 1) {
+        animationFrameRef.current = requestAnimationFrame(step);
+      } else {
+        animationFrameRef.current = null;
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    animationFrameRef.current = requestAnimationFrame(step);
+  }, []);
+
+  useEffect(() => {
+    if (location.pathname !== "/") {
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+      return undefined;
+    }
+
+    let cancelled = false;
+    let timer;
+    // Mobile browsers render SVG text/images before the font and logo have
+    // loaded, so wait for both before animating.
+    const assetsReady = Promise.all([
+      document.fonts?.load('700px "Magnolia Script"') ?? Promise.resolve(),
+      new Promise((resolve) => {
+        const preload = new Image();
+        preload.onload = preload.onerror = resolve;
+        preload.src = logoSmall;
+      }),
+    ]).catch(() => undefined);
+    assetsReady.then(() => {
+      if (cancelled) return;
+      timer = window.setTimeout(startLogoAnimation, 400);
+    });
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      cancelled = true;
+      window.clearTimeout(timer);
+      if (animationFrameRef.current !== null) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     };
-  }, [isMenuOpen]);
+  }, [location.pathname, startLogoAnimation]);
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const isActive = (link) =>
+    location.pathname === link.path ||
+    link.also?.includes(location.pathname) ||
+    (link.path === "/events" && location.pathname.startsWith("/events"));
 
-  const handleNavigation = (path) => {
+  const go = (path) => {
     navigate(path);
-    setIsMenuOpen(false); // Close menu after navigation
+    setIsOpen(false);
   };
 
-  // Update the route detection logic to handle event pages with hash fragments
-  // Map of routes to their display names
-  const routeNames = {
-    "/": { text: "ВКЛЮЧИ СЕ", link: "/program" },
-    "/program": { text: "ПРОГРАМА", link: null },
-    "/events": { text: "СЪБИТИЯ", link: null },
-    "/about": { text: "ЗА НАС", link: null },
-    "/partners": { text: "ПАРТНЬОРИ", link: null },
-    "/privacy-policy": { text: "ПОВЕРИТЕЛНОСТ", link: null },
-    "/terms-of-service": { text: "УСЛОВИЯ", link: null },
-    "/cookie-policy": { text: "БИСКВИТКИ", link: null },
-    "/test": { text: "TEST", link: null },
-  };
-
-  // Determine current route text and link
-  let currentRoute;
-
-  // Get the full URL including hash for proper route detection
-  const fullPath = location.pathname + location.hash;
-
-  // Check if we're on a subscribe/payment page
-  if (fullPath.includes("subscribe") || fullPath.includes("pay")) {
-    currentRoute = { text: "Формуляр", link: null };
-  }
-  // Check if we're on events page or any event-specific page (including hash routes)
-  else if (fullPath.includes("/events") || fullPath.includes("#/events")) {
-    currentRoute = routeNames["/events"];
-  } else {
-    currentRoute = routeNames[location.pathname] || routeNames["/"];
-  }
-
-  return (
-    <div
-      ref={menuRef}
-      className="fixed bottom-0 left-0 z-[9999] w-full pb-4 font-rocaTwoRegular text-2xl font-black drop-shadow-xl"
+  // Link sizing: mobile py-3/text-xl controls row spacing and label size;
+  // desktop text-base/lg:text-lg controls label size. Change the color classes
+  // here to adjust normal/active link colors.
+  const renderLink = (link, mobile) => (
+    <button
+      key={link.path}
+      type="button"
+      onClick={() => go(link.path)}
+      disabled={isActive(link)}
+      className={
+        !mobile && link.path === "/program"
+          ? "whitespace-nowrap rounded-2xl bg-third px-3 py-2 text-xs text-fourth shadow-sm transition-colors hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          : `transition-colors duration-300 ${
+              mobile
+                ? "py-3 text-left text-xl"
+                : "whitespace-nowrap text-base lg:text-lg"
+            } ${
+              isActive(link)
+                ? "cursor-default text-fourth"
+                : "text-fourth hover:text-fourth/30"
+            }`
+      }
     >
-      <div className="mx-auto w-11/12 max-w-sm sm:max-w-md md:max-w-lg">
-        <div
-          className={`rounded-3xl bg-white transition-all ${
-            isMenuOpen ? "duration-1000" : "duration-300"
-          } ease-in-out`}
-        >
-          <div className="overflow-hidden">
+      {link.label}
+    </button>
+  );
+
+  const half = Math.ceil(links.length / 2);
+
+  // Header/nav sizing: adjust h-16 and md:h-20 for bar height, max-w-6xl
+  // for content width, and px-4/md:px-8 for horizontal side padding. The
+  // header classes control its fixed position/layer; bg-primary/drop-shadow-md
+  // below adjust the bar background and shadow.
+  return (
+    <header className="fixed inset-x-0 top-0 z-[9999] font-rocaTwoRegular font-black">
+      <div className="bg-white drop-shadow-md">
+        <nav className="relative mx-auto grid h-16 w-full max-w-6xl grid-cols-2 items-center gap-4 px-4 md:h-20 md:px-8 lg:grid-cols-[minmax(0,1fr)_8rem_minmax(0,1fr)]">
+          {/* Desktop link spacing and text sizing are controlled by gap-6/lg:gap-8
+              and the text-base/lg:text-lg classes in renderLink. */}
+          <div
+            className={`col-start-1 hidden items-center justify-end gap-4 transition-opacity duration-1000 lg:flex lg:gap-6 ${
+              homeIntroStage >= 2
+                ? "opacity-100"
+                : "pointer-events-none opacity-0"
+            }`}
+          >
+            {links.slice(0, half).map((l) => renderLink(l, false))}
+          </div>
+          {!isOpen && (
             <div
-              className={`transform transition-all ${
-                isMenuOpen ? "duration-1000" : "duration-300"
-              } ease-in-out ${
-                isMenuOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+              className={`col-start-1 flex justify-start transition-opacity duration-1000 lg:hidden ${
+                homeIntroStage >= 2
+                  ? "opacity-100"
+                  : "pointer-events-none opacity-0"
               }`}
             >
-              <div className="flex flex-col space-y-5 px-9 py-5 pb-0">
-                {/* Always show all menu items in the same order */}
-                <button
-                  onClick={() => handleNavigation("/program")}
-                  className={`text-left transition-colors duration-1000 ${
-                    location.pathname === "/program"
-                      ? "cursor-default font-black text-moetoRazhdaneYellow"
-                      : "text-black hover:text-black/30"
-                  }`}
-                  disabled={location.pathname === "/program"}
-                >
-                  ПРОГРАМА
-                </button>
-
-                <button
-                  onClick={() => handleNavigation("/events")}
-                  className={`text-left transition-colors duration-1000 ${
-                    fullPath.includes("/events") ||
-                    fullPath.includes("#/events")
-                      ? "cursor-default font-black text-moetoRazhdaneYellow"
-                      : "text-black hover:text-black/30"
-                  }`}
-                  disabled={
-                    fullPath.includes("/events") ||
-                    fullPath.includes("#/events")
-                  }
-                >
-                  СЪБИТИЯ
-                </button>
-
-                <button
-                  onClick={() => handleNavigation("/about")}
-                  className={`text-left transition-colors duration-1000 ${
-                    location.pathname === "/about"
-                      ? "cursor-default font-black text-moetoRazhdaneYellow"
-                      : "text-black hover:text-black/30"
-                  }`}
-                  disabled={location.pathname === "/about"}
-                >
-                  ЗА НАС
-                </button>
-
-                <button
-                  onClick={() => handleNavigation("/partners")}
-                  className={`text-left transition-colors duration-1000 ${
-                    location.pathname === "/partners"
-                      ? "cursor-default font-black text-moetoRazhdaneYellow"
-                      : "text-black hover:text-black/30"
-                  }`}
-                  disabled={location.pathname === "/partners"}
-                >
-                  ПАРТНЬОРИ
-                </button>
-                <button
-                  onClick={() => handleNavigation("/Test")}
-                  className={`text-left transition-colors duration-1000 ${
-                    location.pathname === "/partners"
-                      ? "cursor-default font-black text-moetoRazhdaneYellow"
-                      : "text-black hover:text-black/30"
-                  }`}
-                  disabled={location.pathname === "/partners"}
-                >
-                  TEST
-                </button>
-
-                <hr className="border-gray-300" />
-
-                <button
-                  onClick={() => handleNavigation("/privacy-policy")}
-                  className={`text-left transition-colors duration-1000 ${
-                    [
-                      "/privacy-policy",
-                      "/terms-of-service",
-                      "/cookie-policy",
-                    ].includes(location.pathname)
-                      ? "cursor-default font-black text-moetoRazhdaneYellow"
-                      : "text-black hover:text-black/30"
-                  }`}
-                  disabled={[
-                    "/privacy-policy",
-                    "/terms-of-service",
-                    "/cookie-policy",
-                  ].includes(location.pathname)}
-                >
-                  ПРАВНА ИНФОРМАЦИЯ
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => go("/program")}
+                className="rounded-2xl bg-third px-3 py-2 text-xs text-fourth shadow-sm transition-colors hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              >
+                ПРОГРАМА
+              </button>
             </div>
+          )}
+          {/* Mobile title position is adjusted with left-4; its text size,
+              font, and color are set on the button below. */}
+          {/* <div className="absolute left-4 top-1/2 flex -translate-y-1/2 items-center md:hidden">
+            <button
+              type="button"
+              onClick={() => go("/")}
+              aria-label="Прегърната — Начало"
+              className="whitespace-nowrap font-magnoliaScript text-xl text-fourth transition-opacity hover:opacity-70"
+            >
+              Прегърната
+            </button>
+          </div> */}
+
+          {/* Center logo holder: w-24/md:w-32 sets its width; change the
+              matching logo SVG height below to resize the artwork. Its top-0
+              and h-full align the holder to the navigation bar. */}
+          <div
+            className={`absolute left-1/2 top-0 z-10 h-full w-24 -translate-x-1/2 transition-opacity duration-1000 md:w-32 ${
+              homeIntroStage >= 1
+                ? "opacity-100"
+                : "pointer-events-none opacity-0"
+            }`}
+          >
+            {/* White tab width/height and left offset are set with w-[170%],
+                h-9/md:h-12, and -left-[35%]. The path controls its curve. */}
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 200 60"
+              preserveAspectRatio="none"
+              className="pointer-events-none absolute -left-[35%] top-full -mt-px h-9 w-[170%] fill-white md:h-12"
+            >
+              <path d="M0 0 C 55 0, 55 60, 100 60 C 145 60, 145 0, 200 0 Z" />
+            </svg>
+            {/* Adjust top-4 to raise/lower the logo within its tab. */}
+            <button
+              type="button"
+              onClick={() => {
+                if (location.pathname === "/") {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                  setIsOpen(false);
+                  return;
+                }
+                go("/");
+              }}
+              aria-label="Начало"
+              className="absolute left-1/2 top-2 flex -translate-x-1/2 items-center justify-center transition-opacity hover:opacity-70"
+            >
+              {/* Keep the viewBox matched to the source artwork; the height
+                  classes set logo size at mobile and desktop breakpoints. */}
+              <svg
+                aria-hidden="true"
+                viewBox="-370 -80 2253 2910"
+                className="h-[4.5rem] w-auto overflow-visible md:h-24"
+              >
+                <defs>
+                  {/* Change this path to adjust the route and length traveled
+                      by the animated lettering. */}
+                  <path
+                    ref={logoTrackRef}
+                    id="menu-logo-track"
+                    d="M-990 1328.2L-600 1778.5A1393.7 1451.5 0 0 0 2150.9 1778.5L2150.9 656.6A1393.7 1451.5 0 0 0 1742.3 -370.6"
+                  />
+                </defs>
+                {/* Image dimensions/coordinates align the imported logo to the
+                    SVG artwork; adjust together only if the source artwork changes. */}
+                <image
+                  href={logoSmall}
+                  x="0"
+                  y="0"
+                  width="1513"
+                  height="2436"
+                />
+                {/* Adjust fill/fontFamily/fontSize to change lettering color,
+                    typeface, and scale without changing the animation path. */}
+                <text
+                  className="text-secondary"
+                  fill="currentColor"
+                  fontFamily="Magnolia Script, cursive"
+                  fontSize="700"
+                  letterSpacing="100"
+                >
+                  {/* This text follows the path above; the end offset constant
+                      controls its final position on that path. */}
+                  <textPath
+                    ref={logoTextPathRef}
+                    href="#menu-logo-track"
+                    startOffset="-9999"
+                  >
+                    Прегърната
+                  </textPath>
+                </text>
+              </svg>
+            </button>
           </div>
 
-          {/* Menu Bar - clickable when closed, closable when open (except on frontpage with program button) */}
           <div
-            className={`relative flex items-center py-3 transition-all duration-500 ${
-              isMenuOpen ? "justify-center px-0" : "justify-between px-4"
-            } ${
-              !isMenuOpen
-                ? "cursor-pointer"
-                : location.pathname === "/" && currentRoute.link
-                  ? ""
-                  : "cursor-pointer"
+            className={`col-start-3 hidden items-center justify-start gap-4 transition-opacity duration-1000 lg:flex lg:gap-6 ${
+              homeIntroStage >= 2
+                ? "opacity-100"
+                : "pointer-events-none opacity-0"
             }`}
-            onClick={(e) => {
-              if (!isMenuOpen) {
-                // When closed, always open the menu
-                toggleMenu();
-              } else {
-                // When open, close the menu UNLESS we're on frontpage with program button
-                if (location.pathname === "/" && currentRoute.link) {
-                  // On frontpage with program button - don't close, let button handle it
-                  return;
-                } else {
-                  // On other pages or frontpage without program button - close menu
-                  toggleMenu();
-                }
-              }
-            }}
           >
+            {links.slice(half).map((l) => renderLink(l, false))}
+          </div>
+          <div
+            className={`col-start-2 flex justify-end transition-opacity duration-1000 lg:hidden ${
+              homeIntroStage >= 2
+                ? "opacity-100"
+                : "pointer-events-none opacity-0"
+            }`}
+          >
+            {/* Button h-12/w-12 sets the tap target; icon h-6/w-6 sets its size.
+                Adjust strokeWidth below for thicker/thinner lines. */}
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (currentRoute.link) {
-                  handleNavigation(currentRoute.link);
-                } else if (isMenuOpen) {
-                  // If no link and menu is open, do nothing (just prevent propagation)
-                } else {
-                  // If no link and menu is closed, open the menu
-                  toggleMenu();
-                }
-              }}
-              className={`rounded-2xl px-4 text-black transition-all duration-500 ${
-                isMenuOpen
-                  ? "pointer-events-none w-0 px-0 opacity-0"
-                  : "opacity-100"
-              } ${
-                currentRoute.link
-                  ? "cursor-pointer bg-moetoRazhdaneYellow hover:bg-transparent hover:text-black/30"
-                  : "cursor-default bg-transparent"
-              } px-2 py-2`}
+              type="button"
+              onClick={() => setIsOpen((v) => !v)}
+              aria-label="Меню"
+              aria-expanded={isOpen}
+              className="flex h-12 w-12 items-center justify-center rounded-full hover:text-fourth/30"
             >
-              {currentRoute.text}
-            </button>
-            <div
-              className={`${isMenuOpen ? "flex w-full" : "flex items-center"} transition-all duration-700 ease-out ${isMenuOpen ? "gap-0" : "gap-1"}`}
-            >
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleNavigation("/");
-                }}
-                className={`flex h-12 w-11 transform-gpu items-center justify-center rounded-2xl bg-moetoRazhdaneYellow transition-all duration-700 ease-out will-change-transform ${
-                  !isMenuOpen && location.pathname === "/"
-                    ? "invisible opacity-0"
-                    : "visible opacity-100"
-                } ${
-                  isMenuOpen
-                    ? "druration-700 absolute left-1/2 -translate-x-1/2 transform ease-out"
-                    : ""
-                } hover:bg-transparent hover:text-black/30`}
+              <svg
+                className="h-6 w-6 text-fourth"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <img
-                  src={logoSmall}
-                  alt="Home"
-                  className="h-10 w-10 object-contain"
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d={
+                    isOpen ? "M6 6l12 12M6 18L18 6" : "M4 6h16M4 12h16M4 18h16"
+                  }
                 />
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleMenu();
-                }}
-                className={`flex h-12 w-12 items-center justify-center rounded-full bg-white/20 transition-all duration-300 hover:text-black/30 ${
-                  isMenuOpen
-                    ? "pointer-events-none w-0 opacity-0"
-                    : "opacity-100"
-                }`}
-              >
-                <svg
-                  className={`h-6 w-6 text-black transition-transform duration-1000 ${
-                    isMenuOpen ? "rotate-90" : ""
-                  }`}
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              </button>
-            </div>
+              </svg>
+            </button>
+          </div>
+        </nav>
+
+        <div
+          className={`overflow-hidden transition-all duration-300 ease-in-out lg:hidden ${
+            isOpen ? "max-h-[480px] opacity-100" : "max-h-0 opacity-0"
+          }`}
+        >
+          {/* max-h-[480px] must fit all links; duration-300 controls dropdown animation speed. */}
+          {/* Adjust px-6 for menu side padding, pb-3/pt-6 for vertical padding,
+              and py-3/text-xl in renderLink for row spacing and text size. */}
+          <div className="flex flex-col divide-y divide-gray-200 px-6 pb-3 pt-6">
+            {links.map((l) => renderLink(l, true))}
           </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 };
 

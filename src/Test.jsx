@@ -19,7 +19,7 @@ const Test = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#E2E2E2] flex items-center justify-center p-4 sm:p-8 font-sans selection:bg-neutral-900 selection:text-white">
+    <div className="min-h-screen bg-primary flex items-center justify-center p-4 sm:p-8 font-sans selection:bg-primary selection:text-fourth">
       {/* Google Fonts */}
       <link
         href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
@@ -30,7 +30,7 @@ const Test = () => {
       <div className="relative w-full max-w-4xl pt-32 pb-12 px-4">
         
         {/* Main Card Frame - Serving as absolute bottom reference */}
-        <div className="relative w-full bg-[#F5F5F3] rounded-[2.5rem] border border-white/80 shadow-[0_20px_50px_rgba(0,0,0,0.06)] h-[280px] sm:h-[320px] flex items-center">
+        <div className="relative w-full bg-primary rounded-[2.5rem] border border-primary/80 shadow-[0_20px_50px_rgba(0,0,0,0.06)] h-[280px] sm:h-[320px] flex items-center">
           
           {/* Left Text Column - Width constrained to guarantee space for image */}
           <div className="w-[50%] sm:w-[45%] p-6 sm:p-10 md:p-12 space-y-3 sm:space-y-4 z-10 text-left">
