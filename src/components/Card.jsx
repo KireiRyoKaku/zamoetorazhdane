@@ -13,6 +13,7 @@ const Card = ({
   title,
   icon: Icon,
   description,
+  boldDescription,
   to = "/",
   cta = "Научи повече",
   // image,
@@ -95,7 +96,19 @@ const Card = ({
             {title}
           </h2>
           <div className="mt-4 text-center font-rocaTwoThin text-lg leading-relaxed text-fourth">
-            {description}
+            {boldDescription && description.includes(boldDescription) ? (
+              <>
+                {description.slice(0, description.indexOf(boldDescription))}
+                <strong className="font-rocaTwoBold font-bold">
+                  {boldDescription}
+                </strong>
+                {description.slice(
+                  description.indexOf(boldDescription) + boldDescription.length,
+                )}
+              </>
+            ) : (
+              description
+            )}
           </div>
         </div>
 

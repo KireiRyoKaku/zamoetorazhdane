@@ -307,6 +307,7 @@ const serviceGroups = [
         to: "/katya",
         cta: "Запази сесия",
         text: "1:1 работа с Катя, индивидуално пространство изцяло за ТЕБ и твоите емоции",
+        boldDescription: "Катя",
       },
       {
         title: "Консултации по детски сън",
@@ -316,6 +317,7 @@ const serviceGroups = [
         imageAlt: "Анелия",
         cta: "Запази предв. разговор",
         text: "1:1 работа с Анелия, на фокус са както нуждите на детето, така и твоите собствени ",
+        boldDescription: "Анелия",
       },
       {
         title: "Менторство",
@@ -497,6 +499,7 @@ const StackedServiceCard = ({ item, index }) => {
         title={item.title}
         icon={item.icon}
         description={item.text}
+        boldDescription={item.boldDescription}
         to={item.to}
         cta={item.cta}
         imageAlt={item.imageAlt}
@@ -766,7 +769,7 @@ const Title = () => {
   }, []);
 
   useEffect(() => {
-    const visibleDuration = wordIndex === 0 ? 3000 : 3000;
+    const visibleDuration = wordIndex === 0 ? 4000 : 3000;
     let updateTimeout;
     const transitionTimeout = window.setTimeout(() => {
       setWordVisible(false);
@@ -863,7 +866,7 @@ const Title = () => {
                     : "translate-y-6 opacity-0"
                 }`}
               >
-                <span className="whitespace-nowrap text-4xl font-black tracking-[-0.02em] text-fourth">
+                <span className="whitespace-nowrap text-3xl font-black tracking-[-0.02em] text-fourth">
                   За да бъдеш
                   {/* text-[clamp(2rem,9vw,5.5rem)] */}
                 </span>
@@ -878,7 +881,7 @@ const Title = () => {
                     {cycleWords[wordIndex]}
                   </span>
                 </span>
-                <span className="whitespace-nowrap text-4xl font-black tracking-[-0.02em] text-fourth">
+                <span className="whitespace-nowrap text-3xl font-black tracking-[-0.02em] text-fourth">
                   тогава, когато <br />
                   ти е трудно сама <br />
                   да прегърнеш <br /> себе си.
