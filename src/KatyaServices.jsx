@@ -53,11 +53,11 @@ const KatyaServices = () => (
       <RevealOnScroll
         as="span"
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-28 right-0 select-none font-rocaTwoBold text-[15rem] leading-none text-secondary/70 md:-right-4 md:-top-8 md:text-[22rem]"
+        className="pointer-events-none relative z-0 -mb-3 block w-fit select-none font-rocaTwoBold text-8xl leading-[0.7] text-secondary md:text-7xl"
       >
         “
       </RevealOnScroll>
-      <div className="relative space-y-7 font-rocaTwoThin text-lg leading-relaxed md:space-y-8 md:text-xl">
+      <div className="relative z-10 space-y-7 font-rocaTwoThin text-lg leading-relaxed md:space-y-8 md:text-xl">
         <RevealOnScroll as="p">
           Аз също съм майка и знам колко ценна е подкрепата за една жена, когато
           е уморена, объркана или просто има нужда да бъде разбрана.
@@ -120,7 +120,7 @@ const KatyaServices = () => (
       </RevealOnScroll>
       <RevealOnScroll
         as="p"
-        className="mx-auto mt-4 max-w-4xl text-lefta font-rocaTwoThin text-lg leading-relaxed"
+        className="text-lefta mx-auto mt-4 max-w-4xl font-rocaTwoThin text-lg leading-relaxed"
         delay={240}
       >
         Фокус в моята практика е подкрепата в различните етапи на майчинството.

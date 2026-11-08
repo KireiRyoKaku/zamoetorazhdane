@@ -410,7 +410,6 @@ const ServiceCarousel = ({ label, items }) => {
             description={activeItem.text}
             to={activeItem.to}
             cta={activeItem.cta}
-            // image={activeItem.image}
             imageAlt={activeItem.imageAlt}
             active={slideVisible}
             widthClassName="mx-auto w-[85%]"
@@ -543,9 +542,6 @@ const ApproachPrincipleCard = ({
           <div className={`-mt-4 mb-2 flex justify-center pt-6`}>
             <Icon className="h-8 w-8 text-secondary" aria-hidden="true" />
           </div>
-          {/* <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary font-rocaTwoBold text-sm font-bold text-white">
-            {number}
-          </span> */}
           <h3 className="font-rocaTwoBold text-xl font-bold leading-tight md:text-2xl">
             {title}
           </h3>
@@ -1099,15 +1095,19 @@ const Title = () => {
           ref={servicesSectionRef}
           id={HOME_SECTION_IDS.services}
           aria-labelledby={`${HOME_SECTION_IDS.services}-heading`}
-          className={`services-hero-band relative left-1/2 z-30 flex h-[220px] w-screen -translate-x-1/2 scroll-mt-24 items-center justify-center overflow-hidden rounded-[2rem] ${bannerBgColorClasses[bannerBgColors.services]} md:h-[300px] ${servicesBannerReveal}`}
+          className={`services-hero-band relative left-1/2 z-30 flex h-auto min-h-[220px] w-screen -translate-x-1/2 scroll-mt-24 flex-col items-center justify-center gap-1 overflow-hidden rounded-[2rem] py-6 ${bannerBgColorClasses[bannerBgColors.services]} md:min-h-[300px] md:py-10 ${servicesBannerReveal}`}
         >
           <h2
             id={`${HOME_SECTION_IDS.services}-heading`}
-            className="relative z-10 w-full px-4 text-center font-magnoliaScript text-4xl leading-tight text-white sm:mb-20 sm:text-6xl md:text-9xl"
+            className="relative z-10 w-full px-4 text-center font-magnoliaScript text-4xl leading-tight text-white sm:text-6xl md:text-8xl"
           >
             Услуги
           </h2>
-          <img
+          <p className="relative   z-30 max-w-2xl px-6 text-center text-base leading-snug text-white sm:text-lg md:text-xl">
+            Индивидуални или групови възможности да бъдеш прегърната според
+            твоите нужди в момента
+          </p>
+          {/* <img
             src={katyaServicesHeroImage}
             alt="Катя"
             className="absolute bottom-0 left-0 z-20 h-full w-auto max-w-[38vw] object-contain object-bottom"
@@ -1116,7 +1116,7 @@ const Title = () => {
             src={aneliaServicesHeroImage}
             alt="Анелия"
             className="absolute bottom-0 right-0 z-20 h-full w-auto max-w-[38vw] object-contain object-bottom"
-          />
+          /> */}
         </section>
       </div>
       <section
@@ -1128,12 +1128,7 @@ const Title = () => {
           <div
             ref={individualIntroRef}
             className={`mx-auto w-full max-w-7xl ${individualIntroReveal}`}
-          >
-            <p className="text-rocaTwoThin mx-auto mb-6 mt-3 max-w-xl px-4 text-lg text-fourth md:text-lg">
-              Индивидуални или групови възможности да бъдеш прегърната според
-              твоите нужди в момента
-            </p>
-          </div>
+          ></div>
           <div
             ref={individualHeadingRef}
             className={`mx-auto w-full max-w-7xl ${individualHeadingReveal}`}
