@@ -846,7 +846,7 @@ const Title = () => {
           }`}
         >
           <img
-            src="/carousel/4.png"
+            src={`${import.meta.env.BASE_URL}carousel/4.png`}
             alt="Прегърната подкрепа"
             className="h-full w-full object-cover object-bottom [-webkit-mask-image:linear-gradient(to_bottom,transparent_0,black_4rem)] [mask-image:linear-gradient(to_bottom,transparent_0,black_4rem)]"
           />
@@ -863,7 +863,7 @@ const Title = () => {
                     : "translate-y-6 opacity-0"
                 }`}
               >
-                <span className="whitespace-nowrap text-3xl font-black tracking-[-0.02em] text-fourth">
+                <span className="whitespace-nowrap text-4xl font-black tracking-[-0.02em] text-fourth">
                   За да бъдеш
                   {/* text-[clamp(2rem,9vw,5.5rem)] */}
                 </span>
@@ -878,7 +878,7 @@ const Title = () => {
                     {cycleWords[wordIndex]}
                   </span>
                 </span>
-                <span className="whitespace-nowrap text-3xl font-black tracking-[-0.02em] text-fourth">
+                <span className="whitespace-nowrap text-4xl font-black tracking-[-0.02em] text-fourth">
                   тогава, когато <br />
                   ти е трудно сама <br />
                   да прегърнеш <br /> себе си.

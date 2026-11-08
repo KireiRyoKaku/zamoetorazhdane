@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { IoChevronForward, IoChevronBack } from "react-icons/io5";
-import icon1 from "/assets/pictures/icons/icon1.png";
-import icon2 from "/assets/pictures/icons/icon2.png";
-import icon3 from "/assets/pictures/icons/icon3.png";
+const icon1 = `${import.meta.env.BASE_URL}assets/pictures/icons/icon1.png`;
+const icon2 = `${import.meta.env.BASE_URL}assets/pictures/icons/icon2.png`;
+const icon3 = `${import.meta.env.BASE_URL}assets/pictures/icons/icon3.png`;
 
 const EventsNew = ({ onClose }) => {
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ const EventsNew = ({ onClose }) => {
       icon: (
         <div className="flex h-32 w-32 items-center justify-center md:h-52 md:w-52">
           <img
-            src={icon1 || "/assets/pictures/icons/icon1.png"}
+            src={icon1}
             alt="Време за мама"
             className="h-full w-auto object-contain"
             onError={(e) => {
@@ -64,7 +64,7 @@ const EventsNew = ({ onClose }) => {
       icon: (
         <div className="flex h-32 w-32 items-center justify-center md:h-52 md:w-52">
           <img
-            src={icon2 || "/assets/pictures/icons/icon2.png"}
+            src={icon2}
             alt="Майчински кръг"
             className="h-full w-auto object-contain"
             onError={(e) => {
@@ -86,7 +86,7 @@ const EventsNew = ({ onClose }) => {
       icon: (
         <div className="flex h-32 w-32 items-center justify-center md:h-52 md:w-52">
           <img
-            src={icon3 || "/assets/pictures/icons/icon3.png"}
+            src={icon3}
             alt="Специални събития"
             className="h-full w-auto object-contain"
             onError={(e) => {
@@ -109,7 +109,7 @@ const EventsNew = ({ onClose }) => {
       icon: (
         <div className="flex h-32 w-32 items-center justify-center md:h-52 md:w-52">
           <img
-            src={icon3 || "/assets/pictures/icons/icon3.png"}
+            src={icon3}
             alt="Специални събития"
             className="h-full w-auto object-contain"
             onError={(e) => {
@@ -132,7 +132,7 @@ const EventsNew = ({ onClose }) => {
       icon: (
         <div className="flex h-32 w-32 items-center justify-center md:h-52 md:w-52">
           <img
-            src={icon3 || "/assets/pictures/icons/icon3.png"}
+            src={icon3}
             alt="Специални събития"
             className="h-full w-auto object-contain"
             onError={(e) => {
