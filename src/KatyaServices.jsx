@@ -80,7 +80,7 @@ const KatyaServices = () => (
         className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
       >
         В работата си помагам на жените
-        <span className="mr-2 text-secondary" aria-hidden="true">
+        <span className="mr-2 text-secondary text-center" aria-hidden="true">
           🌸
         </span>
       </RevealOnScroll>

@@ -24,16 +24,16 @@ const Footer = () => {
             <h4 className="text-lg font-semibold">Бързи връзки</h4>
             <nav className="flex flex-col space-y-2">
               <Link
-                to="/program"
-                className="text-sm text-white/80 transition-colors hover:text-third"
-              >
-                Програма
-              </Link>
-              <Link
                 to="/events"
                 className="text-sm text-white/80 transition-colors hover:text-third"
               >
                 Събития
+              </Link>
+              <Link
+                to="/event-types"
+                className="text-sm text-white/80 transition-colors hover:text-third"
+              >
+                Видове събития
               </Link>
               <Link
                 to="/about"

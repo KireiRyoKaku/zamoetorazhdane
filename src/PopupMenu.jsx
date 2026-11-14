@@ -8,7 +8,6 @@ const LOGO_ANIMATION_DURATION_MS = 2000;
 const LOGO_TEXT_END_OFFSET = 300;
 
 const links = [
-  { label: "ПРОГРАМА", path: "/program" },
   { label: "СЪБИТИЯ", path: "/events" },
   { label: "ЗА НАС", path: "/about" },
   { label: "ПАРТНЬОРИ", path: "/partners" },
@@ -148,19 +147,15 @@ const PopupMenu = () => {
       type="button"
       onClick={() => go(link.path)}
       disabled={isActive(link)}
-      className={
-        !mobile && link.path === "/program"
-          ? "whitespace-nowrap rounded-2xl bg-third px-3 py-2 text-xs text-fourth shadow-sm transition-colors hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-          : `transition-colors duration-300 ${
-              mobile
-                ? "py-3 text-left text-xl"
-                : "whitespace-nowrap text-base lg:text-lg"
-            } ${
-              isActive(link)
-                ? "cursor-default text-fourth"
-                : "text-fourth hover:text-fourth/30"
-            }`
-      }
+      className={`transition-colors duration-300 ${
+        mobile
+          ? "py-3 text-left text-xl"
+          : "whitespace-nowrap text-base lg:text-lg"
+      } ${
+        isActive(link)
+          ? "cursor-default text-fourth"
+          : "text-fourth hover:text-fourth/30"
+      }`}
     >
       {link.label}
     </button>
@@ -187,23 +182,6 @@ const PopupMenu = () => {
           >
             {links.slice(0, half).map((l) => renderLink(l, false))}
           </div>
-          {!isOpen && (
-            <div
-              className={`col-start-1 flex justify-start transition-opacity duration-1000 lg:hidden ${
-                homeIntroStage >= 2
-                  ? "opacity-100"
-                  : "pointer-events-none opacity-0"
-              }`}
-            >
-              <button
-                type="button"
-                onClick={() => go("/program")}
-                className="rounded-2xl bg-third px-3 py-2 text-xs text-fourth shadow-sm transition-colors hover:bg-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              >
-                ПРОГРАМА
-              </button>
-            </div>
-          )}
           {/* Mobile title position is adjusted with left-4; its text size,
               font, and color are set on the button below. */}
           {/* <div className="absolute left-4 top-1/2 flex -translate-y-1/2 items-center md:hidden">

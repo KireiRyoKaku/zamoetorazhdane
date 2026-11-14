@@ -17,16 +17,14 @@ import {
   IoPlay,
 } from "react-icons/io5";
 import { FaBrain } from "react-icons/fa6";
-import { LuBaby } from "react-icons/lu";
 import { PiBabyFill } from "react-icons/pi";
-import { GiBabyFace, GiHeartOrgan } from "react-icons/gi";
+import { GiHeartOrgan } from "react-icons/gi";
 import aneliaImage from "./assets/pictures/good/anelia-good-ench-edit.png";
 import detskiSunImage from "./assets/pictures/good/detskisun.png";
 import katyaImage from "./assets/pictures/good/katya-good2.png";
-import katyaServicesHeroImage from "./assets/pictures/good/uslugiHeroAnelia.png";
-import aneliaServicesHeroImage from "./assets/pictures/good/uslugiHeroKatya.png";
 import logoSmall from "./assets/pictures/PregurnataLogoPinkNoText.png";
 import Card from "./components/Card";
+import { Button, ButtonLink } from "./components/Button";
 import { partnersAll } from "./partnerData";
 import { API_URL } from "../utils/apiConfig.js";
 
@@ -638,16 +636,16 @@ const PodcastEpisodeCard = ({ episode, index }) => {
             {episode.description}
           </p>
         )}
-        <a
+        <ButtonLink
           href={episode.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-6 inline-flex min-h-12 items-center justify-center gap-2 rounded-3xl bg-secondary px-6 py-3 text-center font-rocaTwoRegular text-base text-white transition-colors duration-300 hover:bg-fourth"
+          className="mt-6"
           aria-label={`Слушай епизода „${episode.title}“ в Spotify`}
         >
           <IoPlay aria-hidden="true" className="h-4 w-4 shrink-0" />
           Слушай в Spotify
-        </a>
+        </ButtonLink>
       </div>
     </article>
   );
@@ -707,14 +705,14 @@ const PodcastEpisodes = () => {
         <p className="font-rocaTwoRegular text-lg text-fourth/75" role="alert">
           Епизодите не могат да бъдат заредени в момента.
         </p>
-        <a
+        <ButtonLink
           href="https://open.spotify.com/show/1RFiM8DDswRJohQiczd4R7"
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-4 inline-flex min-h-12 items-center justify-center rounded-3xl bg-secondary px-6 py-3 font-rocaTwoRegular text-white transition-colors duration-300 hover:bg-fourth"
+          className="mt-4"
         >
           Отвори подкаста в Spotify
-        </a>
+        </ButtonLink>
       </div>
     );
   }
@@ -811,7 +809,7 @@ const Title = () => {
         }
       };
       requestAnimationFrame(tick);
-    }, 0);
+    }, 1000);
     return () => clearTimeout(timeout);
   }, [heroImageVisible]);
 
@@ -826,9 +824,6 @@ const Title = () => {
     setTimeout(() => navigate(path), 300);
   };
 
-  const secondButtonClass =
-    "w-full rounded-3xl bg-secondary px-6 py-2 font-rocaTwoRegular text-base text-white sm:text-xl transition-colors duration-500 ease-in-out hover:bg-fourth";
-
   return (
     <main
       className={`title-section-background overflow-x-clip text-fourth transition-all duration-100 ease-in-out ${isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
@@ -840,19 +835,19 @@ const Title = () => {
         className="home-hero-background relative -mb-px flex flex-col overflow-hidden md:min-h-[min(75w,125svh)]"
       >
         <div
-          className={`relative order-2 h-[50vw] bg-primary transition-opacity delay-[500ms] duration-700 ease-out motion-reduce:opacity-100 motion-reduce:transition-none md:absolute md:inset-0 md:order-none md:flex md:h-auto md:items-end md:bg-transparent ${
+          className={`relative order-2 -mt-3 h-[50vw] bg-primary transition-opacity delay-[500ms] duration-700 ease-out motion-reduce:opacity-100 motion-reduce:transition-none max-[359px]:h-[34vw] md:absolute md:inset-0 md:order-none md:mt-0 md:flex md:h-auto md:items-end md:bg-transparent ${
             heroImageVisible ? "opacity-100" : "opacity-0"
           }`}
         >
           <img
             src={`${import.meta.env.BASE_URL}carousel/4.png`}
             alt="Прегърната подкрепа"
-            className="h-full w-full object-cover object-bottom [-webkit-mask-image:linear-gradient(to_bottom,transparent_0,black_4rem)] [mask-image:linear-gradient(to_bottom,transparent_0,black_4rem)]"
+            className="h-full w-full object-cover object-bottom [-webkit-mask-image:linear-gradient(to_bottom,transparent_0,black_4rem)] [mask-image:linear-gradient(to_bottom,transparent_0,black_4rem)] max-[359px]:object-[center_85%] max-[359px]:[-webkit-mask-image:linear-gradient(to_bottom,transparent_0,black_1rem)] max-[359px]:[mask-image:linear-gradient(to_bottom,transparent_0,black_1rem)]"
           />
         </div>
-        <div className="relative z-10 order-1 flex flex-col px-4 pb-2 pt-[calc(4rem+16vw)] md:min-h-[inherit] md:px-6 md:pb-[50vw] md:pt-32 lg:px-8">
+        <div className="relative z-10 order-1 flex flex-col px-4 pb-2 pt-[calc(4rem+16vw)] max-[420px]:pt-[100px] max-[359px]:pb-1 md:min-h-[inherit] md:px-6 md:pb-[45vw] md:pt-32 lg:px-8">
           <div className="relative mx-auto flex w-full max-w-7xl flex-1 items-center justify-center md:mt-8 md:flex-none">
-            <div className="flex w-full flex-col items-center justify-center gap-4 py-4 md:gap-3 md:py-0">
+            <div className="flex w-full flex-col items-center justify-center gap-4 py-4 max-[420px]:gap-3 max-[420px]:py-3 max-[359px]:gap-2 max-[359px]:py-0 md:gap-3 md:py-0">
               {/* Hero title — stacked on mobile, side-by-side on sm+ */}
               <h1
                 id={`${HOME_SECTION_IDS.hero}-heading`}
@@ -862,30 +857,30 @@ const Title = () => {
                     : "translate-y-6 opacity-0"
                 }`}
               >
-                <span className="whitespace-nowrap text-3xl font-black tracking-[-0.02em] text-fourth">
+                <span className="whitespace-nowrap text-3xl font-black tracking-[-0.02em] text-fourth max-[359px]:text-[22px] max-[359px]:leading-[1.05]">
                   За да бъдеш
                   {/* text-[clamp(2rem,9vw,5.5rem)] */}
                 </span>
-                <span className="flex h-[calc(clamp(2.25rem,10vw,6.5rem)*1.3)] w-full items-center justify-center">
+                <span className="flex h-[calc(clamp(2.25rem,10vw,6.5rem)*1.3)] w-full items-center justify-center max-[359px]:h-9">
                   <span
                     style={{
                       transition:
                         "opacity 600ms ease-in-out, transform 600ms ease-in-out",
                     }}
-                    className={`block whitespace-nowrap leading-none text-secondary ${wordIndex === 0 ? "font-magnoliaScript text-4xl font-normal tracking-normal" : "text-4xl font-black tracking-[-0.02em]"} ${wordVisible ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}
+                    className={`block whitespace-nowrap leading-none text-secondary max-[359px]:text-3xl ${wordIndex === 0 ? "font-magnoliaScript text-4xl font-normal tracking-normal" : "text-4xl font-black tracking-[-0.02em]"} ${wordVisible ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}
                   >
                     {cycleWords[wordIndex]}
                   </span>
                 </span>
-                <span className="whitespace-nowrap text-3xl font-black tracking-[-0.02em] text-fourth">
+                <span className="whitespace-nowrap text-3xl font-black tracking-[-0.02em] text-fourth max-[359px]:text-[22px] max-[359px]:leading-[1.05]">
                   тогава, когато <br />
                   ти е трудно сама <br />
-                  да прегърнеш <br /> себе си.
+                  да прегърнеш <br className="max-[420px]:hidden" /> себе си.
                 </span>
               </h1>
               {/* Description — full width on mobile, right column on desktop */}
               <p
-                className={`w-full max-w-xl px-2 text-center text-base leading-relaxed text-fourth transition-[opacity,transform] delay-150 duration-700 ease-out motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none md:max-w-3xl md:text-2xl ${
+                className={`w-full max-w-xl px-2 text-center text-base leading-relaxed text-fourth transition-[opacity,transform] delay-150 duration-700 ease-out motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none max-[359px]:text-sm max-[359px]:leading-snug md:max-w-3xl md:text-2xl ${
                   heroTextVisible
                     ? "translate-y-0 opacity-100"
                     : "translate-y-6 opacity-0"
@@ -902,17 +897,25 @@ const Title = () => {
                 извън ролята си на майка. */}
               </p>
 
-              <button
-                type="button"
-                onClick={handleClickServices}
-                className={`rounded-3xl bg-secondary px-6 py-2 text-base font-bold text-white shadow-lg transition-[opacity,transform] delay-300 duration-700 ease-out hover:scale-105 focus:outline-none focus:ring-4 focus:ring-fourth/60 motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none md:mt-4 md:px-10 md:py-3 md:text-xl ${
+              <div
+                className={`flex flex-wrap justify-center gap-4 transition-[opacity,transform] delay-300 duration-700 ease-out motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none max-[359px]:gap-2 md:mt-4 ${
                   heroTextVisible
                     ? "translate-y-0 opacity-100"
                     : "translate-y-6 opacity-0"
                 }`}
               >
-                УСЛУГИ
-              </button>
+                <Button
+                  onClick={handleClickServices}
+                >
+                  УСЛУГИ
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() => handleClickPage("/events")}
+                >
+                  СЪБИТИЯ
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -976,13 +979,12 @@ const Title = () => {
                 </p>
               </div>
               <div className="grid grid-cols-1 gap-3 pt-2 md:grid-cols-2 md:gap-4">
-                <button
-                  type="button"
+                <Button
                   onClick={() => handleClickPage("/katya")}
-                  className={secondButtonClass}
+                  className="w-full"
                 >
                   ЗАПАЗИ СЕСИЯ
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -1024,13 +1026,12 @@ const Title = () => {
                 </p>
               </div>
               <div className="grid grid-cols-1 gap-3 pt-2 md:grid-cols-2 md:gap-4">
-                <button
-                  type="button"
+                <Button
                   onClick={() => handleClickPage("/anelia")}
-                  className={secondButtonClass}
+                  className="w-full"
                 >
                   ЗАПАЗИ КОНСУЛТАЦИЯ
-                </button>
+                </Button>
               </div>
             </div>
           </div>
@@ -1091,6 +1092,7 @@ const Title = () => {
         </section>
       </div>
       <div className="relative z-10 flow-root">
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-8 bg-white" />
         <section
           ref={servicesSectionRef}
           id={HOME_SECTION_IDS.services}
@@ -1107,16 +1109,7 @@ const Title = () => {
             Индивидуални или групови възможности да бъдеш прегърната според
             твоите нужди в момента
           </p>
-          {/* <img
-            src={katyaServicesHeroImage}
-            alt="Катя"
-            className="absolute bottom-0 left-0 z-20 h-full w-auto max-w-[38vw] object-contain object-bottom"
-          />
-          <img
-            src={aneliaServicesHeroImage}
-            alt="Анелия"
-            className="absolute bottom-0 right-0 z-20 h-full w-auto max-w-[38vw] object-contain object-bottom"
-          /> */}
+        
         </section>
       </div>
       <section
@@ -1216,21 +1209,21 @@ const Title = () => {
         </h2>
         <PodcastEpisodes />
         <div className="mt-10 flex justify-center">
-          <a
+          <ButtonLink
             href="https://open.spotify.com/show/1RFiM8DDswRJohQiczd4R7"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-16 items-center justify-center rounded-3xl bg-secondary px-8 py-5 text-center font-rocaTwoRegular text-lg text-white shadow-md transition-colors duration-300 hover:bg-fourth md:px-12 md:text-2xl"
           >
             Абонирай се и чуй всички епизоди в Spotify
-          </a>
+          </ButtonLink>
         </div>
       </section>
-      <div className="flow-root">
+      <div className="flow-root bg-white">
         <SectionBanner
           id={HOME_SECTION_IDS.merch}
           title="Прегърната близо до теб"
           backgroundColor={bannerBgColors.merch}
+          topBackgroundColor="third"
           titleClassName="text-4xl sm:text-5xl md:text-7xl"
           subtitle="мърч, джунджурий и други"
         />

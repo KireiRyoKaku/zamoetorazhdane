@@ -9,7 +9,8 @@ import {
   FaMapMarkerAlt,
   FaDesktop,
 } from "react-icons/fa";
-import { API_URL } from "../utils/apiConfig.js";
+import { getCachedEvents, getEvents } from "../utils/events.js";
+import { Button } from "./components/Button";
 
 const bulgarianMonthAbbreviations = [
   "яну",
@@ -33,19 +34,24 @@ const hasConfiguredEventLocation = (location) =>
     location,
   );
 
-const Program = () => {
+const Events = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showAnimation, setShowAnimation] = useState(false);
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState(() =>
+    (getCachedEvents() ?? []).filter((event) =>
+      hasConfiguredEventLocation(event.location),
+    ),
+  );
   const [showToast, setShowToast] = useState(false);
   const [errorState, setErrorState] = useState(null); // Add error state
   const [locationFilter, setLocationFilter] = useState(null); // null, 'na-zhivo', or 'online'
   const [animatingCalendar, setAnimatingCalendar] = useState(false);
-  const [isLoadingEvents, setIsLoadingEvents] = useState(true); // Add loading state
+  const [isLoadingEvents, setIsLoadingEvents] = useState(
+    () => getCachedEvents() === null,
+  );
   const [modalEventId, setModalEventId] = useState(null); // Track which event modal is open
   const navigate = useNavigate();
   const location = useLocation();
-  const apiUrl = import.meta.env.VITE_API_URL; // http://localhost:5174
 
   // Add function to toggle description modal
   const toggleDescriptionModal = (eventId, e) => {
@@ -244,22 +250,11 @@ const Program = () => {
   };
 
   useEffect(() => {
+    let active = true;
     const fetchEventDates = async () => {
       try {
-        setIsLoadingEvents(true); // Start loading
-        console.log("🔄 Fetching events from:", `${API_URL}/events`);
-
-        const response = await fetch(`${API_URL}/events`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const fetchedEvents = await response.json();
+        const fetchedEvents = await getEvents();
+        if (!active) return;
         const events = fetchedEvents.filter((event) =>
           hasConfiguredEventLocation(event.location),
         );
@@ -271,18 +266,20 @@ const Program = () => {
 
         setEvents(events);
       } catch (error) {
+        if (!active) return;
         console.error("❌ Error fetching event dates:", error);
         setErrorState({ message: `Failed to load events: ${error.message}` });
-
-        // Fallback to empty state
         setEvents([]);
       } finally {
-        setIsLoadingEvents(false); // End loading
+        if (active) setIsLoadingEvents(false);
       }
     };
 
     fetchEventDates();
-  }, [apiUrl]); // Only depend on apiUrl, which shouldn't change often
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -590,7 +587,7 @@ const Program = () => {
       return (
         <div
           key={index}
-          className={`event-box isolate relative mb-6 w-full overflow-visible rounded ${event.attachmentUrl ? "bg-transparent" : "bg-white/90"} p-4 pt-6 ring-1 transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] sm:w-full sm:max-w-xl ${
+          className={`event-box isolate relative mb-6 w-full overflow-visible rounded bg-white/90 p-4 pt-6 ring-1 transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] sm:w-full sm:max-w-xl ${
             isEventInPast(event)
               ? "ring-gray-300"
               : "ring-primary"
@@ -604,23 +601,6 @@ const Program = () => {
           }}
           onClick={() => handleEventInteraction(event.ID)}
         >
-          {event.attachmentUrl && (
-            <div
-              aria-hidden="true"
-              className="event-card-background pointer-events-none absolute inset-0 z-0 overflow-hidden rounded"
-            >
-              <img
-                src={event.attachmentUrl}
-                alt=""
-                loading="lazy"
-                className="h-full w-full scale-105 object-cover blur-sm opacity-40"
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                }}
-              />
-              <div className="absolute inset-0 bg-white/65" />
-            </div>
-          )}
           {/* Date badge overlaps the card's upper-left corner. */}
           <div className="EventDay absolute -left-3 -top-4 z-20 flex min-w-10 flex-col items-center">
             <span className="mb-0.5 text-xs font-bold uppercase leading-none text-fourth">
@@ -730,22 +710,20 @@ const Program = () => {
                     включиш по всяко време.
                   </div>
                 )}
-                <button
-                  className="mt-2 items-center justify-center rounded-2xl bg-third p-3 font-rocaTwoRegular text-2xl font-black text-fourth transition-all duration-500 ease-in-out hover:bg-transparent hover:text-fourth/30"
+                <Button
+                  className="mt-2"
                   onClick={() => handleClickSubscribeAndPay(event)}
                 >
                   <div className="flex flex-col items-center gap-2">
                     {/^https?:\/\/.+/i.test(event.location) ? (
                       <>
-                        <span className="text-xl">
-                          СТАНИ ЧАСТ ОТ ПРЕГЪРНАТА
-                        </span>
+                        <span>СТАНИ ЧАСТ ОТ ПРЕГЪРНАТА</span>
                       </>
                     ) : (
                       "ЗАПИШИ СЕ"
                     )}
                   </div>
-                </button>
+                </Button>
               </div>
             ) : (
               <div className="flex w-full justify-center">
@@ -1009,7 +987,7 @@ const Program = () => {
             }}
           >
             <div
-              className="relative isolate mx-4 max-h-[80vh] w-full min-w-0 max-w-lg overflow-x-hidden overflow-y-auto rounded-lg bg-primary p-6 shadow-xl"
+              className="relative isolate mx-4 max-h-[80vh] w-full min-w-0 max-w-lg overflow-x-hidden overflow-y-auto rounded-lg bg-white p-6 shadow-xl"
               onClick={(e) => e.stopPropagation()}
               style={{ zIndex: 999999 }}
             >
@@ -1083,18 +1061,17 @@ const Program = () => {
                 )}
               </div>
               {modalEvent && !isEventInPast(modalEvent) && (
-                <button
-                  type="button"
+                <Button
                   onClick={() => {
                     closeModal();
                     handleClickSubscribeAndPay(modalEvent);
                   }}
-                  className="mt-4 w-full rounded-2xl bg-third px-4 py-3 text-center font-rocaTwoRegular text-xl font-black text-fourth transition-colors hover:bg-third/80"
+                  className="mt-4 w-full"
                 >
                   {/^https?:\/\/.+/i.test(modalEvent.location)
                     ? "СТАНИ ЧАСТ ОТ ПРЕГЪРНАТА"
                     : "ЗАПИШИ СЕ"}
-                </button>
+                </Button>
               )}
               </div>
             </div>
@@ -1105,4 +1082,4 @@ const Program = () => {
   );
 };
 
-export default Program;
+export default Events;

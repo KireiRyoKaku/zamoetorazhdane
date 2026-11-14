@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { IoChevronForward, IoChevronBack } from "react-icons/io5";
+import { Button } from "./components/Button";
 const icon1 = `${import.meta.env.BASE_URL}assets/pictures/icons/icon1.png`;
 const icon2 = `${import.meta.env.BASE_URL}assets/pictures/icons/icon2.png`;
 const icon3 = `${import.meta.env.BASE_URL}assets/pictures/icons/icon3.png`;
@@ -226,7 +227,7 @@ const EventsNew = ({ onClose }) => {
   // Navigate to a specific event
   const navigateToEvent = (index) => {
     const eventId = eventCards[index].id;
-    navigate(`/events/${eventId}`);
+    navigate(`/event-types/${eventId}`);
   };
 
   // Navigate to previous card
@@ -310,7 +311,7 @@ const EventsNew = ({ onClose }) => {
             {eventCards.map((card, index) => (
               <Link
                 key={card.id}
-                to={`/events/${card.id}`}
+                to={`/event-types/${card.id}`}
                 className={`h-3 w-3 rounded-full transition-all duration-300 ${
                   activeIndex === index
                     ? "scale-110 bg-primary"
@@ -352,18 +353,18 @@ const EventsNew = ({ onClose }) => {
                 : "translate-y-8 opacity-0"
             }`}
           >
-            <button
-              className="rounded-3xl bg-third px-6 py-2 font-rocaTwoRegular text-2xl font-black text-fourth transition-all duration-500 ease-in-out hover:bg-transparent hover:text-fourth/30"
+            <Button
+              variant="secondary"
               onClick={() => {
                 setIsClosing(true);
                 setTimeout(() => {
-                  navigate("/program");
-                  onClose();
+                  navigate("/events");
+                  onClose?.();
                 }, 300);
               }}
             >
               ВКЛЮЧИ СЕ
-            </button>
+            </Button>
           </div>
         </div>
       </div>

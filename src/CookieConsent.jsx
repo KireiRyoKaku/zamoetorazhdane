@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Button } from "./components/Button";
 
 const CookieConsent = () => {
   const [showBanner, setShowBanner] = useState(false);
@@ -32,18 +33,19 @@ const CookieConsent = () => {
           Този сайт използва бисквитки, за да подобри вашето преживяване.
         </p>
         <div className="sx:flex-row flex w-full flex-col gap-2 self-stretch sm:w-auto sm:self-auto">
-          <button
+          <Button
             onClick={handleAccept}
-            className="w-full whitespace-nowrap rounded-lg bg-third px-4 py-2 text-fourth transition-colors duration-300 hover:bg-primary sm:w-auto"
+            variant="secondary"
+            className="w-full whitespace-nowrap sm:w-auto"
           >
             Приемам
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={handleDecline}
-            className="w-full whitespace-nowrap rounded-lg bg-primary px-4 py-2 text-fourth transition-colors duration-300 hover:bg-secondary sm:w-auto"
+            className="w-full whitespace-nowrap sm:w-auto"
           >
             Отказвам
-          </button>
+          </Button>
         </div>
       </div>
     </div>

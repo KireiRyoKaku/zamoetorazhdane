@@ -3,7 +3,9 @@ import { createPortal } from "react-dom";
 import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { differenceInHours } from "date-fns";
 import { API_URL } from "../utils/apiConfig.js";
+import { getEvents } from "../utils/events.js";
 import LoadingSpinner from "./components/LoadingSpinner";
+import { Button } from "./components/Button";
 import {
   FaCalendarAlt,
   FaClock,
@@ -84,13 +86,7 @@ const SubscribeAndPay = () => {
           console.log(`Fetching events for ID: ${eventId}`);
 
           // Fetch all events and find the one with matching ID
-          const response = await fetch(`${API_URL}/events`);
-
-          if (!response.ok) {
-            throw new Error(`Failed to fetch events: ${response.status}`);
-          }
-
-          const events = await response.json();
+          const events = await getEvents();
           console.log(
             `Fetched ${events.length} events, looking for event with ID: ${eventId}`,
           );
@@ -339,7 +335,7 @@ const SubscribeAndPay = () => {
       console.log("✅ Form submitted successfully:", result);
 
       // Only navigate on success
-      navigate("/program", { state: { showSuccessToast: true } });
+      navigate("/events", { state: { showSuccessToast: true } });
     } catch (err) {
       setError("Connection error: " + (err.message || "Unknown error"));
       console.error("Error submitting form:", err);
@@ -435,10 +431,10 @@ const SubscribeAndPay = () => {
   return (
     createPortal(
     <div className="fixed inset-0 z-[10000] h-[100dvh] w-screen overflow-hidden bg-primary/60">
-      <div className="subscribe-and-pay-container h-full w-full overflow-x-hidden overflow-y-auto bg-primary p-5 shadow-lg sm:p-6">
+      <div className="subscribe-and-pay-container h-full w-full overflow-x-hidden overflow-y-auto bg-white p-5 shadow-lg sm:p-6">
       <button
         type="button"
-        onClick={() => navigate("/program")}
+        onClick={() => navigate("/events")}
         className="fixed right-3 top-3 z-[10001] flex h-11 w-11 items-center justify-center rounded-full bg-primary text-3xl text-fourth shadow-md transition-colors hover:bg-primary focus:outline-none focus:ring-2 focus:ring-primary"
         aria-label="Затвори прозореца"
         title="Затвори"
@@ -688,23 +684,16 @@ const SubscribeAndPay = () => {
 
                 {/* Add participant button */}
                 {formData.participantCount < 5 && (
-                  <button
-                    type="button"
-                    onClick={addParticipant}
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-bold text-fourth transition-colors duration-200 hover:bg-primary"
-                  >
-                    <span>+ добави място</span>
-                    <span className="text-lg">
-                      ({formData.participantCount}/5)
-                    </span>
-                    {/* Information icon button inside the add button */}
+                  <div className="flex items-center gap-2">
+                    <Button onClick={addParticipant} className="min-w-0 flex-1">
+                      <span>+ добави място</span>
+                      <span>({formData.participantCount}/5)</span>
+                    </Button>
                     <button
                       type="button"
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent triggering the parent button
-                        setShowParticipantInfoPopup(true);
-                      }}
-                      className="flex rounded-full bg-primary bg-opacity-20 p-1 transition-colors duration-200 hover:bg-opacity-30"
+                      onClick={() => setShowParticipantInfoPopup(true)}
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary text-fourth focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-fourth/60"
+                      aria-label="Информация за допълнителни участници"
                       title="Информация за допълнителни участници"
                     >
                       <svg
@@ -719,18 +708,18 @@ const SubscribeAndPay = () => {
                         />
                       </svg>
                     </button>
-                  </button>
+                  </div>
                 )}
 
                 {/* Remove participant button (only show if more than 1) */}
                 {formData.participantCount > 1 && (
-                  <button
-                    type="button"
+                  <Button
+                    variant="secondary"
                     onClick={removeParticipant}
-                    className="w-full rounded-lg bg-red-600 px-4 py-2 text-xl font-medium text-fourth transition-colors duration-200 hover:bg-red-700"
+                    className="w-full"
                   >
                     - премахни място ({formData.participantCount}/5)
-                  </button>
+                  </Button>
                 )}
 
                 {/* Dynamic participant name fields - appear below buttons (additional participants only) */}
@@ -805,12 +794,9 @@ const SubscribeAndPay = () => {
               />
             )}
             <div className="flex justify-center">
-              <button
+              <Button
                 type="submit"
                 disabled={isSubmitting}
-                className={`rounded-3xl bg-third px-6 py-2 font-rocaTwoBold text-2xl font-black text-fourth transition-all duration-500 ease-in-out hover:bg-transparent hover:text-fourth/30 ${
-                  isSubmitting ? "cursor-not-allowed opacity-50" : ""
-                }`}
               >
                 {isSubmitting ? (
                   <div className="flex items-center">
@@ -820,16 +806,15 @@ const SubscribeAndPay = () => {
                 ) : (
                   "ЗАПИШИ МЕ!"
                 )}
-              </button>
+              </Button>
             </div>
             <div className="flex justify-center">
-              <button
-                type="button"
-                onClick={() => navigate("/program")}
-                className="rounded-3xl bg-secondary px-3 py-1 font-rocaTwoBold text-base font-bold text-fourth transition-colors hover:bg-secondary"
+              <Button
+                variant="secondary"
+                onClick={() => navigate("/events")}
               >
                 {"<- избери друго"}
-              </button>
+              </Button>
             </div>
           </form>
         </>

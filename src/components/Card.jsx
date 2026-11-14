@@ -1,13 +1,10 @@
 import React, { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { ButtonLink } from "./Button";
 
 const ANIMATION_DURATION = 1500;
 const STAGGER_DELAY = 40;
 const TILT_ANGLE = 4;
 const CUBIC_EASING = "cubic-bezier(0.16, 1, 0.3, 1)";
-
-const handBase =
-  "absolute z-20 flex items-center justify-center rounded-3xl px-6 py-2 font-rocaTwoRegular text-base font-black shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary";
 
 const Card = ({
   title,
@@ -120,12 +117,13 @@ const Card = ({
           />
         )} */}
 
-        <Link
+        <ButtonLink
           to={to}
+          variant="secondary"
           tabIndex={isRevealed ? 0 : -1}
-          className={`${handBase} bg-third text-fourth hover:bg-primary`}
+          className="absolute z-20"
           style={{
-            bottom: "68px",
+            bottom: "80px",
             ...handBox(
               "left center",
               70,
@@ -135,12 +133,12 @@ const Card = ({
           }}
         >
           Научи повече
-        </Link>
+        </ButtonLink>
 
-        <Link
+        <ButtonLink
           to={to}
           tabIndex={isRevealed ? 0 : -1}
-          className={`${handBase} z-30 bg-secondary text-white hover:bg-fourth`}
+          className="absolute z-30"
           style={{
             bottom: "16px",
             ...handBox(
@@ -152,7 +150,7 @@ const Card = ({
           }}
         >
           {cta}
-        </Link>
+        </ButtonLink>
       </div>
     </article>
   );

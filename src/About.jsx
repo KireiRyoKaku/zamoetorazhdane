@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import { Button } from "./components/Button";
 
 const About = ({ onClose = () => {} }) => {
   const navigate = useNavigate();
@@ -8,7 +9,7 @@ const About = ({ onClose = () => {} }) => {
   const elementsRef = useRef([]);
 
   const handleClickEventProgram = () => {
-    navigate("/program");
+    navigate("/events");
     if (onClose) onClose(); // Add safety check
   };
 
@@ -131,12 +132,12 @@ const About = ({ onClose = () => {} }) => {
           ref={(el) => (elementsRef.current[4] = el)}
           className="mt-10 flex justify-center opacity-0 transition-opacity duration-1000 ease-in-out"
         >
-          <button
-            className="rounded-3xl bg-third px-6 py-2 font-rocaTwoBold text-2xl font-black text-fourth transition-all duration-500 ease-in-out hover:bg-transparent hover:text-fourth/30"
+          <Button
+            variant="secondary"
             onClick={handleClickEventProgram}
           >
             ВКЛЮЧИ СЕ
-          </button>
+          </Button>
         </div>
       </div>
     </main>

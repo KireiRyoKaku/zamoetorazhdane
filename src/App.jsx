@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import Program from "./Program";
+import Events from "./Events";
 import About from "./About";
-import Events from "./EventsNew";
+import EventTypes from "./EventsNew";
 import Partners from "./Partners";
 import KatyaServices from "./KatyaServices";
 import AneliaServices from "./AneliaServices";
@@ -13,9 +13,10 @@ import PopupMenu from "./PopupMenu";
 import Footer from "./components/Footer";
 import PrivacyPolicy from "./PrivacyPolicy";
 import TermsOfService from "./TermsOfService";
-import { HashRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { HashRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import CookieConsent from "./CookieConsent";
 import Test from "./Test";
+import { getEvents } from "../utils/events";
 
 const ScrollToTop = () => {
   const { pathname, state } = useLocation();
@@ -84,9 +85,23 @@ const RouteTransition = ({ children, animate }) => {
   );
 };
 
+const ProgramRedirect = () => {
+  const { search, hash, state } = useLocation();
+  return <Navigate to={{ pathname: "/events", search, hash }} state={state} replace />;
+};
+
 const Layout = () => {
   const { pathname } = useLocation();
   const isSubscriptionModal = pathname.startsWith("/subscribe-and-pay/");
+
+  useEffect(() => {
+    if (pathname === "/") {
+      getEvents().catch((error) => {
+        console.error("Error preloading events:", error);
+      });
+    }
+  }, [pathname]);
+
   return (
     <div
       className={`relative flex min-h-screen flex-col ${
@@ -105,9 +120,11 @@ const Layout = () => {
             {/* Main Pages */}
             <Route path="/" element={<Title />} />
             <Route path="/about" element={<About />} />
-            <Route path="/program" element={<Program />} />
+            <Route path="/program" element={<ProgramRedirect />} />
             <Route path="/events" element={<Events />} />
-            <Route path="/events/:eventId" element={<Events />} />
+            <Route path="/events/:eventId" element={<EventTypes />} />
+            <Route path="/event-types" element={<EventTypes />} />
+            <Route path="/event-types/:eventId" element={<EventTypes />} />
             <Route path="/partners" element={<Partners />} />
             <Route path="/katya" element={<KatyaServices />} />
             <Route path="/anelia" element={<AneliaServices />} />
@@ -118,7 +135,7 @@ const Layout = () => {
               path="/subscribe-and-pay/:eventId"
               element={
                 <>
-                  <Program />
+                  <Events />
                   <SubscribeAndPay />
                 </>
               }
