@@ -6,10 +6,10 @@ import {
   RevealOnScroll,
 } from "./components/PageShell";
 import {
-  IoConstructOutline,
-  IoHeartOutline,
-  IoLeafOutline,
-  IoHandLeftOutline,
+  IoConstruct,
+  IoHeart,
+  IoLeaf,
+  IoHandLeft,
 } from "react-icons/io5";
 import katyaImage from "./assets/pictures/good/katyapsyconsult.png";
 
@@ -24,11 +24,11 @@ const supportAreas = [
 const reasonsToChoose = [
   {
     text: "Психолог с постоянно развиващ се инструментариум",
-    icon: IoConstructOutline,
+    icon: IoConstruct,
   },
-  { text: "Индивидуално присъствие и грижа", icon: IoHeartOutline },
-  { text: "Нежен и внимателен подход", icon: IoLeafOutline },
-  { text: "Разбиране във всеки един момент", icon: IoHandLeftOutline },
+  { text: "Индивидуално присъствие и грижа", icon: IoHeart },
+  { text: "Нежен и внимателен подход", icon: IoLeaf },
+  { text: "Разбиране във всеки един момент", icon: IoHandLeft },
 ];
 
 const KatyaServices = () => (

@@ -4,16 +4,16 @@ import {
   IoChevronBack,
   IoChevronForward,
   IoHeartCircle,
-  IoLeafOutline,
-  IoEarOutline,
+  IoLeaf,
+  IoEar,
   IoBonfire,
-  IoRoseOutline,
+  IoRose,
   IoAccessibility,
-  IoMoonOutline,
-  IoRibbonOutline,
-  IoCalendarOutline,
-  IoVideocamOutline,
-  IoPeopleOutline,
+  IoMoon,
+  IoRibbon,
+  IoCalendar,
+  IoVideocam,
+  IoPeople,
   IoPlay,
 } from "react-icons/io5";
 import { FaBrain } from "react-icons/fa6";
@@ -33,7 +33,7 @@ const approachPrinciples = [
   {
     title: "Без осъждане и вина",
     description: "валиден е опитът и личното преживяване на всяка майка",
-    icon: IoEarOutline,
+    icon: IoEar,
   },
   {
     title: "Без сравнение и състезание",
@@ -44,7 +44,7 @@ const approachPrinciples = [
     title: "Връзка с интуицията",
     description:
       "вътрешният глас е по-важен от всеки външен глас, дори този на специалиста",
-    icon: IoRoseOutline,
+    icon: IoRose,
   },
   {
     title: "Грижа и обич към себе си",
@@ -54,7 +54,7 @@ const approachPrinciples = [
   {
     title: "Баланс между трудности и радости",
     description: "защото в майчинството има изобилно и от двете",
-    icon: IoLeafOutline,
+    icon: IoLeaf,
   },
   {
     title: "Атмосфера на спокойствие и сигурност",
@@ -290,7 +290,7 @@ const MoonBabyIcon = ({ className, ...props }) => (
     className={`relative inline-block h-10 w-10 shrink-0 ${className ?? ""}`}
     {...props}
   >
-    <IoMoonOutline className="absolute -top-1 left-0 h-9 w-9 text-fourth" />
+    <IoMoon className="absolute -top-1 left-0 h-9 w-9 text-fourth" />
     <PiBabyFill className="absolute -bottom-0 -right-1 h-8 w-8 text-secondary" />
   </span>
 );
@@ -319,7 +319,7 @@ const serviceGroups = [
       },
       {
         title: "Менторство",
-        icon: IoRibbonOutline,
+        icon: IoRibbon,
         to: "/mentoring",
         cta: "Запази предв. разговор",
         text: "авторска програма на “Прегърната” за подкрепа по личния път към едно спокойно и хармонично майчинство",
@@ -331,21 +331,21 @@ const serviceGroups = [
     items: [
       {
         title: "Събития",
-        icon: IoCalendarOutline,
+        icon: IoCalendar,
         to: "/events",
         cta: "Запиши се за събитие",
         text: "месечни срещи на живо в Пловдив и София, групово преживяване в кръг от съзнателни майки",
       },
       {
         title: "Онлайн срещи",
-        icon: IoVideocamOutline,
+        icon: IoVideocam,
         to: "/events?filter=online",
         cta: "Запиши се за събитие",
         text: "експертни лекции или разговори със специалист от мрежата на “Прегърната”",
       },
       {
         title: "Общност",
-        icon: IoPeopleOutline,
+        icon: IoPeople,
         to: "/community",
         cta: "Последвай ни",
         text: "принадлежност, споделяне и взаимна подкрепа между съзнателни майки",
@@ -887,14 +887,7 @@ const Title = () => {
                 }`}
               >
                 Грижа и специализирана подкрепа за менталното здраве на майките.
-                {/* в общност, водена от
-                експерти, чрез индивидуални и групови форми на подкрепа. */}
-                {/* Помагаме им да се свържат отново със себе си в периоди на
-                трансформация, лични или семейни предизвикателства на всеки етап
-                от майчинството. */}
-                {/* Подкрепяме жената да върви по своя път в майчинството със
-                спокойствие и увереност, за да се почувства отново себе си, в и
-                извън ролята си на майка. */}
+
               </p>
 
               <div

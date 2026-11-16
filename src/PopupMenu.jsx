@@ -8,8 +8,16 @@ const LOGO_ANIMATION_DURATION_MS = 2000;
 const LOGO_TEXT_END_OFFSET = 300;
 
 const links = [
-  { label: "СЪБИТИЯ", path: "/events" },
   { label: "ЗА НАС", path: "/about" },
+  { label: "СЪБИТИЯ", path: "/events" },
+  {
+    label: "УСЛУГИ",
+    children: [
+      { label: "СЕСИИ С ПСИХОЛОГ", path: "/katya" },
+      { label: "МЕНТОРСКА ПРОГРАМА", path: "/mentoring" },
+      { label: "КОНСУЛТАЦИЯ ПО ДЕТСКИ СЪН", path: "/anelia" },
+    ],
+  },
   { label: "ПАРТНЬОРИ", path: "/partners" },
   { label: "TEST", path: "/test" },
   {
@@ -131,7 +139,8 @@ const PopupMenu = () => {
   const isActive = (link) =>
     location.pathname === link.path ||
     link.also?.includes(location.pathname) ||
-    (link.path === "/events" && location.pathname.startsWith("/events"));
+    (link.path === "/events" && location.pathname.startsWith("/events")) ||
+    link.children?.some((child) => isActive(child));
 
   const go = (path) => {
     navigate(path);
@@ -141,7 +150,45 @@ const PopupMenu = () => {
   // Link sizing: mobile py-3/text-xl controls row spacing and label size;
   // desktop text-base/lg:text-lg controls label size. Change the color classes
   // here to adjust normal/active link colors.
-  const renderLink = (link, mobile) => (
+  const renderLink = (link, mobile) => {
+    if (link.children) {
+      return (
+        <div
+          key={link.label}
+          className={`group relative ${
+            mobile ? "flex flex-col" : "flex items-center"
+          }`}
+        >
+          <button
+            type="button"
+            aria-haspopup="true"
+            aria-expanded={isActive(link)}
+            className={`transition-colors duration-300 ${
+              mobile
+                ? "py-3 text-left text-xl"
+                : "whitespace-nowrap text-base lg:text-lg"
+            } ${
+              isActive(link)
+                ? "text-fourth"
+                : "text-fourth hover:text-fourth/30"
+            }`}
+          >
+            {link.label}
+          </button>
+          <div
+            className={`${
+              mobile
+                ? "ml-4 flex flex-col border-l border-gray-200 pl-4"
+                : "invisible absolute left-1/2 top-full z-20 min-w-56 -translate-x-1/2 translate-y-2 rounded-xl bg-white p-2 opacity-0 shadow-lg transition-all duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100"
+            }`}
+          >
+            {link.children.map((child) => renderLink(child, mobile))}
+          </div>
+        </div>
+      );
+    }
+
+    return (
     <button
       key={link.path}
       type="button"
@@ -159,7 +206,8 @@ const PopupMenu = () => {
     >
       {link.label}
     </button>
-  );
+    );
+  };
 
   const half = Math.ceil(links.length / 2);
 
@@ -323,13 +371,15 @@ const PopupMenu = () => {
 
         <div
           className={`overflow-hidden transition-all duration-300 ease-in-out lg:hidden ${
-            isOpen ? "max-h-[480px] opacity-100" : "max-h-0 opacity-0"
+            isOpen
+              ? "max-h-[calc(100vh-4rem)] opacity-100"
+              : "max-h-0 opacity-0"
           }`}
         >
-          {/* max-h-[480px] must fit all links; duration-300 controls dropdown animation speed. */}
+          {/* The viewport-based max height keeps the full menu usable on small screens. */}
           {/* Adjust px-6 for menu side padding, pb-3/pt-6 for vertical padding,
               and py-3/text-xl in renderLink for row spacing and text size. */}
-          <div className="flex flex-col divide-y divide-gray-200 px-6 pb-3 pt-6">
+          <div className="flex max-h-[calc(100vh-4rem)] flex-col divide-y divide-gray-200 overflow-y-auto px-6 pb-3 pt-6">
             {links.map((l) => renderLink(l, true))}
           </div>
         </div>

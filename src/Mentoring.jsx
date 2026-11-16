@@ -5,13 +5,18 @@ import {
   PageShell,
   RevealOnScroll,
 } from "./components/PageShell";
+import mentoringImage from "./assets/pictures/good/mentoring2.png";
+
+const currentDate = new Date();
+const programYear =
+  currentDate.getFullYear() + (currentDate.getMonth() >= 9 ? 1 : 0);
 
 const openingNeeds = [
   "си постоянно уморена",
   "живееш в режим „оцеляване“",
   "нямаш време за себе си",
   "имаш нужда от по-ясна структура и някой, който да държи пространство само за теб",
-  "знаеш, че през 2027 искаш промяна, но не знаеш откъде да започнеш",
+  `знаеш, че през ${programYear} искаш промяна, но не знаеш откъде да започнеш`,
   "имаш нужда някой да те води",
 ];
 
@@ -95,22 +100,64 @@ const Mentoring = () => (
   <PageShell
     title="Менторска програма"
     intro="Индивидуална подкрепа за теб и твоя път в майчинството."
-    introClassName="font-rocaTwoThin text-lg"
-    introMarginClassName="mb-10"
+    introClassName="font-rocaTwoThin text-lg leading-6"
+    introMarginClassName="mb-0"
     revealHeader
   >
-    <RevealOnScroll as="section" className="mb-12 md:mb-16">
-      <RevealOnScroll
-        as="h2"
-        className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
+    <RevealOnScroll>
+      <img
+        src={mentoringImage}
+        alt="Менторска програма"
+        className="relative left-1/2 z-0 mt-2 h-[100px] w-screen max-w-none -translate-x-1/2 translate-y-4 object-cover object-[center_20%] sm:h-[300px]"
+      />
+    </RevealOnScroll>
+
+    <RevealOnScroll
+      as="section"
+      className="relative mb-2 rounded-[32px] bg-white p-6 shadow-xl md:mb-4 md:p-14"
+    >
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-2 -top-8 select-none font-rocaTwoBold text-8xl leading-none text-secondary"
       >
-        Ако си майка и усещаш, че…
-      </RevealOnScroll>
+        “
+      </span>
+          <RevealOnScroll
+      as="h2"
+          className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
+      delay={240}
+    >
+      Не е нужно да вървиш по този път сама
+    </RevealOnScroll>
       <RevealOnScroll
-        className="mx-auto max-w-4xl rounded-[32px] bg-white/80 p-5 shadow-sm md:p-10"
+        as="p"
+        className="font-rocaTwoThin text-lg leading-6"
         delay={120}
       >
-        <ul className="list-disc space-y-4 pl-6 font-rocaTwoThin text-lg leading-relaxed marker:text-secondary">
+        Можеш да го извървиш с някого, който вече го е вървял не само за себе
+        си, но и за други майки и има опита и перспективата да те придружи по
+        този път.
+      </RevealOnScroll>
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -bottom-8 -right-2 select-none font-rocaTwoBold text-8xl leading-none text-secondary"
+      >
+        ”
+      </span>
+    </RevealOnScroll>
+
+    <RevealOnScroll as="section" className="mb-12 md:mb-16">
+      <RevealOnScroll
+        className="mx-auto max-w-4xl rounded-[32px] bg-white p-5 shadow-sm md:p-10"
+        delay={120}
+      >
+        <RevealOnScroll
+          as="h2"
+          className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
+        >
+          Ако си майка и усещаш, че…
+        </RevealOnScroll>
+        <ul className="list-disc space-y-4 pl-6 font-rocaTwoThin text-lg leading-6 marker:text-secondary">
           {openingNeeds.map((need, index) => (
             <RevealOnScroll as="li" key={need} delay={index * 100}>
               {need}
@@ -120,34 +167,6 @@ const Mentoring = () => (
         <p className="mt-6 text-center font-rocaTwoBold text-xl font-bold">
           Това е за теб
         </p>
-      </RevealOnScroll>
-    </RevealOnScroll>
-
-    <RevealOnScroll
-      as="section"
-      className="mb-12 rounded-[32px] bg-white p-6 shadow-xl md:mb-16 md:p-14"
-    >
-      <RevealOnScroll
-        as="span"
-        aria-hidden="true"
-        className="pointer-events-none -mb-3 block w-fit select-none font-rocaTwoBold text-8xl leading-[0.7] text-secondary md:text-7xl"
-      >
-        “
-      </RevealOnScroll>
-      <RevealOnScroll
-        as="h2"
-        className="mb-4 font-rocaTwoBold text-2xl font-bold sm:text-3xl"
-      >
-        Не е нужно да вървиш по този път сама
-      </RevealOnScroll>
-      <RevealOnScroll
-        as="p"
-        className="font-rocaTwoThin text-lg leading-relaxed md:text-xl"
-        delay={120}
-      >
-        Можеш да го извървиш с някого, който вече го е вървял не само за себе
-        си, но и за други майки и има опита и перспективата да те придружи по
-        този път.
       </RevealOnScroll>
     </RevealOnScroll>
 
@@ -163,7 +182,7 @@ const Mentoring = () => (
       </RevealOnScroll>
       <RevealOnScroll
         as="p"
-        className="mx-auto max-w-4xl font-rocaTwoThin text-lg leading-relaxed"
+        className="mx-auto max-w-4xl font-rocaTwoThin text-lg leading-6"
         delay={120}
       >
         Анелия или Катя – създатели на „Прегърната“ и специалисти с опит в
@@ -171,12 +190,19 @@ const Mentoring = () => (
       </RevealOnScroll>
       <RevealOnScroll
         as="p"
-        className="mx-auto mt-4 max-w-4xl font-rocaTwoThin text-lg leading-relaxed"
+        className="mx-auto mt-4 max-w-4xl font-rocaTwoThin text-lg leading-6"
         delay={240}
       >
         Създадохме индивидуална менторска програма за майки, които имат нужда от:
       </RevealOnScroll>
-      <ul className="mx-auto mt-4 max-w-4xl list-disc space-y-3 pl-6 font-rocaTwoThin text-lg leading-relaxed marker:text-secondary">
+      <RevealOnScroll
+        as="h3"
+        className="mx-auto mt-6 max-w-4xl font-rocaTwoBold text-xl font-bold"
+        delay={300}
+      >
+        Какво ще получиш
+      </RevealOnScroll>
+      <ul className="mx-auto mt-4 max-w-4xl list-disc space-y-3 pl-6 font-rocaTwoThin text-lg leading-6 marker:text-secondary">
         {programNeeds.map((need, index) => (
           <RevealOnScroll as="li" key={need} delay={index * 100}>
             {need}
@@ -195,18 +221,25 @@ const Mentoring = () => (
       <div className="mx-auto max-w-4xl rounded-[32px] bg-white/80 p-5 shadow-sm md:p-10">
         <RevealOnScroll
           as="p"
-          className="mb-4 font-rocaTwoBold text-lg font-bold leading-relaxed"
+          className="mb-4 font-rocaTwoBold text-lg font-bold leading-6"
         >
           6 индивидуални 1:1 срещи в рамките на 6 до 8 седмици
         </RevealOnScroll>
         <RevealOnScroll
           as="p"
-          className="font-rocaTwoThin text-lg leading-relaxed"
+          className="font-rocaTwoThin text-lg leading-6"
           delay={120}
         >
           Цялостна програма, разработена и фокусирана върху аспекти като:
         </RevealOnScroll>
-        <ul className="mt-4 list-disc space-y-3 pl-6 font-rocaTwoThin text-lg leading-relaxed marker:text-secondary">
+        <RevealOnScroll
+          as="h3"
+          className="mt-6 font-rocaTwoBold text-xl font-bold"
+          delay={240}
+        >
+          Теми, които можем да разгледаме
+        </RevealOnScroll>
+        <ul className="mt-4 list-disc space-y-3 pl-6 font-rocaTwoThin text-lg leading-6 marker:text-secondary">
           {programTopics.map((topic, index) => (
             <RevealOnScroll as="li" key={topic} delay={index * 100}>
               {topic}
@@ -215,7 +248,7 @@ const Mentoring = () => (
         </ul>
         <RevealOnScroll
           as="p"
-          className="mt-5 font-rocaTwoThin text-lg leading-relaxed"
+          className="mt-5 font-rocaTwoThin text-lg leading-6"
           delay={120}
         >
           Подбор на темите според твоите индивидуални нужди и цели за тази
@@ -235,7 +268,7 @@ const Mentoring = () => (
         {sessions.map(({ title, description }, index) => (
           <RevealOnScroll as="li" key={title} delay={index * 100}>
             <InfoCard title={`${index + 1}. ${title}`}>
-              <p className="font-rocaTwoThin text-lg leading-relaxed">
+              <p className="font-rocaTwoThin text-lg leading-6">
                 {description}
               </p>
             </InfoCard>
@@ -252,7 +285,7 @@ const Mentoring = () => (
         Тази програма е за теб, ако…
       </RevealOnScroll>
       <div className="mx-auto max-w-4xl rounded-[32px] bg-white/80 p-5 shadow-sm md:p-10">
-        <ul className="list-disc space-y-4 pl-6 font-rocaTwoThin text-lg leading-relaxed marker:text-secondary">
+        <ul className="list-disc space-y-4 pl-6 font-rocaTwoThin text-lg leading-6 marker:text-secondary">
           {isForYou.map((reason, index) => (
             <RevealOnScroll as="li" key={reason} delay={index * 100}>
               {reason}
@@ -271,7 +304,7 @@ const Mentoring = () => (
       </RevealOnScroll>
       <RevealOnScroll
         as="p"
-        className="mx-auto mb-6 max-w-4xl text-center font-rocaTwoThin text-lg leading-relaxed"
+        className="mx-auto mb-6 max-w-4xl text-center font-rocaTwoThin text-lg leading-6"
         delay={120}
       >
         За да извървиш с наша помощ своя път
@@ -292,22 +325,36 @@ const Mentoring = () => (
     >
       <RevealOnScroll
         as="p"
-        className="mx-auto max-w-3xl font-rocaTwoThin text-lg leading-relaxed"
+        className="mx-auto max-w-3xl font-rocaTwoThin text-lg leading-6"
       >
         А в края не си нова майка. Но си по-близо до себе си. По-спокойна в
-        решенията си. По-уверена в това, което усещаш.
+        решенията си.
       </RevealOnScroll>
       <RevealOnScroll
         as="p"
-        className="mx-auto mt-4 max-w-3xl font-rocaTwoThin text-lg leading-relaxed"
+        className="mx-auto mt-4 max-w-3xl font-rocaTwoThin text-lg leading-6"
         delay={120}
+      >
+        По-уверена в това, което усещаш.
+      </RevealOnScroll>
+      <RevealOnScroll
+        as="p"
+        className="mx-auto mt-4 max-w-3xl font-rocaTwoThin text-lg leading-6"
+        delay={240}
       >
         И ще знаеш как да подкрепиш себе си и след програмата.
       </RevealOnScroll>
       <RevealOnScroll
+        as="h3"
+        className="mx-auto mt-6 max-w-3xl font-rocaTwoBold text-xl font-bold"
+        delay={300}
+      >
+        Готова ли си за следващата стъпка?
+      </RevealOnScroll>
+      <RevealOnScroll
         as="p"
-        className="mx-auto mb-6 mt-4 max-w-3xl font-rocaTwoThin text-lg leading-relaxed"
-        delay={240}
+        className="mx-auto mb-6 mt-4 max-w-3xl font-rocaTwoThin text-lg leading-6"
+        delay={360}
       >
         Пиши ни, за да се запишеш за безплатен предварителен разговор.
       </RevealOnScroll>
