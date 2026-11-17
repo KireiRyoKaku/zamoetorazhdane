@@ -100,6 +100,7 @@ const Journey = () => {
   const panelRef = useRef(null);
   const [interactive, setInteractive] = useState(false);
   const [revealedCount, setRevealedCount] = useState(0);
+  const [isPinned, setIsPinned] = useState(false);
 
   useEffect(() => {
     const media = window.matchMedia(
@@ -109,11 +110,17 @@ const Journey = () => {
       if (!stageRef.current || !panelRef.current) return;
       const canAnimate =
         media.matches &&
-        panelRef.current.offsetHeight <= window.innerHeight - 116;
+        panelRef.current.offsetHeight <= window.innerHeight - 148;
       setInteractive(canAnimate);
-      if (!canAnimate) return;
+      if (!canAnimate) {
+        setIsPinned(false);
+        return;
+      }
 
       const rect = stageRef.current.getBoundingClientRect();
+      setIsPinned(
+        rect.top <= 97 && rect.bottom > 96 + panelRef.current.offsetHeight,
+      );
       const scrollDistance = rect.height - panelRef.current.offsetHeight - 96;
       const progress = Math.max(
         0,
@@ -141,7 +148,7 @@ const Journey = () => {
 
   return (
     <div ref={stageRef} className={interactive ? "min-h-[400svh]" : ""}>
-      <div ref={panelRef} className={interactive ? "sticky top-24" : ""}>
+      <div ref={panelRef} className={interactive ? "sticky top-24" : "relative"}>
         <RevealOnScroll
           as="h2"
           className="mb-4 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
@@ -155,33 +162,51 @@ const Journey = () => {
         >
           За да извървиш с наша помощ своя път
         </RevealOnScroll>
-        <div className="overflow-hidden rounded-[32px] shadow-lg">
-          <div className="grid grid-cols-2 font-rocaTwoBold text-2xl font-bold">
-            <h3 className="bg-third px-4 py-4 text-left">От</h3>
-            <h3 className="bg-fourth px-4 py-4 text-right text-white">Към</h3>
+        <div className="rounded-[32px] bg-third p-3 shadow-lg md:p-6">
+          <div className="mb-3 grid grid-cols-2 font-rocaTwoBold text-2xl font-bold">
+            <h3 className="px-3 text-left">От</h3>
+            <h3 className="px-3 text-right">Към</h3>
           </div>
-          <div className="bg-third/70">
+          <div className="space-y-2">
             {journey.map(({ from, to }, index) => (
-              <div key={to} className="grid grid-cols-2">
-                <ul className="flex flex-col justify-center gap-2 border-b border-fourth/10 p-3 text-left font-rocaTwoThin text-base leading-5 md:p-4 md:text-lg md:leading-6">
+              <div key={to} className="grid grid-cols-2 overflow-hidden rounded-2xl bg-white/90">
+                <ul className="flex flex-col justify-center gap-2 p-3 text-left font-rocaTwoThin text-base leading-5 md:p-4 md:text-lg md:leading-6">
                   {from.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
-                <div className="flex items-stretch bg-fourth/10 p-2">
-                  <p
-                    className={`flex w-full items-center justify-end rounded-2xl bg-fourth p-3 text-right font-rocaTwoThin text-base leading-5 text-white transition-opacity duration-300 motion-reduce:transition-none md:p-4 md:text-lg md:leading-6 ${
-                      interactive && index >= revealedCount
-                        ? "opacity-0"
-                        : "opacity-100"
-                    }`}
-                  >
-                    {to}
-                  </p>
-                </div>
+                <p
+                  className={`flex origin-left items-center justify-end bg-fourth p-3 pl-6 text-right font-rocaTwoThin text-base leading-5 text-white transition-[opacity,transform] duration-500 motion-reduce:transition-none md:p-4 md:pl-6 md:text-lg md:leading-6 ${
+                    interactive && index >= revealedCount
+                      ? "scale-x-0 opacity-0"
+                      : "scale-x-100 opacity-100"
+                  }`}
+                  style={{ clipPath: "polygon(16px 0, 100% 0, 100% 100%, 0 100%)" }}
+                >
+                  {to}
+                </p>
               </div>
             ))}
           </div>
+        </div>
+        <div
+          aria-hidden="true"
+          className={`pointer-events-none absolute top-full mt-2 flex w-full items-center justify-center gap-2 font-rocaTwoRegular text-sm text-fourth transition-opacity motion-reduce:transition-none ${
+            interactive && isPinned && revealedCount < journey.length
+              ? "opacity-100"
+              : "opacity-0"
+          }`}
+        >
+          <span>Скролни надолу</span>
+          <svg
+            className="h-5 w-5 animate-pulse motion-reduce:animate-none"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M12 3v17m-6-6 6 6 6-6" />
+          </svg>
         </div>
       </div>
     </div>
