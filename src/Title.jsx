@@ -969,6 +969,11 @@ const Title = () => {
               src={katyaImage}
               alt="Катя"
               className="pointer-events-none relative z-20 mx-auto -mt-24 h-72 w-auto object-contain md:absolute md:bottom-0 md:right-6 md:mt-0 md:h-[135%] md:w-auto md:max-w-[50%] md:object-bottom"
+              style={{
+                maskImage: "linear-gradient(to bottom, #000 80%, transparent 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(to bottom, #000 80%, transparent 100%)",
+              }}
             />
             <div className="relative z-10 w-full space-y-3 p-6 text-center md:w-[55%] md:space-y-4 md:p-12 md:text-left">
               <div className="space-y-1 text-left">
@@ -1015,6 +1020,11 @@ const Title = () => {
               src={aneliaImage}
               alt="Anelia"
               className="pointer-events-none relative z-20 mx-auto -mt-24 h-72 w-auto object-contain md:absolute md:bottom-0 md:left-6 md:mt-0 md:h-[135%] md:w-auto md:max-w-[45%] md:object-bottom lg:left-16"
+              style={{
+                maskImage: "linear-gradient(to bottom, #000 80%, transparent 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(to bottom, #000 80%, transparent 100%)",
+              }}
             />
             <div className="relative z-10 w-full space-y-3 p-6 text-center md:ml-auto md:w-[55%] md:space-y-4 md:p-12 md:p-8 md:text-left">
               <div className="space-y-1 text-left">

@@ -15,6 +15,7 @@ import {
   IoRibbon,
 } from "react-icons/io5";
 import aneliaImage from "./assets/pictures/good/detskisunservices.png";
+import logoSmall from "./assets/pictures/PregurnataLogoPinkNoText.png";
 
 const supportAreas = [
   "да открият своя подход в казусите със съня на детето",
@@ -36,6 +37,7 @@ const reasonsToChoose = [
 
 const CalendlyBooking = ({ label = "Безплатен 15-минутен разговор" }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCalendlyLoading, setIsCalendlyLoading] = useState(false);
   const triggerButtonRef = useRef(null);
   const closeButtonRef = useRef(null);
 
@@ -67,7 +69,10 @@ const CalendlyBooking = ({ label = "Безплатен 15-минутен раз�
     <>
       <Button
         ref={triggerButtonRef}
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          setIsCalendlyLoading(true);
+          setIsOpen(true);
+        }}
       >
         {label}
       </Button>
@@ -101,11 +106,32 @@ const CalendlyBooking = ({ label = "Безплатен 15-минутен раз�
                   ×
                 </button>
               </header>
-              <iframe
-                src={calendlyUrl.toString()}
-                title="Calendly – безплатен 15-минутен разговор с Анелия"
-                className="min-h-0 w-full flex-1"
-              />
+              <div className="relative min-h-0 flex-1 bg-white">
+                {isCalendlyLoading && (
+                  <div
+                    className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center bg-white"
+                    role="status"
+                    aria-label="Зареждане на календара"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="absolute h-36 w-36 animate-ping rounded-full border border-primary/30"
+                    />
+                    <img
+                      src={logoSmall}
+                      alt=""
+                      aria-hidden="true"
+                      className="relative z-10 h-28 w-28 animate-pulse object-contain"
+                    />
+                  </div>
+                )}
+                <iframe
+                  src={calendlyUrl.toString()}
+                  title="Calendly – безплатен 15-минутен разговор с Анелия"
+                  className="h-full w-full"
+                  onLoad={() => setIsCalendlyLoading(false)}
+                />
+              </div>
             </section>
           </div>,
           document.body,

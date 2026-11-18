@@ -325,6 +325,7 @@ const Mentoring = () => {
         introClassName="font-rocaTwoThin text-lg leading-6"
         introMarginClassName="mb-0"
         revealHeader
+        showBackButton={false}
       >
     <RevealOnScroll>
       <img
@@ -405,9 +406,9 @@ const Mentoring = () => {
         <Button
           type="button"
           onClick={openContactModal}
-          className="text-4xl md:text-4xl"
+          className="text-7xl md:text-7xl"
         >
-          Това е за теб!
+          ТОВА Е ЗА ТЕБ!
         </Button>
       </div>
     </RevealOnScroll>
@@ -621,7 +622,7 @@ const Mentoring = () => {
       </RevealOnScroll>
       <RevealOnScroll delay={360}>
         <Button type="button" onClick={openContactModal}>
-          Свържи се с нас
+          СВЪРЖИ СЕ
         </Button>
       </RevealOnScroll>
     </RevealOnScroll>
