@@ -728,7 +728,7 @@ const PodcastEpisodes = () => {
 
 const Title = () => {
   const navigate = useNavigate();
-  const [specialistsHeadingRef, specialistsHeadingReveal] = useRevealOnView();
+  const [specialistsHeadingRef, , specialistsHeadingInView] = useRevealOnView();
   const [katyaCardRef, katyaCardReveal] = useRevealOnView();
   const [profileDividerRef, profileDividerReveal] = useRevealOnView();
   const [aneliaCardRef, aneliaCardReveal] = useRevealOnView();
@@ -747,8 +747,16 @@ const Title = () => {
   const [partnerTickerVisible, setPartnerTickerVisible] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
   const [wordVisible, setWordVisible] = useState(true);
+  const [hasScrolled, setHasScrolled] = useState(false);
 
   const arcPathRef = useRef(null);
+
+  useEffect(() => {
+    const updateScroll = () => setHasScrolled(window.scrollY > 0);
+    updateScroll();
+    window.addEventListener("scroll", updateScroll, { passive: true });
+    return () => window.removeEventListener("scroll", updateScroll);
+  }, []);
 
   useEffect(() => {
     setHeroTextVisible(true);
@@ -938,7 +946,12 @@ const Title = () => {
         <div className="mx-auto w-full max-w-6xl">
           <span
             ref={specialistsHeadingRef}
-            className={`block w-full text-left text-5xl font-black tracking-[-0.02em] text-fourth md:w-1/2 ${specialistsHeadingReveal}`}
+            aria-hidden={!hasScrolled}
+            className={`block w-full text-left text-5xl font-black tracking-[-0.02em] text-fourth transition-[opacity,transform] duration-700 ease-out motion-reduce:translate-y-0 motion-reduce:transition-none md:w-1/2 ${
+              hasScrolled && specialistsHeadingInView
+                ? "translate-y-0 opacity-100"
+                : "translate-y-6 opacity-0"
+            }`}
           >
             Здравей!
             <br />
@@ -1045,13 +1058,7 @@ const Title = () => {
         >
           <div className="mx-auto w-full max-w-7xl">
             <div ref={approachContentRef} className={approachContentReveal}>
-              {/* <h2
-                id={`${HOME_SECTION_IDS.approachContent}-heading`}
-                className="mb-4 text-center font-magnoliaScript text-4xl md:text-5xl lg:text-6xl"
-              >
-                Прегърната
-              </h2> */}
-              <p className="mx-auto mb-6 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug">
+                <p className="mx-auto mb-6 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug">
                 Повечето услуги за родители са насочени към грижата за детето.
                 Ние се грижим за майката, като ѝ помагаме да подкрепя себе си.
                 Защото и тя има нужда да бъде прегърната в уязвимите периоди от

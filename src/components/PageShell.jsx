@@ -112,6 +112,29 @@ export const PageShell = ({
   </main>
 );
 
+export const ServiceQuote = ({ children }) => (
+  <RevealOnScroll
+    as="section"
+    className="relative z-10 -mt-6 mb-12 rounded-[32px] bg-fourth px-6 py-5 text-center text-white shadow-xl md:mb-16 md:px-14 md:py-8"
+  >
+    <span
+      aria-hidden="true"
+      className="pointer-events-none -mb-14 block select-none font-rocaTwoBold text-9xl leading-none text-secondary sm:-mb-20 sm:text-[11rem]"
+    >
+      “
+    </span>
+    <div className="relative mx-auto max-w-3xl font-rocaTwoThin text-lg leading-7">
+      {children}
+    </div>
+    <span
+      aria-hidden="true"
+      className="pointer-events-none -mt-14 block rotate-180 select-none font-rocaTwoBold text-9xl leading-none text-secondary sm:-mt-20 sm:text-[11rem]"
+    >
+      “
+    </span>
+  </RevealOnScroll>
+);
+
 export const InfoCard = ({ title, price, badge, items = [], children }) => (
   <div className="relative flex flex-col rounded-[32px] bg-white p-7 shadow-xl">
     {badge && (

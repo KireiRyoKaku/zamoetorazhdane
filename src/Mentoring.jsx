@@ -95,6 +95,21 @@ const journey = [
   },
 ];
 
+const ScrollChevrons = () => (
+  <svg
+    className="h-8 w-8 animate-pulse motion-reduce:animate-none"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="m5 7 7 7 7-7M5 13l7 7 7-7" />
+  </svg>
+);
+
 const Journey = () => {
   const stageRef = useRef(null);
   const panelRef = useRef(null);
@@ -110,7 +125,7 @@ const Journey = () => {
       if (!stageRef.current || !panelRef.current) return;
       const canAnimate =
         media.matches &&
-        panelRef.current.offsetHeight <= window.innerHeight - 148;
+        panelRef.current.offsetHeight <= window.innerHeight - 160;
       setInteractive(canAnimate);
       if (!canAnimate) {
         setIsPinned(false);
@@ -148,7 +163,10 @@ const Journey = () => {
 
   return (
     <div ref={stageRef} className={interactive ? "min-h-[400svh]" : ""}>
-      <div ref={panelRef} className={interactive ? "sticky top-24" : "relative"}>
+      <div
+        ref={panelRef}
+        className={interactive ? "sticky top-24" : "relative"}
+      >
         <RevealOnScroll
           as="h2"
           className="mb-4 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
@@ -169,7 +187,10 @@ const Journey = () => {
           </div>
           <div className="space-y-2">
             {journey.map(({ from, to }, index) => (
-              <div key={to} className="grid grid-cols-2 overflow-hidden rounded-2xl bg-white/90">
+              <div
+                key={to}
+                className="grid grid-cols-2 overflow-hidden rounded-2xl bg-white/90"
+              >
                 <ul className="flex flex-col justify-center gap-2 p-3 text-left font-rocaTwoThin text-base leading-5 md:p-4 md:text-lg md:leading-6">
                   {from.map((item) => (
                     <li key={item}>{item}</li>
@@ -181,7 +202,9 @@ const Journey = () => {
                       ? "scale-x-0 opacity-0"
                       : "scale-x-100 opacity-100"
                   }`}
-                  style={{ clipPath: "polygon(16px 0, 100% 0, 100% 100%, 0 100%)" }}
+                  style={{
+                    clipPath: "polygon(16px 0, 100% 0, 100% 100%, 0 100%)",
+                  }}
                 >
                   {to}
                 </p>
@@ -191,22 +214,13 @@ const Journey = () => {
         </div>
         <div
           aria-hidden="true"
-          className={`pointer-events-none absolute top-full mt-2 flex w-full items-center justify-center gap-2 font-rocaTwoRegular text-sm text-fourth transition-opacity motion-reduce:transition-none ${
+          className={`pointer-events-none absolute top-full mt-2 flex w-full items-center justify-center gap-2 font-rocaTwoRegular text-sm text-[#403d5c] transition-opacity motion-reduce:transition-none ${
             interactive && isPinned && revealedCount < journey.length
               ? "opacity-100"
               : "opacity-0"
           }`}
         >
-          <span>Скролни надолу</span>
-          <svg
-            className="h-5 w-5 animate-pulse motion-reduce:animate-none"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          >
-            <path d="M12 3v17m-6-6 6 6 6-6" />
-          </svg>
+          <ScrollChevrons />
         </div>
       </div>
     </div>
@@ -240,7 +254,7 @@ const Mentoring = () => (
     >
       <span
         aria-hidden="true"
-        className="pointer-events-none block h-14 select-none overflow-hidden font-rocaTwoBold text-9xl leading-[0.7] text-secondary sm:h-20 sm:text-[11rem]"
+        className="pointer-events-none -mb-14 block select-none font-rocaTwoBold text-9xl leading-none text-secondary sm:-mb-20 sm:text-[11rem]"
       >
         “
       </span>
@@ -264,7 +278,7 @@ const Mentoring = () => (
       </div>
       <span
         aria-hidden="true"
-        className="pointer-events-none block h-14 rotate-180 select-none overflow-hidden font-rocaTwoBold text-9xl leading-[0.7] text-secondary sm:h-20 sm:text-[11rem]"
+        className="pointer-events-none -mt-14 block rotate-180 select-none font-rocaTwoBold text-9xl leading-none text-secondary sm:-mt-20 sm:text-[11rem]"
       >
         “
       </span>
@@ -317,7 +331,7 @@ const Mentoring = () => (
         delay={120}
       >
         Анелия или Катя – създатели на „
-        <span className="font-rocaTwoRegular">Прегърната</span>“ и специалисти с
+        <span className="font-magnoliaScript">Прегърната</span>“ и специалисти с
         опит в подкрепата на майки в групови и индивидуални формати.
       </RevealOnScroll>
       <RevealOnScroll
@@ -390,7 +404,7 @@ const Mentoring = () => (
     </RevealOnScroll>
 
     <RevealOnScroll as="section" className="mb-12 md:mb-16">
-      <div className="grid motion-safe:-mb-[20svh] md:mb-0">
+      <div className="grid motion-safe:-mb-[max(0px,calc(100svh-max(11rem,(100svh-17rem)/2-6rem)-23.25rem))] md:mb-0">
         <div className="relative z-20 motion-safe:pointer-events-none motion-safe:sticky motion-safe:top-24 motion-safe:col-start-1 motion-safe:row-start-1 motion-safe:h-[calc(100svh-6rem)] motion-safe:self-start md:static md:col-auto md:row-auto md:h-auto">
           <h2 className="mb-6 text-center font-rocaTwoBold text-2xl font-bold motion-safe:absolute motion-safe:inset-x-0 motion-safe:top-0 sm:text-3xl md:static">
             Програма
@@ -400,32 +414,42 @@ const Mentoring = () => (
           {sessions.map(({ title, description }, index) => (
             <li
               key={title}
-              className="motion-safe:sticky motion-safe:top-0 motion-safe:flex motion-safe:min-h-[100svh] motion-safe:items-center motion-safe:pt-[var(--stack-offset)] md:static md:block md:min-h-0 md:pt-0"
+              className="motion-safe:sticky motion-safe:top-0 motion-safe:flex motion-safe:min-h-[100svh] motion-safe:items-start motion-safe:pt-[calc(max(11rem,(100svh-17rem)/2-6rem)+var(--stack-offset)/2)] md:static md:block md:min-h-0 md:pt-0"
               style={{ "--stack-offset": `${index * 24}px`, zIndex: index + 1 }}
             >
-              <RevealOnScroll
-                className={`relative flex min-h-[17rem] w-full items-center justify-center overflow-hidden rounded-[28px] border border-fourth/10 p-6 shadow-md ${
-                  index % 2 === 0 ? "bg-white" : "bg-third"
-                }`}
-              >
-                <span
-                  aria-hidden="true"
-                  className="absolute right-4 top-2 font-rocaTwoBold text-7xl leading-none text-secondary/60"
+              <div className="relative w-full">
+                <RevealOnScroll
+                  className={`relative flex min-h-[17rem] w-full items-center justify-center overflow-hidden rounded-[28px] border border-fourth/10 p-6 shadow-md ${
+                    index % 2 === 0 ? "bg-white" : "bg-third"
+                  }`}
                 >
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <div className="relative w-full text-center">
-                  <p className="mb-2 font-rocaTwoBold text-sm uppercase tracking-widest text-fourth/70">
-                    Среща {index + 1}
-                  </p>
-                  <h3 className="mb-3 font-rocaTwoBold text-xl font-bold">
-                    {title}
-                  </h3>
-                  <p className="font-rocaTwoThin text-lg leading-6">
-                    {description}
-                  </p>
-                </div>
-              </RevealOnScroll>
+                  <span
+                    aria-hidden="true"
+                    className="absolute right-4 top-2 font-rocaTwoBold text-7xl leading-none text-secondary/60"
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <div className="relative w-full text-center">
+                    <p className="mb-2 font-rocaTwoBold text-sm uppercase tracking-widest text-[#403d5c]/70">
+                      Среща {index + 1}
+                    </p>
+                    <h3 className="mb-3 font-rocaTwoBold text-xl font-bold">
+                      {title}
+                    </h3>
+                    <p className="font-rocaTwoThin text-lg leading-6">
+                      {description}
+                    </p>
+                  </div>
+                </RevealOnScroll>
+                {index === 0 && (
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 top-full mt-20 hidden justify-center text-[#403d5c] motion-safe:max-md:flex [&>svg]:h-12 [&>svg]:w-12"
+                  >
+                    <ScrollChevrons />
+                  </div>
+                )}
+              </div>
             </li>
           ))}
         </ol>
@@ -446,7 +470,7 @@ const Mentoring = () => (
               as="li"
               key={reason}
               delay={index * 80}
-              className="rounded-2xl bg-white/90 p-4 font-rocaTwoThin text-lg leading-6 shadow-sm"
+              className="text-center leading-6 rounded-2xl bg-white/90 p-4 font-rocaTwoThin text-lg shadow-sm"
             >
               {reason}
             </RevealOnScroll>

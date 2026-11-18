@@ -4,6 +4,7 @@ import {
   InfoCard,
   PageShell,
   RevealOnScroll,
+  ServiceQuote,
 } from "./components/PageShell";
 import {
   IoConstruct,
@@ -46,18 +47,8 @@ const KatyaServices = () => (
         className="relative z-0 mx-auto h-[280px] w-4/5 max-w-xs translate-y-4 rounded-[24px] object-cover object-top sm:h-[320px]"
       />
     </RevealOnScroll>
-    <RevealOnScroll
-      as="section"
-      className="relative z-10 -mt-6 mb-12 overflow-hidden rounded-[32px] bg-white p-6 shadow-xl md:mb-16 md:p-14"
-    >
-      <RevealOnScroll
-        as="span"
-        aria-hidden="true"
-        className="pointer-events-none relative z-0 -mb-3 block w-fit select-none font-rocaTwoBold text-8xl leading-[0.7] text-secondary md:text-7xl"
-      >
-        “
-      </RevealOnScroll>
-      <div className="relative z-10 space-y-7 font-rocaTwoThin text-lg leading-relaxed md:space-y-8 md:text-xl">
+    <ServiceQuote>
+      <div className="space-y-6">
         <RevealOnScroll as="p">
           Аз също съм майка и знам колко ценна е подкрепата за една жена, когато
           е уморена, объркана или просто има нужда да бъде разбрана.
@@ -72,7 +63,7 @@ const KatyaServices = () => (
           просто пространство, в което да бъдат чути.
         </RevealOnScroll>
       </div>
-    </RevealOnScroll>
+    </ServiceQuote>
 
     <RevealOnScroll as="section" className="mb-12 md:mb-16">
       <RevealOnScroll
@@ -85,12 +76,18 @@ const KatyaServices = () => (
         </span>
       </RevealOnScroll>
       <RevealOnScroll
-        className="mx-auto max-w-4xl rounded-[32px] bg-white/80 p-5 shadow-sm md:p-10"
+        className="mx-auto max-w-4xl rounded-[32px] bg-third/80 p-5 shadow-sm md:p-10"
         delay={120}
       >
-        <ul className="list-disc space-y-4 px-2 pl-6 font-rocaTwoThin text-lg leading-relaxed marker:text-secondary">
+        <ul className="grid gap-3 md:grid-cols-2">
           {supportAreas.map((area, index) => (
-            <RevealOnScroll as="li" key={area} delay={index * 100}>
+            <RevealOnScroll
+              as="li"
+              key={area}
+              delay={index * 100}
+              className="flex items-start gap-3 rounded-2xl bg-white/90 p-4 font-rocaTwoThin text-lg leading-6"
+            >
+              <span aria-hidden="true" className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-secondary" />
               {area}
             </RevealOnScroll>
           ))}
@@ -100,7 +97,7 @@ const KatyaServices = () => (
 
     <RevealOnScroll
       as="section"
-      className="mb-12 rounded-[32px] bg-white/80 p-5 shadow-sm md:mb-16 md:p-10"
+      className="mb-12 rounded-[32px] border-t-8 border-secondary bg-white p-5 shadow-sm md:mb-16 md:p-10"
     >
       <RevealOnScroll
         as="h2"
@@ -120,7 +117,7 @@ const KatyaServices = () => (
       </RevealOnScroll>
       <RevealOnScroll
         as="p"
-        className="text-lefta mx-auto mt-4 max-w-4xl font-rocaTwoThin text-lg leading-relaxed"
+        className="mx-auto mt-4 max-w-4xl font-rocaTwoThin text-lg leading-relaxed"
         delay={240}
       >
         Фокус в моята практика е подкрепата в различните етапи на майчинството.
@@ -137,12 +134,12 @@ const KatyaServices = () => (
       >
         Защо да се обърнеш към мен
       </RevealOnScroll>
-      <ul className="mx-auto grid max-w-4xl grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
+      <ul className="mx-auto grid max-w-4xl grid-cols-1 gap-3 rounded-[32px] bg-secondary/75 p-5 md:grid-cols-2 md:gap-4 md:p-10">
         {reasonsToChoose.map(({ text, icon: Icon }, index) => (
           <RevealOnScroll
             as="li"
             key={text}
-            className="flex min-w-0 flex-col items-center gap-3 break-words rounded-2xl bg-third p-4 text-center font-rocaTwoThin text-lg leading-relaxed [overflow-wrap:anywhere] md:p-5"
+            className="flex min-w-0 flex-col items-center gap-3 break-words rounded-2xl bg-white/90 p-4 text-center font-rocaTwoThin text-lg leading-relaxed [overflow-wrap:anywhere] md:p-5"
             delay={index * 100}
           >
             <Icon
@@ -204,7 +201,7 @@ const KatyaServices = () => (
 
     <RevealOnScroll
       as="section"
-      className="rounded-[32px] bg-white/80 p-5 text-center shadow-xl md:p-10"
+      className="rounded-[32px] bg-fourth p-5 text-center text-white shadow-xl md:p-10"
     >
       <RevealOnScroll
         as="h2"
