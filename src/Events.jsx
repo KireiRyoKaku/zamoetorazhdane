@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import calBgImage from "./assets/pictures/logo-and-text-green-outline.png";
+import logoSmall from "./assets/pictures/PregurnataLogoPinkNoText.png";
 
 import {
   FaCalendarAlt,
@@ -921,23 +922,21 @@ const Events = () => {
             Събития
           </div>
           {isLoadingEvents ? (
-            // Loading state
             <div
-              className={`event-box mb-4 grid w-full grid-cols-[auto_1fr] grid-rows-[min-content] rounded bg-white/90 p-3 ring-1 ring-primary transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] sm:w-full sm:max-w-xl ${
+              className={`event-box relative mb-4 flex min-h-56 w-full items-center justify-center overflow-hidden rounded bg-white/90 p-8 ring-1 ring-primary transition-all duration-500 ease-out [filter:drop-shadow(0_4px_3px_rgb(0_87_63_/_0.07))_drop-shadow(0_2px_2px_rgb(0_87_63_/_0.06))] sm:w-full sm:max-w-xl ${
                 showAnimation ? "scale-100 opacity-100" : "scale-90 opacity-0"
               }`}
             >
-              <div className="flex h-full items-center">
-                <div className="NoEventDay mr-4 flex items-center justify-center">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full bg-third font-rocaTwoRegular text-xl text-fourth">
-                    <div className="animate-spin">⏳</div>
-                  </span>
-                </div>
-                <div className="NoEventSummary flex-1 items-center text-balance font-rocaTwoThin text-3xl text-fourth">
-                  Зареждане на събитията в програмата. Това може да отнеме
-                  известно време. Моля изчакайте.
-                </div>
-              </div>
+              <span
+                aria-hidden="true"
+                className="absolute h-36 w-36 animate-ping rounded-full border border-primary/30"
+              />
+              <img
+                src={logoSmall}
+                alt=""
+                aria-hidden="true"
+                className="relative z-10 h-28 w-28 animate-pulse object-contain"
+              />
             </div>
           ) : upcomingEvents.length > 0 ? (
             createEventList()

@@ -52,30 +52,35 @@ export const PageShell = ({
   children,
   backState,
   revealHeader = false,
+  showBackButton = true,
+  className = "",
 }) => (
-  <main className="min-h-screen bg-primary px-4 pb-16 pt-8 text-fourth">
+  <main
+    className={`min-h-screen bg-primary px-4 pb-16 pt-8 text-fourth ${className}`}
+  >
     <div className="mx-auto max-w-5xl">
-      {revealHeader ? (
-        <RevealOnScroll className="mb-6 inline-block">
+      {showBackButton &&
+        (revealHeader ? (
+          <RevealOnScroll className="mb-6 inline-block">
+            <ButtonLink
+              to="/"
+              state={backState}
+              variant="secondary"
+            >
+              ← Начало
+            </ButtonLink>
+          </RevealOnScroll>
+        ) : (
           <ButtonLink
             to="/"
             state={backState}
             variant="secondary"
+            className="mb-6"
           >
             ← Начало
           </ButtonLink>
-        </RevealOnScroll>
-      ) : (
-        <ButtonLink
-          to="/"
-          state={backState}
-          variant="secondary"
-          className="mb-6"
-        >
-          ← Начало
-        </ButtonLink>
-      )}
-      {revealHeader ? (
+        ))}
+      {title && (revealHeader ? (
         <>
           <RevealOnScroll
             as="h1"
@@ -106,7 +111,7 @@ export const PageShell = ({
             </p>
           )}
         </>
-      )}
+      ))}
       {children}
     </div>
   </main>

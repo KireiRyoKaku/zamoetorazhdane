@@ -31,20 +31,16 @@ const PopupMenu = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const [homeIntroStage, setHomeIntroStage] = useState(
-    location.pathname === "/" ? 0 : 2,
-  );
+  const [homeIntroStage, setHomeIntroStage] = useState(0);
   const logoTrackRef = useRef(null);
   const logoTextPathRef = useRef(null);
   const animationFrameRef = useRef(null);
 
   useEffect(() => {
     setIsOpen(false);
-    if (location.pathname !== "/") {
-      setHomeIntroStage(2);
-      return;
-    }
+  }, [location.pathname]);
 
+  useEffect(() => {
     setHomeIntroStage(0);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setHomeIntroStage(2);
@@ -56,7 +52,7 @@ const PopupMenu = () => {
       window.clearTimeout(logoTimer);
       window.clearTimeout(menuTimer);
     };
-  }, [location.pathname]);
+  }, []);
 
   const startLogoAnimation = useCallback(() => {
     const track = logoTrackRef.current;
@@ -103,14 +99,6 @@ const PopupMenu = () => {
   }, []);
 
   useEffect(() => {
-    if (location.pathname !== "/") {
-      if (animationFrameRef.current !== null) {
-        cancelAnimationFrame(animationFrameRef.current);
-        animationFrameRef.current = null;
-      }
-      return undefined;
-    }
-
     let cancelled = false;
     let timer;
     // Mobile browsers render SVG text/images before the font and logo have
@@ -134,7 +122,7 @@ const PopupMenu = () => {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [location.pathname, startLogoAnimation]);
+  }, [startLogoAnimation]);
 
   const isActive = (link) =>
     location.pathname === link.path ||

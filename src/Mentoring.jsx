@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { CtaLink, PageShell, RevealOnScroll } from "./components/PageShell";
+import { createPortal } from "react-dom";
+import { PageShell, RevealOnScroll } from "./components/PageShell";
+import { Button } from "./components/Button";
 import mentoringImage from "./assets/pictures/good/mentoring2.png";
+import { API_URL } from "../utils/apiConfig";
 
 const currentDate = new Date();
 const programYear =
@@ -227,14 +230,102 @@ const Journey = () => {
   );
 };
 
-const Mentoring = () => (
-  <PageShell
-    title="Менторска програма"
-    intro="Индивидуална подкрепа за теб и твоя път в майчинството."
-    introClassName="font-rocaTwoThin text-lg leading-6"
-    introMarginClassName="mb-0"
-    revealHeader
-  >
+const Mentoring = () => {
+  const defaultContactMessage =
+    "Здравейте, имам желание да участвам в менторската програма. Бих искала да се свържа с Вас за предварителна консултация на следната дата:";
+  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    email: "",
+    message: defaultContactMessage,
+  });
+  const [contactStatus, setContactStatus] = useState({
+    type: "idle",
+    message: "",
+  });
+
+  useEffect(() => {
+    if (!isContactModalOpen) return undefined;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setIsContactModalOpen(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = "";
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isContactModalOpen]);
+
+  const openContactModal = () => {
+    setContactStatus({ type: "idle", message: "" });
+    setIsContactModalOpen(true);
+  };
+
+  const handleContactSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!contactForm.name.trim() || !contactForm.email.trim()) {
+      setContactStatus({
+        type: "error",
+        message: "Моля, попълни името и имейла си.",
+      });
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contactForm.email.trim())) {
+      setContactStatus({
+        type: "error",
+        message: "Моля, въведи валиден имейл адрес.",
+      });
+      return;
+    }
+
+    setContactStatus({ type: "submitting", message: "" });
+
+    try {
+      const response = await fetch(`${API_URL}/mentoring-contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(contactForm),
+      });
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Съобщението не беше изпратено.");
+      }
+
+      setContactForm({
+        name: "",
+        email: "",
+        message: defaultContactMessage,
+      });
+      setContactStatus({
+        type: "success",
+        message: "Благодарим! Ще се свържем с теб възможно най-скоро.",
+      });
+    } catch (error) {
+      console.error("Mentoring contact form error:", error);
+      setContactStatus({
+        type: "error",
+        message:
+          error.message ||
+          "Възникна проблем. Моля, опитай отново след малко.",
+      });
+    }
+  };
+
+  return (
+    <>
+      <PageShell
+        title="Менторска програма"
+        intro="Индивидуална подкрепа за теб и твоя път в майчинството."
+        introClassName="font-rocaTwoThin text-lg leading-6"
+        introMarginClassName="mb-0"
+        revealHeader
+      >
     <RevealOnScroll>
       <img
         src={mentoringImage}
@@ -310,9 +401,15 @@ const Mentoring = () => (
           </RevealOnScroll>
         ))}
       </ul>
-      <p className="mt-7 text-center font-rocaTwoBold text-4xl font-bold">
-        Това е за теб!
-      </p>
+      <div className="mt-7 text-center">
+        <Button
+          type="button"
+          onClick={openContactModal}
+          className="text-4xl md:text-4xl"
+        >
+          Това е за теб!
+        </Button>
+      </div>
     </RevealOnScroll>
 
     <RevealOnScroll
@@ -523,12 +620,121 @@ const Mentoring = () => (
         Пиши ни, за да се запишеш за безплатен предварителен разговор.
       </RevealOnScroll>
       <RevealOnScroll delay={360}>
-        <CtaLink href="mailto:embraced.mothersclub@gmail.com">
+        <Button type="button" onClick={openContactModal}>
           Свържи се с нас
-        </CtaLink>
+        </Button>
       </RevealOnScroll>
     </RevealOnScroll>
-  </PageShell>
-);
+      </PageShell>
+
+      {isContactModalOpen &&
+        createPortal(
+        <div
+          className="fixed inset-0 z-[10001] flex items-center justify-center bg-[#403d5c]/70 p-0 sm:p-4"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              setIsContactModalOpen(false);
+            }
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mentoring-contact-title"
+            className="max-h-[100dvh] w-full max-w-2xl overflow-y-auto rounded-[24px] bg-white p-6 text-[#403d5c] shadow-2xl sm:max-h-[calc(100dvh-2rem)] sm:rounded-[32px] md:p-8"
+          >
+            <div className="mb-6 flex items-start justify-between gap-4">
+              <div>
+                <h2
+                  id="mentoring-contact-title"
+                  className="font-rocaTwoBold text-2xl text-center font-bold sm:text-xl"
+                >
+                  Заявка за участие в менторската програма
+                </h2>
+                
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsContactModalOpen(false)}
+                aria-label="Затвори формата"
+                className="rounded-full p-2 text-2xl leading-none hover:bg-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-fourth/60"
+              >
+                ×
+              </button>
+            </div>
+
+            {contactStatus.type === "success" ? (
+              <div className="rounded-2xl bg-primary p-5 text-center font-rocaTwoThin text-lg leading-6">
+                {contactStatus.message}
+              </div>
+            ) : (
+              <form onSubmit={handleContactSubmit} className="space-y-4">
+                <label className="block font-rocaTwoRegular text-base">
+                  Име
+                  <input
+                    required
+                    type="text"
+                    placeholder="Мария Иванова"
+                    value={contactForm.name}
+                    onChange={(event) =>
+                      setContactForm({
+                        ...contactForm,
+                        name: event.target.value,
+                      })
+                    }
+                    className="mt-1 w-full rounded-xl border border-fourth/30 px-4 py-3 font-rocaTwoThin focus:border-fourth focus:outline-none focus:ring-2 focus:ring-fourth/40"
+                  />
+                </label>
+                <label className="block font-rocaTwoRegular text-base">
+                  Имейл
+                  <input
+                    required
+                    type="email"
+                    placeholder="maria@example.com"
+                    value={contactForm.email}
+                    onChange={(event) =>
+                      setContactForm({
+                        ...contactForm,
+                        email: event.target.value,
+                      })
+                    }
+                    className="mt-1 w-full rounded-xl border border-fourth/30 px-4 py-3 font-rocaTwoThin focus:border-fourth focus:outline-none focus:ring-2 focus:ring-fourth/40"
+                  />
+                </label>
+                <label className="block font-rocaTwoRegular text-base">
+                  Съобщение
+                  <textarea
+                    required
+                    rows="7"
+                    value={contactForm.message}
+                    onChange={(event) =>
+                      setContactForm({
+                        ...contactForm,
+                        message: event.target.value,
+                      })
+                    }
+                    className="mt-1 min-h-48 w-full resize-y rounded-xl border border-fourth/30 px-4 py-3 font-rocaTwoThin focus:border-fourth focus:outline-none focus:ring-2 focus:ring-fourth/40"
+                  />
+                </label>
+                {contactStatus.type === "error" && (
+                  <p role="alert" className="font-rocaTwoRegular text-red-700">
+                    {contactStatus.message}
+                  </p>
+                )}
+                <Button type="submit" disabled={contactStatus.type === "submitting"} className="w-full">
+                  {contactStatus.type === "submitting"
+                    ? "Изпращане..."
+                    : "Изпрати съобщение"}
+                </Button>
+              </form>
+            )}
+          </div>
+        </div>,
+        document.body,
+      )}
+    </>
+  );
+};
 
 export default Mentoring;

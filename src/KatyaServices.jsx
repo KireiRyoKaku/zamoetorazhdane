@@ -11,6 +11,7 @@ import {
   IoHeart,
   IoLeaf,
   IoHandLeft,
+  IoFlower
 } from "react-icons/io5";
 import katyaImage from "./assets/pictures/good/katyapsyconsult.png";
 
@@ -38,16 +39,23 @@ const KatyaServices = () => (
     intro="Холистичен психолог, емоционален ментор и позитивен психотерапевт в обучение."
     introClassName="font-rocaTwoThin text-lg"
     revealHeader
+    showBackButton={false}
     backState={{ scrollTo: "katya-card" }}
   >
     <RevealOnScroll>
-      <img
-        src={katyaImage}
-        alt="Катя Ушева"
-        className="relative z-0 mx-auto h-[280px] w-4/5 max-w-xs translate-y-4 rounded-[24px] object-cover object-top sm:h-[320px]"
-      />
-    </RevealOnScroll>
-    <ServiceQuote>
+      <div className="relative z-20 mx-auto w-4/5 max-w-xs">
+        <img
+          src={katyaImage}
+          alt="Катя Ушева"
+          className="relative z-0 h-[280px] w-full translate-y-4 rounded-[24px] object-cover object-top sm:h-[320px]"
+        />
+        <div className="absolute inset-x-0 bottom-16 z-30 flex justify-center">
+          <CtaLink href="https://superdoc.bg/lekar/katya-usheva">
+            ЗАПАЗИ ЧАС
+          </CtaLink>
+        </div>
+      </div>
+    </RevealOnScroll>    <ServiceQuote>
       <div className="space-y-6">
         <RevealOnScroll as="p">
           Аз също съм майка и знам колко ценна е подкрепата за една жена, когато
@@ -71,9 +79,7 @@ const KatyaServices = () => (
         className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
       >
         В работата си помагам на жените
-        <span className="mr-2 text-secondary text-center" aria-hidden="true">
-          🌸
-        </span>
+
       </RevealOnScroll>
       <RevealOnScroll
         className="mx-auto max-w-4xl rounded-[32px] bg-third/80 p-5 shadow-sm md:p-10"
@@ -205,7 +211,7 @@ const KatyaServices = () => (
     >
       <RevealOnScroll
         as="h2"
-        className="mb-4 font-rocaTwoBold text-2xl font-bold sm:text-3xl"
+        className="mb-10 font-rocaTwoBold text-2xl font-bold sm:text-3xl"
       >
         Запази час
       </RevealOnScroll>

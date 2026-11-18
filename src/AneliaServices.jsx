@@ -14,7 +14,7 @@ import {
   IoAccessibility,
   IoRibbon,
 } from "react-icons/io5";
-import aneliaImage from "./assets/pictures/good/anelia-good-ench-edit.png";
+import aneliaImage from "./assets/pictures/good/detskisunservices.png";
 
 const supportAreas = [
   "да открият своя подход в казусите със съня на детето",
@@ -25,7 +25,7 @@ const supportAreas = [
 
 const reasonsToChoose = [
   {
-    text: "Сертифициран член на асоциацията на консултантите по детски сън в България,",
+    text: "Сертифициран консултант по детски сън",
     icon: IoRibbon,
     href: "https://asociaciasun.bg/person/%d0%b0%d0%bd%d0%b5%d0%bb%d0%b8%d1%8f-%d1%82%d0%b0%d0%ba%d0%be%d0%b2%d0%b0/",
   },
@@ -34,7 +34,7 @@ const reasonsToChoose = [
   { text: "Трайни резултати", icon: IoAddCircle },
 ];
 
-const CalendlyBooking = () => {
+const CalendlyBooking = ({ label = "Безплатен 15-минутен разговор" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const triggerButtonRef = useRef(null);
   const closeButtonRef = useRef(null);
@@ -69,12 +69,12 @@ const CalendlyBooking = () => {
         ref={triggerButtonRef}
         onClick={() => setIsOpen(true)}
       >
-        Безплатен 15-минутен разговор
+        {label}
       </Button>
       {isOpen &&
         createPortal(
           <div
-            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-3 sm:p-6"
+            className="fixed inset-0 z-[10001] flex items-center justify-center bg-black/60 p-3 sm:p-6"
             onClick={() => setIsOpen(false)}
           >
             <section
@@ -120,13 +120,19 @@ const AneliaServices = () => (
     intro="Сертифициран консултант по детски сън и обучаващ се психолог."
     introClassName="font-rocaTwoThin text-lg"
     revealHeader
+    showBackButton={false}
   >
     <RevealOnScroll>
-      <img
-        src={aneliaImage}
-        alt="Анелия Такова"
-        className="relative z-0 mx-auto h-[280px] w-4/5 max-w-xs translate-y-4 rounded-[24px] object-cover object-[center_25%] sm:h-[320px]"
-      />
+      <div className="relative z-20 mx-auto w-4/5 max-w-xs overflow-hidden rounded-[24px]">
+        <img
+          src={aneliaImage}
+          alt="Анелия Такова"
+          className="relative z-0 h-[280px] w-full origin-top scale-110 translate-y-4 rounded-[24px] object-cover object-top sm:h-[320px]"
+        />
+        <div className="absolute inset-x-0 bottom-16 z-30 flex justify-center">
+          <CalendlyBooking label="ЗАПАЗИ ЧАС" />
+        </div>
+      </div>
     </RevealOnScroll>
     <ServiceQuote>
       <RevealOnScroll
@@ -142,7 +148,7 @@ const AneliaServices = () => (
         </span>{" "}
         съм, за да творя и вдъхвам живот на едно доверено пространство, което
         да носи на майките усещане за заедност, сила, сплотеност и подкрепа. И
-        за да се свързвам искрено с всички вас, които сте тук, в него! 🌸
+        за да се свързвам искрено с всички вас, които сте тук, в него! 
       </RevealOnScroll>
     </ServiceQuote>
 
@@ -152,10 +158,7 @@ const AneliaServices = () => (
         className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
       >
         В работата си помагам на жените
-        <br />
-        <span className="mr-2 text-secondary text-center" aria-hidden="true">
-          🌸
-        </span>
+        
       </RevealOnScroll>
       <RevealOnScroll
         className="mx-auto max-w-4xl rounded-[32px] bg-third/80 p-5 shadow-sm md:p-10"
@@ -189,7 +192,7 @@ const AneliaServices = () => (
       </RevealOnScroll>
       <RevealOnScroll
         as="p"
-        className="mx-auto max-w-4xl font-rocaTwoThin text-lg leading-relaxed"
+        className="mx-auto max-w-4xl p-2 font-rocaTwoThin text-lg leading-relaxed"
         delay={120}
       >
         Ежедневно подкрепям семейства по пътя им като родители. Искрено вярвам,
@@ -199,7 +202,7 @@ const AneliaServices = () => (
       </RevealOnScroll>
       <RevealOnScroll
         as="p"
-        className="mx-auto mt-4 max-w-4xl font-rocaTwoThin text-lg leading-relaxed"
+        className="mx-auto mt-4 max-w-4xl p-2 font-rocaTwoThin text-lg leading-relaxed"
         delay={240}
       >
         Всяко дете идва със своя темперамент и нужди. Всяко семейство е отделна

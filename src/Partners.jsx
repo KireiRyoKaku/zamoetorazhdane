@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import PropTypes from "prop-types";
 import { FaGlobe, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 import { partnersAll } from "./partnerData";
 
@@ -25,26 +24,26 @@ const PartnerCard = ({
 
   return (
     <div
-      className={`flex h-80 w-full flex-col items-center justify-between transition-all duration-300 ${firstAvailableLink ? "cursor-pointer" : ""}`}
+      className={`grid h-80 w-full grid-rows-[8rem_4rem_minmax(0,1fr)_2rem] text-center transition-all duration-300 ${firstAvailableLink ? "cursor-pointer" : ""}`}
       onClick={firstAvailableLink ? handleCardClick : undefined}
     >
-      <div className="flex h-32 w-32 items-center justify-center overflow-hidden">
+      <div className="mx-auto flex h-32 w-32 items-center justify-center overflow-hidden">
         <img
           src={image}
           alt={`${partnerName} logo`}
-          className="h-auto w-full object-contain p-1"
+          className="h-auto items-center w-full object-contain p-1"
         />
       </div>
-      <h3 className="mt-4 text-center font-magnoliaScript text-3xl font-bold text-fourth">
+      <h3 className="flex items-center justify-center font-magnoliaScript text-3xl font-bold text-fourth">
         {partnerName}
       </h3>
       {description && (
-        <p className="mt-2 text-center font-rocaTwoThin text-lg font-light text-fourth">
+        <p className="flex min-h-0 items-start justify-center pt-2 font-rocaTwoThin text-lg font-light text-fourth">
           {description}
         </p>
       )}
       {(linkWeb || linkInsta || linkFace || linkYoutube) && (
-        <div className="mt-3 flex gap-3" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center justify-center gap-3" onClick={(e) => e.stopPropagation()}>
           {linkWeb && (
             <a
               href={linkWeb}
@@ -91,7 +90,7 @@ const PartnerCard = ({
   );
 };
 
-const Partners = ({ onClose }) => {
+const Partners = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [animatedItems, setAnimatedItems] = useState([]);
   const [isAtBottom, setIsAtBottom] = useState(false);
@@ -146,8 +145,8 @@ const Partners = ({ onClose }) => {
 
   return (
     <div className="flex flex-col items-center">
-      <div className={`fixed z-50 flex px-5 pt-7`}>
-        <div className="relative h-[calc(100dvh-125px)] w-full">
+      <div className="relative z-10 flex w-full justify-center px-5 pb-16 pt-7">
+        <div className="relative min-h-[calc(100dvh-125px)] w-full max-w-3xl">
           {/* Faded bottom overlay with dynamic opacity */}
           <div
             className={`pointer-events-none absolute bottom-0 left-0 z-10 h-40 w-full rounded-b-xl bg-gradient-to-t from-slate-50 to-transparent transition-opacity duration-300 ${
@@ -158,7 +157,7 @@ const Partners = ({ onClose }) => {
           {/* Original container with unchanged styling */}
           <div
             ref={containerRef}
-            className={`h-full w-full max-w-3xl transform overflow-y-auto rounded-xl bg-slate-50 p-8 text-left font-playfairDisplay transition-all duration-300 ease-in-out ${
+            className={`min-h-[calc(100dvh-125px)] w-full transform rounded-xl bg-slate-50 p-8 text-left font-playfairDisplay transition-all duration-300 ease-in-out ${
               isVisible
                 ? "translate-y-0 opacity-100"
                 : "translate-y-8 opacity-0"
@@ -189,10 +188,6 @@ const Partners = ({ onClose }) => {
       </div>
     </div>
   );
-};
-
-Partners.propTypes = {
-  onClose: PropTypes.func.isRequired,
 };
 
 export default Partners;

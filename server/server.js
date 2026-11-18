@@ -470,6 +470,54 @@ app.post("/check-member", async (req, res) => {
   }
 });
 
+// Mentoring contact form endpoint
+app.post("/mentoring-contact", async (req, res) => {
+  const { name, email, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({
+      success: false,
+      message: "Името, имейлът и съобщението са задължителни.",
+    });
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    return res.status(400).json({
+      success: false,
+      message: "Моля, въведи валиден имейл адрес.",
+    });
+  }
+
+  if (!emailAvailable || !transporter) {
+    console.error("Mentoring contact form unavailable: email service is not configured");
+    return res.status(503).json({
+      success: false,
+      message: "Услугата за изпращане на имейли временно не е налична.",
+    });
+  }
+
+  try {
+    await transporter.sendMail({
+      from: process.env.SENDER_EMAIL,
+      to: process.env.ADMIN_EMAIL,
+      replyTo: email,
+      subject: `Ново съобщение за менторската програма от ${name}`,
+      text: `Име: ${name}\nИмейл: ${email}\n\nСъобщение:\n${message}`,
+    });
+
+    res.json({
+      success: true,
+      message: "Съобщението беше изпратено успешно.",
+    });
+  } catch (error) {
+    console.error("Mentoring contact email error:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Съобщението не беше изпратено. Моля, опитай отново.",
+    });
+  }
+});
+
 // Form submission endpoint
 app.post("/submit-form", async (req, res) => {
   try {
