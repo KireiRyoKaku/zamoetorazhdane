@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Button } from "./components/Button";
 import { PageShell, RevealOnScroll } from "./components/PageShell";
 import logoSmall from "./assets/pictures/PregurnataLogoPinkNoText.png";
+import aboutPageImage from "./assets/pictures/good/aboutpage.jpg";
 
 const About = ({ onClose = () => {} }) => {
   const navigate = useNavigate();
@@ -68,6 +69,23 @@ const About = ({ onClose = () => {} }) => {
           Нашата мисия е да създадем пространство, в което майки се събират и
           взаимодействат помежду си въз основа на{" "}
           <b>своите ценности и интереси в и извън родителството.</b>
+        </RevealOnScroll>
+        <RevealOnScroll
+          as="div"
+          className="my-4 px-5 md:my-8 md:px-10"
+          delay={270}
+        >
+          <img
+            src={aboutPageImage}
+            alt="Жени, които се усмихват и прегръщат"
+            className="h-auto w-full rounded-3xl object-cover"
+            style={{
+              WebkitMaskImage:
+                "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+              maskImage:
+                "linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%)",
+            }}
+          />
         </RevealOnScroll>
         <RevealOnScroll
           as="p"
