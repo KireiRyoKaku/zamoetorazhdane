@@ -239,8 +239,8 @@ const Events = () => {
         eventDate: event.dateOfEvent,
         eventDay: event.dayOfEvent,
         eventID: event.ID,
-        eventTime: event.timeStart, // Add this line
-        eventEnd: event.end,
+        eventTime: event.timeStart,
+        eventTimeEnd: event.timeEnd,
         eventLocation: event.location,
         eventDescription: event.description,
         eventDateLocaleString: event.dateOfEventLocaleString,
@@ -826,7 +826,7 @@ const Events = () => {
   );
   return (
     <main className="bg-primary px-4 py-8">
-      <div className="mx-auto mb-14 mt-4 grid w-full max-w-7xl grid-cols-1 items-start gap-8 rounded-2xl bg-white/65 p-4 shadow-lg sm:p-6 lg:grid-cols-[minmax(0,2fr)_minmax(280px,1fr)] lg:gap-10">
+      <div className="mx-auto mb-14 mt-4 grid w-full max-w-[600px] grid-cols-1 items-start gap-8 rounded-2xl bg-white/65 p-4 shadow-lg sm:p-6">
         {/* Toast notification with drop animation */}
         <div
           className={`toast fixed left-1/2 top-6 z-[9999] w-4/6 -translate-x-1/2 transform transition-all duration-1000 ease-in-out ${

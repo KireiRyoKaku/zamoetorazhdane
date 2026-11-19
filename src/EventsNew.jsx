@@ -248,7 +248,7 @@ const EventsNew = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 overflow-auto bg-primary md:flex md:items-center md:justify-center">
-      <div className="mx-auto max-w-6xl px-8 pb-4 pt-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[600px] px-8 pb-4 pt-8 sm:px-6 lg:px-8">
         {/* Navigation header with arrow buttons */}
         <div
           className={`transform transition-all duration-500 ${

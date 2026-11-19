@@ -331,11 +331,12 @@ const Mentoring = () => {
       <img
         src={mentoringImage}
         alt="Менторска програма"
-        className="relative left-1/2 z-0 mt-2 h-[100px] w-screen max-w-none -translate-x-1/2 translate-y-4 object-cover object-[center_20%] sm:h-[300px]"
+        className="relative left-1/2 z-0 mt-2 h-[100px] w-screen max-w-none -translate-x-1/2 translate-y-4 object-cover object-[center_20%] sm:h-[300px] md:left-auto md:mx-auto md:w-full md:max-w-[600px] md:translate-x-0"
         style={{
-          maskImage: "linear-gradient(to bottom, #000 85%, transparent 100%)",
+          maskImage:
+            "radial-gradient(ellipse at center, #000 55%, transparent 100%)",
           WebkitMaskImage:
-            "linear-gradient(to bottom, #000 85%, transparent 100%)",
+            "radial-gradient(ellipse at center, #000 55%, transparent 100%)",
         }}
       />
     </RevealOnScroll>
