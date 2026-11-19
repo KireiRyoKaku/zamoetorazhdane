@@ -518,6 +518,61 @@ app.post("/mentoring-contact", async (req, res) => {
   }
 });
 
+app.post("/anelia-contact", async (req, res) => {
+  const { name, email, message, service } = req.body;
+  const services = [
+    "Единична консултация",
+    "Пакет: Фокус върху режима (1 седмица)",
+    "Пакет: Режима и начина на заспиване (2 седмици)",
+    "Пълен пакет (4 седмици)",
+    "Пакет 'Добре дошло, бебе!'",
+  ];
+
+  if (
+    typeof name !== "string" || !name.trim() ||
+    typeof email !== "string" || !email.trim() ||
+    typeof message !== "string" || !message.trim() ||
+    !services.includes(service)
+  ) {
+    return res.status(400).json({
+      success: false,
+      message: "Моля, попълни всички полета и избери валидна услуга.",
+    });
+  }
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+    return res.status(400).json({
+      success: false,
+      message: "Моля, въведи валиден имейл адрес.",
+    });
+  }
+
+  if (!emailAvailable || !transporter) {
+    console.error("Anelia contact form unavailable: email service is not configured");
+    return res.status(503).json({
+      success: false,
+      message: "Услугата за изпращане на имейли временно не е налична.",
+    });
+  }
+
+  try {
+    await transporter.sendMail({
+      from: process.env.SENDER_EMAIL,
+      to: process.env.ANELIA_CONTACT_EMAIL || "sunzatebe@gmail.com",
+      replyTo: email.trim(),
+      subject: "Нова заявка за консултация по детски сън",
+      text: `Услуга: ${service}\nИме: ${name.trim()}\nИмейл: ${email.trim()}\n\nСъобщение:\n${message.trim()}`,
+    });
+    return res.json({ success: true, message: "Съобщението беше изпратено успешно." });
+  } catch (error) {
+    console.error("Anelia contact email error:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Съобщението не беше изпратено. Моля, опитай отново.",
+    });
+  }
+});
+
 // Form submission endpoint
 app.post("/submit-form", async (req, res) => {
   try {
