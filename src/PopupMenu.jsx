@@ -19,7 +19,6 @@ const links = [
     ],
   },
   { label: "ПАРТНЬОРИ", path: "/partners" },
-  { label: "TEST", path: "/test" },
   {
     label: "ПРАВНА ИНФОРМАЦИЯ",
     path: "/privacy-policy",

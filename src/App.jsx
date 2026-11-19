@@ -15,7 +15,6 @@ import PrivacyPolicy from "./PrivacyPolicy";
 import TermsOfService from "./TermsOfService";
 import { HashRouter as Router, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import CookieConsent from "./CookieConsent";
-import Test from "./Test";
 import { getEvents } from "../utils/events";
 
 const ScrollToTop = () => {
@@ -130,7 +129,6 @@ const Layout = () => {
             <Route path="/anelia" element={<AneliaServices />} />
             <Route path="/mentoring" element={<Mentoring />} />
             <Route path="/community" element={<Community />} />
-            <Route path="/test" element={<Test />} />
             <Route
               path="/subscribe-and-pay/:eventId"
               element={

@@ -11,7 +11,7 @@ import {
   IoHeart,
   IoLeaf,
   IoHandLeft,
-  IoFlower
+  IoFlower,
 } from "react-icons/io5";
 import katyaImage from "./assets/pictures/good/katyapsyconsult.png";
 
@@ -55,7 +55,8 @@ const KatyaServices = () => (
           </CtaLink>
         </div>
       </div>
-    </RevealOnScroll>    <ServiceQuote>
+    </RevealOnScroll>{" "}
+    <ServiceQuote>
       <div className="space-y-6">
         <RevealOnScroll as="p">
           Аз също съм майка и знам колко ценна е подкрепата за една жена, когато
@@ -72,14 +73,12 @@ const KatyaServices = () => (
         </RevealOnScroll>
       </div>
     </ServiceQuote>
-
     <RevealOnScroll as="section" className="mb-12 md:mb-16">
       <RevealOnScroll
         as="h2"
         className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
       >
         В работата си помагам на жените
-
       </RevealOnScroll>
       <RevealOnScroll
         className="mx-auto max-w-4xl rounded-[32px] bg-third/80 p-5 shadow-sm md:p-10"
@@ -93,14 +92,16 @@ const KatyaServices = () => (
               delay={index * 100}
               className="flex items-start gap-3 rounded-2xl bg-white/90 p-4 font-rocaTwoThin text-lg leading-6"
             >
-              <span aria-hidden="true" className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-secondary" />
+              <span
+                aria-hidden="true"
+                className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-secondary"
+              />
               {area}
             </RevealOnScroll>
           ))}
         </ul>
       </RevealOnScroll>
     </RevealOnScroll>
-
     <RevealOnScroll
       as="section"
       className="mb-12 rounded-[32px] border-t-8 border-secondary bg-white p-5 shadow-sm md:mb-16 md:p-10"
@@ -113,7 +114,7 @@ const KatyaServices = () => (
       </RevealOnScroll>
       <RevealOnScroll
         as="p"
-        className="mx-auto max-w-4xl text-left font-rocaTwoThin text-lg leading-relaxed"
+        className="mx-auto max-w-4xl p-5 text-left font-rocaTwoThin text-lg leading-relaxed"
         delay={120}
       >
         В индивидуалните сесии можем да навлезем в дълбочина по теми като
@@ -123,7 +124,7 @@ const KatyaServices = () => (
       </RevealOnScroll>
       <RevealOnScroll
         as="p"
-        className="mx-auto mt-4 max-w-4xl font-rocaTwoThin text-lg leading-relaxed"
+        className="mx-auto mt-4 max-w-4xl p-5 font-rocaTwoThin text-lg leading-relaxed"
         delay={240}
       >
         Фокус в моята практика е подкрепата в различните етапи на майчинството.
@@ -131,7 +132,6 @@ const KatyaServices = () => (
         ми. Ще се радвам да те придружа в твоето пътуване навътре към себе си.
       </RevealOnScroll>
     </RevealOnScroll>
-
     <RevealOnScroll as="section" className="mb-12 md:mb-16">
       <RevealOnScroll
         as="h2"
@@ -156,7 +156,6 @@ const KatyaServices = () => (
         ))}
       </ul>
     </RevealOnScroll>
-
     <RevealOnScroll as="section" className="mb-12 md:mb-16">
       <RevealOnScroll
         as="h2"
@@ -170,7 +169,7 @@ const KatyaServices = () => (
             title="Индивидуална психологическа консултация"
             price="60 минути | 50 €"
           >
-            <p className="font-rocaTwoThin leading-relaxed">
+            <p className="font-rocaTwoThin text-lg leading-relaxed">
               Пространство, в което да споделиш онова, което те вълнува, да
               внесеш яснота в преживяванията си и да откриеш нова гледна точка
               към ситуацията, през която преминаваш.
@@ -182,7 +181,7 @@ const KatyaServices = () => (
             title="Пакет от 6 терапевтични сесии"
             price="6 × 60 минути | 250 €"
           >
-            <p className="font-rocaTwoThin leading-relaxed">
+            <p className="font-rocaTwoThin text-lg leading-relaxed">
               Възможност да отделиш повече време на себе си, да изследваш
               повтарящи се модели и постепенно да откриваш нови начини да
               разбираш и подкрепяш себе си.
@@ -203,7 +202,6 @@ const KatyaServices = () => (
         </RevealOnScroll>
       </div>
     </RevealOnScroll>
-
     <RevealOnScroll
       as="section"
       className="rounded-[32px] bg-fourth p-5 text-center text-white shadow-xl md:p-10"

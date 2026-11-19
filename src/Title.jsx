@@ -29,6 +29,8 @@ import { partnersAll } from "./partnerData";
 import { API_URL } from "../utils/apiConfig.js";
 
 const cycleWords = ["Прегърната", "видяна", "приета", "чута", "разбрана"];
+const dropCapClassName =
+  "first-letter:float-left first-letter:mr-2 first-letter:font-magnoliaScript first-letter:text-[3.5em] first-letter:leading-[0.8]";
 const approachPrinciples = [
   {
     title: "Без осъждане и вина",
@@ -895,7 +897,6 @@ const Title = () => {
                 }`}
               >
                 Грижа и специализирана подкрепа за менталното здраве на майките.
-
               </p>
 
               <div
@@ -905,11 +906,7 @@ const Title = () => {
                     : "translate-y-6 opacity-0"
                 }`}
               >
-                <Button
-                  onClick={handleClickServices}
-                >
-                  УСЛУГИ
-                </Button>
+                <Button onClick={handleClickServices}>УСЛУГИ</Button>
                 <Button
                   variant="secondary"
                   onClick={() => handleClickPage("/events")}
@@ -970,7 +967,8 @@ const Title = () => {
               alt="Катя"
               className="pointer-events-none relative z-20 mx-auto -mt-24 h-72 w-auto object-contain md:absolute md:bottom-0 md:right-6 md:mt-0 md:h-[135%] md:w-auto md:max-w-[50%] md:object-bottom"
               style={{
-                maskImage: "linear-gradient(to bottom, #000 80%, transparent 100%)",
+                maskImage:
+                  "linear-gradient(to bottom, #000 80%, transparent 100%)",
                 WebkitMaskImage:
                   "linear-gradient(to bottom, #000 80%, transparent 100%)",
               }}
@@ -1021,7 +1019,8 @@ const Title = () => {
               alt="Anelia"
               className="pointer-events-none relative z-20 mx-auto -mt-24 h-72 w-auto object-contain md:absolute md:bottom-0 md:left-6 md:mt-0 md:h-[135%] md:w-auto md:max-w-[45%] md:object-bottom lg:left-16"
               style={{
-                maskImage: "linear-gradient(to bottom, #000 80%, transparent 100%)",
+                maskImage:
+                  "linear-gradient(to bottom, #000 80%, transparent 100%)",
                 WebkitMaskImage:
                   "linear-gradient(to bottom, #000 80%, transparent 100%)",
               }}
@@ -1068,9 +1067,12 @@ const Title = () => {
         >
           <div className="mx-auto w-full max-w-7xl">
             <div ref={approachContentRef} className={approachContentReveal}>
-                <p className="mx-auto mb-6 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug">
+              <p className={`mx-auto mb-6 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug ${dropCapClassName}`}>
                 Повечето услуги за родители са насочени към грижата за детето.
-                Ние се грижим за майката, като ѝ помагаме да подкрепя себе си.
+                Ние се грижим за майката, като ѝ помагаме да подкрепя себе
+                си.{" "}
+              </p>
+              <p className="mx-auto mb-6 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug">
                 Защото и тя има нужда да бъде прегърната в уязвимите периоди от
                 майчинството.
               </p>
@@ -1102,7 +1104,10 @@ const Title = () => {
         </section>
       </div>
       <div className="relative z-10 flow-root">
-        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-8 bg-white" />
+        <div
+          aria-hidden="true"
+          className="absolute inset-x-0 top-0 h-8 bg-white"
+        />
         <section
           ref={servicesSectionRef}
           id={HOME_SECTION_IDS.services}
@@ -1115,11 +1120,10 @@ const Title = () => {
           >
             Услуги
           </h2>
-          <p className="relative   z-30 max-w-2xl px-6 text-center text-base leading-snug text-white sm:text-lg md:text-xl">
+          <p className="relative z-30 max-w-2xl px-6 text-center text-base leading-snug text-white sm:text-lg md:text-xl">
             Индивидуални или групови възможности да бъдеш прегърната според
             твоите нужди в момента
           </p>
-        
         </section>
       </div>
       <section
@@ -1204,10 +1208,12 @@ const Title = () => {
           ref={podcastIntroRef}
           className={`mx-auto w-full max-w-3xl px-4 text-left font-rocaTwoThin text-lg text-fourth ${podcastIntroReveal}`}
         >
-          Тук ще ни чуете да говорим като специалисти, но и като майки по своя
-          личен път. Независимо от това на кой етап от твоя път се намираш ти в
-          момента, тук си на правилното място. Този подкаст е за жената. В и
-          извън ролята й на майка.
+          <p className={dropCapClassName}>
+            Тук ще ни чуете да говорим като специалисти, но и като майки по своя
+            личен път. Независимо от това на кой етап от твоя път се намираш ти в
+            момента, тук си на правилното място. Този подкаст е за жената. В и
+            извън ролята й на майка.
+          </p>
         </div>
         <br />
 
@@ -1244,7 +1250,7 @@ const Title = () => {
         >
           <div className="mx-auto w-full max-w-7xl">
             <div ref={merchIntroRef} className={merchIntroReveal}>
-              <p className="mx-auto mb-6 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug">
+              <p className={`mx-auto mb-6 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug ${dropCapClassName}`}>
                 Повечето услуги за родители са насочени към грижата за детето.
                 Ние се грижим за майката, като ѝ помагаме да подкрепя себе си.
                 Защото и тя има нужда да бъде прегърната в уязвимите периоди от

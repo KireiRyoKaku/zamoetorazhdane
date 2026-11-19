@@ -1,15 +1,80 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { ButtonLink } from "./Button";
+
+const RevealSequenceContext = createContext(null);
+
+export const RevealSequence = ({ children }) => {
+  const observerRef = useRef(null);
+  const callbacksRef = useRef(new Map());
+
+  const register = useCallback((element, callback) => {
+    if (!observerRef.current) {
+      observerRef.current = new IntersectionObserver(
+        (entries) => {
+          const entering = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) =>
+              a.target.compareDocumentPosition(b.target) &
+              Node.DOCUMENT_POSITION_FOLLOWING
+                ? -1
+                : 1,
+            );
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) {
+              callbacksRef.current.get(entry.target)?.(false, 0);
+            }
+          });
+          entering.forEach((entry, index) => {
+            callbacksRef.current.get(entry.target)?.(
+              true,
+              Math.min(index * 120, 360),
+            );
+          });
+        },
+        { threshold: 0 },
+      );
+    }
+
+    callbacksRef.current.set(element, callback);
+    observerRef.current.observe(element);
+    return () => {
+      observerRef.current?.unobserve(element);
+      callbacksRef.current.delete(element);
+    };
+  }, []);
+
+  useEffect(
+    () => () => {
+      observerRef.current?.disconnect();
+      observerRef.current = null;
+    },
+    [],
+  );
+
+  return (
+    <RevealSequenceContext.Provider value={register}>
+      {children}
+    </RevealSequenceContext.Provider>
+  );
+};
 
 export const RevealOnScroll = ({
   as: Element = "div",
   children,
   className = "",
-  delay = 0,
+  delay,
   ...elementProps
 }) => {
   const elementRef = useRef(null);
-  const [isVisible, setIsVisible] = useState(false);
+  const register = useContext(RevealSequenceContext);
+  const [reveal, setReveal] = useState({ visible: false, delay: 0 });
 
   useEffect(() => {
     const element = elementRef.current;
@@ -18,26 +83,33 @@ export const RevealOnScroll = ({
       window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
       !("IntersectionObserver" in window)
     ) {
-      setIsVisible(true);
+      setReveal({ visible: true, delay: 0 });
       return undefined;
     }
 
+    if (register) {
+      return register(element, (visible, staggerDelay) => {
+        setReveal({ visible, delay: visible ? (delay ?? staggerDelay) : 0 });
+      });
+    }
+
     const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
+      ([entry]) =>
+        setReveal({ visible: entry.isIntersecting, delay: delay ?? 0 }),
       { threshold: 0 },
     );
     observer.observe(element);
     return () => observer.disconnect();
-  }, []);
+  }, [delay, register]);
 
   return (
     <Element
       {...elementProps}
       ref={elementRef}
       className={`transition-[opacity,transform] duration-700 ease-out motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none ${
-        isVisible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+        reveal.visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
       } ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
+      style={{ transitionDelay: `${reveal.delay}ms` }}
     >
       {children}
     </Element>
@@ -62,11 +134,7 @@ export const PageShell = ({
       {showBackButton &&
         (revealHeader ? (
           <RevealOnScroll className="mb-6 inline-block">
-            <ButtonLink
-              to="/"
-              state={backState}
-              variant="secondary"
-            >
+            <ButtonLink to="/" state={backState} variant="secondary">
               ← Начало
             </ButtonLink>
           </RevealOnScroll>
@@ -80,38 +148,39 @@ export const PageShell = ({
             ← Начало
           </ButtonLink>
         ))}
-      {title && (revealHeader ? (
-        <>
-          <RevealOnScroll
-            as="h1"
-            className="mb-4 text-center font-rocaTwoBold text-3xl font-bold sm:text-5xl"
-          >
-            {title}
-          </RevealOnScroll>
-          {intro && (
+      {title &&
+        (revealHeader ? (
+          <>
             <RevealOnScroll
-              as="p"
-              delay={120}
-              className={`mx-auto ${introMarginClassName} max-w-2xl text-center ${introClassName}`}
+              as="h1"
+              className="mb-4 text-center font-rocaTwoBold text-3xl font-bold sm:text-5xl"
             >
-              {intro}
+              {title}
             </RevealOnScroll>
-          )}
-        </>
-      ) : (
-        <>
-          <h1 className="mb-4 text-center font-rocaTwoBold text-3xl font-bold sm:text-5xl">
-            {title}
-          </h1>
-          {intro && (
-            <p
-              className={`mx-auto ${introMarginClassName} max-w-2xl text-center ${introClassName}`}
-            >
-              {intro}
-            </p>
-          )}
-        </>
-      ))}
+            {intro && (
+              <RevealOnScroll
+                as="p"
+                delay={120}
+                className={`mx-auto ${introMarginClassName} max-w-2xl text-center ${introClassName}`}
+              >
+                {intro}
+              </RevealOnScroll>
+            )}
+          </>
+        ) : (
+          <>
+            <h1 className="mb-4 text-center font-rocaTwoBold text-3xl font-bold sm:text-5xl">
+              {title}
+            </h1>
+            {intro && (
+              <p
+                className={`mx-auto ${introMarginClassName} max-w-2xl text-center ${introClassName}`}
+              >
+                {intro}
+              </p>
+            )}
+          </>
+        ))}
       {children}
     </div>
   </main>
@@ -147,8 +216,14 @@ export const InfoCard = ({ title, price, badge, items = [], children }) => (
         {badge}
       </span>
     )}
-    <h2 className="mb-2 font-rocaTwoBold text-2xl font-bold">{title}</h2>
-    {price && <p className="mb-4 text-xl font-bold">{price}</p>}
+    <h2 className="mb-2 text-center font-rocaTwoBold text-2xl font-bold">
+      {title}
+    </h2>
+    {price && (
+      <p className="mb-4 p-5 text-center text-xl font-bold text-secondary">
+        {price}
+      </p>
+    )}
     {children}
     {items.length > 0 && (
       <ul className="list-disc space-y-2 pl-5">
