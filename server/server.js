@@ -6,6 +6,7 @@ import { google } from "googleapis";
 import nodemailer from "nodemailer";
 import { createGmailTransport } from "./gmailTransport.js";
 import {
+  formatConfirmationPrice,
   getConfirmationEmailHTML,
   getAdminNotificationHTML,
 } from "./emailTemplates/confirmationEmail.js";
@@ -621,7 +622,7 @@ app.post("/submit-form", async (req, res) => {
     let lateFeeAmount = null;
 
     if (isCurrentlyEarlyBird) {
-      lateFeeAmount = `LAST MINUTE: ${21 * participantCount} € (${21} € x ${participantCount} участника)`;
+      lateFeeAmount = formatConfirmationPrice(21, participantCount, false);
 
       paymentDeadlineMessage = paymentDeadline.toLocaleDateString("bg-BG", {
         day: "2-digit",
@@ -699,7 +700,7 @@ app.post("/submit-form", async (req, res) => {
           eventLocation: formData.eventLocation,
           phone: formData.phone,
           source: formData.source,
-          finalPrice: finalPriceForSheets,
+          finalPrice: formatConfirmationPrice(basePrice, participantCount, isEarlyBird),
           participantCount: participantCount,
           participantNames: formData.participantNames || [formData.name],
           paymentDeadline: paymentDeadlineMessage,
@@ -716,8 +717,13 @@ app.post("/submit-form", async (req, res) => {
           attachments: [
             {
               filename: "logo.png",
-              path: path.join(__dirname, "logo-white-outline.png"),
+              path: path.join(__dirname, "logo-symbol-white.png"),
               cid: "unique-logo-id",
+            },
+            {
+              filename: "pregurnata.png",
+              path: path.join(__dirname, "pregurnata-magnolia-white.png"),
+              cid: "brand-name-id",
             },
           ],
         };

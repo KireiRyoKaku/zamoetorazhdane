@@ -1,6 +1,10 @@
 import { after, before, test } from "node:test";
 import assert from "node:assert/strict";
 import { google } from "googleapis";
+import {
+  formatConfirmationPrice,
+  getConfirmationEmailHTML,
+} from "./emailTemplates/confirmationEmail.js";
 
 process.env.CLIENT_EMAIL = "service@example.test";
 process.env.PRIVATE_KEY_BASE64 = Buffer.from("test-key").toString("base64");
@@ -81,6 +85,45 @@ const submit = () =>
     }),
   });
 
+test("confirmation email includes the updated bank details and event date", () => {
+  const data = {
+    name: "Test User",
+    event: "Test event",
+    eventDate: "28.11.2026, събота",
+    eventTime: "11:30",
+    eventLocation: "Sofia",
+    phone: "123",
+    finalPrice: formatConfirmationPrice(18, 1, true),
+    participantCount: 1,
+    participantNames: ["Test User"],
+  };
+  const html = getConfirmationEmailHTML(data);
+
+  assert.match(html, /IBAN:<\/strong> BG66UNCR70001526933500/);
+  assert.match(html, /src="cid:brand-name-id" alt="Прегърната"/);
+  assert.match(html, /Получател:<\/strong> Прегърната ООД/);
+  assert.match(html, /Основание:<\/strong> Събитие на 28\.11\.2026<\/p>/);
+  assert.match(html, /Сума:<\/strong> 18 € \(🕊️ EARLY BIRD\)/);
+  assert.doesNotMatch(html, /BG42STSA93000018035708|Катя Ушева/);
+  assert.match(
+    getConfirmationEmailHTML({ ...data, eventDate: "28.11.2026" }),
+    /Основание:<\/strong> Събитие на 28\.11\.2026<\/p>/,
+  );
+});
+
+test("confirmation prices put the total before the tier and preserve multi-person pricing", () => {
+  assert.equal(formatConfirmationPrice(18, 1, true), "18 € (🕊️ EARLY BIRD)");
+  assert.equal(formatConfirmationPrice(21, 1, false), "21 € (⏰ LAST MINUTE)");
+  assert.equal(
+    formatConfirmationPrice(18, 2, true),
+    "36 € (🕊️ EARLY BIRD) (18 € x 2 участника)",
+  );
+  assert.equal(
+    formatConfirmationPrice(21, 2, false),
+    "42 € (⏰ LAST MINUTE) (21 € x 2 участника)",
+  );
+});
+
 test("saves registration and sends both MIME emails through Gmail", async () => {
   const response = await submit();
   const result = await response.json();
@@ -97,6 +140,7 @@ test("saves registration and sends both MIME emails through Gmail", async () => 
   const mime = Buffer.from(sentMessages[0].options.requestBody.raw, "base64url").toString();
   assert.match(mime, /To: participant@example\.test/);
   assert.match(mime, /Content-ID: <unique-logo-id>/);
+  assert.match(mime, /Content-ID: <brand-name-id>/);
 });
 
 test("reports a failed Sheets save without sending emails", async () => {

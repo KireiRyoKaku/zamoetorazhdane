@@ -1,3 +1,11 @@
+export function formatConfirmationPrice(unitPrice, participantCount, isEarlyBird) {
+  const tier = isEarlyBird ? "🕊️ EARLY BIRD" : "⏰ LAST MINUTE";
+  const breakdown = participantCount > 1
+    ? ` (${unitPrice} € x ${participantCount} участника)`
+    : "";
+  return `${unitPrice * participantCount} € (${tier})${breakdown}`;
+}
+
 /**
  * Email template for user registration confirmation
  * @param {Object} data - Data for the email template
@@ -23,116 +31,26 @@ export function getConfirmationEmailHTML(data) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Успешно записване</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      color: #4E5F4C;
-      max-width: 100%;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #B0C4B1;
-    }
-    .container {
-      background-color: #B0C4B1;
-      overflow: hidden;
-      border-radius: 12px;
-      box-sizing: border-box;
-      padding: 20px;
-      margin: 0 auto;
-      text-align: center;
-      width: 100%;
-      max-width: 600px;
-    }
-
-    .header {
-      background-color: #B0C4B1;
-      text-align: center;
-      margin-bottom: 20px;
-      width: 100%;
-    }
-
-    .content {
-      border-radius: 8px;
-      padding: 20px;
-      background-color: #fff;
-      width: 90%;
-      max-width: 500px;
-      margin: 0 auto;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      display: inline-block;
-      text-align: left;
-    }
-
-    .filled-out-form {
-      background-color: #DEDBD2;
-      padding: 15px;
-      border-left: 4px solid #EDAFB8;
-      margin: 15px 0;
-    }
-
-    .bank-details {
-      background-color: #DEDBD2;
-      padding: 15px;
-      border-left: 4px solid #F7E1D7;
-      margin: 15px 0;
-      border-radius: 4px;
-      text-align: center;
-    }    .social-links {
-      background-color: #f5f5f5;
-      padding: 15px;
-      margin: 15px 0;
-      border-radius: 4px;
-      text-align: center;
-    }
-
-    .bank-details p {
-      margin: 5px 0;
-    }
-
-    .footer {
-      text-align: center;
-      font-size: 12px;
-      color: #4E5F4C;
-      background-color: #F7E1D7;
-      padding: 20px;
-      margin: 0 auto;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      border-radius: 12px;
-    }
-
-    .important {
-      font-weight: bold;      
-    }
-
-    img {
-      max-width: 100%;
-      height: auto;
-    }
-
-    @media only screen and (max-width: 480px) {
-      .container, .content {
-        padding: 10px;
-      }
-      .content {
-        width: 95%;
-      }
-    }
-  </style>
 </head>
-<body>
-  <div class="container">
-    <div class="header">
-      <img src="cid:unique-logo-id" alt="Прегърната Лого" style="max-width: 50%; height: auto;">
-      <h1 style="color:#F7E1D7;">Успешно записване!</h1>
-    </div>
-    
-    <div class="content">
+<body style="margin: 0; padding: 0; background-color: #d4dee0; color: #393750; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: #d4dee0;">
+    <tr>
+      <td align="center" style="padding: 24px 12px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width: 600px;">
+          <tr>
+            <td align="center" style="background-color: #6c698d; padding: 30px 24px; border-radius: 20px 20px 0 0;">
+              <img src="cid:unique-logo-id" alt="Лого" width="120" style="display: block; width: 120px; max-width: 50%; height: auto; margin: 0 auto;">
+              <img src="cid:brand-name-id" alt="Прегърната" width="215" style="display: block; width: 215px; max-width: 80%; height: auto; margin: 12px auto 0;">
+              <h1 style="margin: 20px 0 0; color: #ffffff; font-family: Georgia, serif; font-size: 30px; line-height: 1.2;">Успешно записване!</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color: #ffffff; padding: 28px 24px;">
       <p>Здравей ${name}! </p>
       
       <p>Благодарим ти за интереса и записването за:</p>
 
-      <div class="bank-details">
+      <div style="background-color: #f7e1d7; border-radius: 14px; padding: 16px; margin: 20px 0; text-align: center;">
         <p> "<strong>${event}</strong>"
         <br>на <strong>${eventDate} </strong>
         <br>от <strong>${eventTime} часа</strong> 
@@ -141,19 +59,19 @@ export function getConfirmationEmailHTML(data) {
 
       <p>За да бъде регистрацията ти завършена, а мястото ти - резервирано, заплати таксата от <strong>${finalPrice}</strong> като използваш следните банкови данни:</p>
       
-      <div class="bank-details">
-        <p><strong>IBAN:</strong> BG42STSA93000018035708</p>
-        <p><strong>Получател:</strong> Катя Ушева</p>
-        <p><strong>Основание:</strong> Среща на ${eventDate.slice(0, 10)}</p>
-        <p><strong>Сума:</strong> ${finalPrice}</p>
+      <div style="background-color: #f9edef; border-left: 4px solid #edafb8; border-radius: 12px; padding: 16px; margin: 20px 0; overflow-wrap: anywhere;">
+        <p style="margin: 4px 0;"><strong>IBAN:</strong> BG66UNCR70001526933500</p>
+        <p style="margin: 4px 0;"><strong>Получател:</strong> Прегърната ООД</p>
+        <p style="margin: 4px 0;"><strong>Основание:</strong> Събитие на ${eventDate.split(",")[0].trim()}</p>
+        <p style="margin: 4px 0;"><strong>Сума:</strong> ${finalPrice}</p>
       </div>
       
       ${data.paymentDeadline && data.lateFee ? `<p><strong>⚠️ Важно:</strong> Ако преводът не бъде направен до ${data.paymentDeadline}, дължимата сума е ${data.lateFee}.</p>` : ""}
       
-      <p class="important">Моля, имай предвид, че регистрацията ти ще бъде валидна само след постъпило плащане.</p>
+      <p><strong>Моля, имай предвид, че регистрацията ти ще бъде валидна само след постъпило плащане.</strong></p>
       
       <p>При записването ти използва следните данни:</p>
-      <div class="filled-out-form">
+      <div style="background-color: #edf2f3; border-left: 4px solid #6c698d; border-radius: 12px; padding: 16px; margin: 20px 0;">
         <p><strong>Брой участници:</strong> ${participantCount}</p>
         ${participantCount > 1 ? `<p><strong>Допълнителни места:</strong> ${participantCount - 1} допълнителни участника</p>` : ""}
         ${(() => {
@@ -184,20 +102,26 @@ export function getConfirmationEmailHTML(data) {
       <p><br>Слънчев ден,
       <br>eкипът на "Прегърната"</p>
 
-      <div class="social-links">
+      <div style="background-color: #f7e1d7; border-radius: 14px; padding: 12px 16px; margin: 24px 0 0; text-align: center;">
             <p>Последвай ни в социалните мрежи!</p>
-            <a href="https://www.instagram.com/embraced.mothersclub/" target="_blank">Instagram</a> |
-            <a href="https://www.facebook.com/embraced.mothersclub" target="_blank">Facebook</a>
+            <a href="https://www.instagram.com/embraced.mothersclub/" target="_blank" style="color: #514d76;">Instagram</a> |
+            <a href="https://www.facebook.com/embraced.mothersclub" target="_blank" style="color: #514d76;">Facebook</a>
       </div>
-    </div>
-    <div class="footer">
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="background-color: #edafb8; color: #393750; padding: 20px; border-radius: 0 0 20px 20px; font-size: 12px;">
       <p>© ${new Date().getFullYear()} Прегърната. Всички права запазени.</p>
       <p>
-        <a href="https://zamoetorazhdane.com">zamoetorazhdane.com</a> |
-        <a href="mailto:embraced.mothersclub@gmail.com">embraced.mothersclub@gmail.com</a>
+        <a href="https://zamoetorazhdane.com" style="color: #393750;">zamoetorazhdane.com</a> |
+        <a href="mailto:embraced.mothersclub@gmail.com" style="color: #393750;">embraced.mothersclub@gmail.com</a>
       </p>
-    </div>
-  </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>`;
 }
