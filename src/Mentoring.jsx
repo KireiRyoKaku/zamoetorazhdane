@@ -311,8 +311,7 @@ const Mentoring = () => {
       setContactStatus({
         type: "error",
         message:
-          error.message ||
-          "Възникна проблем. Моля, опитай отново след малко.",
+          error.message || "Възникна проблем. Моля, опитай отново след малко.",
       });
     }
   };
@@ -327,413 +326,426 @@ const Mentoring = () => {
         revealHeader
         showBackButton={false}
       >
-    <RevealOnScroll>
-      <img
-        src={mentoringImage}
-        alt="Менторска програма"
-        className="relative left-1/2 z-0 mt-2 h-[100px] w-screen max-w-none -translate-x-1/2 translate-y-4 object-cover object-[center_20%] sm:h-[300px]"
-        style={{
-          maskImage: "linear-gradient(to bottom, #000 85%, transparent 100%)",
-          WebkitMaskImage:
-            "linear-gradient(to bottom, #000 85%, transparent 100%)",
-        }}
-      />
-    </RevealOnScroll>
-
-    <RevealOnScroll
-      as="section"
-      className="mb-16 rounded-[32px] bg-fourth px-6 py-5 text-center text-white shadow-xl md:mb-16 md:px-14 md:py-8"
-    >
-      <span
-        aria-hidden="true"
-        className="pointer-events-none -mb-14 block select-none font-rocaTwoBold text-9xl leading-none text-secondary sm:-mb-20 sm:text-[11rem]"
-      >
-        “
-      </span>
-      <div className="mx-auto w-full max-w-3xl text-center">
-        <RevealOnScroll
-          as="h2"
-          className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
-          delay={240}
-        >
-          Не е нужно да вървиш по този път сама
+        <RevealOnScroll>
+          <img
+            src={mentoringImage}
+            alt="Менторска програма"
+            className="relative z-0 mt-2 aspect-[2/1] w-full translate-y-4 object-cover object-top"
+            style={{
+              maskImage:
+                "linear-gradient(to bottom, #000 85%, transparent 100%), linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)",
+              maskComposite: "intersect",
+              WebkitMaskImage:
+                "linear-gradient(to bottom, #000 85%, transparent 100%), linear-gradient(to right, transparent, #000 8%, #000 92%, transparent)",
+              WebkitMaskComposite: "source-in",
+            }}
+          />
         </RevealOnScroll>
-        <RevealOnScroll
-          as="p"
-          className="mx-auto max-w-3xl text-center font-rocaTwoThin text-lg leading-7"
-          delay={120}
-        >
-          Можеш да го извървиш с някого, който вече го е вървял не само за себе
-          си, но и за други майки и има опита и перспективата да те придружи по
-          този път.
-        </RevealOnScroll>
-      </div>
-      <span
-        aria-hidden="true"
-        className="pointer-events-none -mt-14 block rotate-180 select-none font-rocaTwoBold text-9xl leading-none text-secondary sm:-mt-20 sm:text-[11rem]"
-      >
-        “
-      </span>
-    </RevealOnScroll>
 
-    <RevealOnScroll
-      as="section"
-      className="mb-12 rounded-[32px] bg-third/80 p-5 md:mb-16 md:p-10"
-    >
-      <RevealOnScroll
-        as="h2"
-        className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
-      >
-        Ако си майка и усещаш, че…
-      </RevealOnScroll>
-      <ul className="mx-auto grid max-w-4xl gap-3 md:grid-cols-2">
-        {openingNeeds.map((need, index) => (
-          <RevealOnScroll
-            as="li"
-            key={need}
-            delay={index * 80}
-            className="flex items-start gap-3 rounded-2xl border border-white/80 bg-white/80 p-4 font-rocaTwoThin text-lg leading-6 shadow-sm"
+        <RevealOnScroll
+          as="section"
+          className="mb-16 rounded-[32px] bg-fourth px-6 py-5 text-center text-white shadow-xl md:mb-16 md:px-14 md:py-8"
+        >
+          <span
+            aria-hidden="true"
+            className="pointer-events-none -mb-14 block select-none font-rocaTwoBold text-9xl leading-none text-secondary sm:-mb-20 sm:text-[11rem]"
           >
-            <span
-              aria-hidden="true"
-              className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-secondary"
-            />
-            {need}
-          </RevealOnScroll>
-        ))}
-      </ul>
-      <div className="mt-7 text-center">
-        <Button
-          type="button"
-          onClick={openContactModal}
-          className="text-7xl md:text-7xl"
-        >
-          ТОВА Е ЗА ТЕБ!
-        </Button>
-      </div>
-    </RevealOnScroll>
-
-    <RevealOnScroll
-      as="section"
-      className="mb-12 rounded-[32px] bg-primary p-5 text-[#403d5c] shadow-sm md:mb-16 md:p-10"
-    >
-      <RevealOnScroll
-        as="h2"
-        className="mb-4 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
-      >
-        Индивидуална работа с една от нас
-      </RevealOnScroll>
-      <RevealOnScroll
-        as="p"
-        className="mx-auto max-w-4xl font-rocaTwoThin text-lg leading-6"
-        delay={120}
-      >
-        Анелия или Катя – създатели на „
-        <span className="font-magnoliaScript">Прегърната</span>“ и специалисти с
-        опит в подкрепата на майки в групови и индивидуални формати.
-      </RevealOnScroll>
-      <RevealOnScroll
-        as="p"
-        className="mx-auto mt-4 max-w-4xl font-rocaTwoThin text-lg leading-6"
-        delay={240}
-      >
-        Създадохме индивидуална менторска програма за майки, които имат нужда
-        от:
-      </RevealOnScroll>
-      <RevealOnScroll
-        as="h3"
-        className="mx-auto mt-6 max-w-4xl font-rocaTwoBold text-xl font-bold"
-        delay={300}
-      >
-        Какво ще получиш
-      </RevealOnScroll>
-      <ul className="mx-auto mt-4 max-w-4xl list-disc space-y-3 pl-6 font-rocaTwoThin text-lg leading-6 marker:text-secondary">
-        {programNeeds.map((need, index) => (
-          <RevealOnScroll as="li" key={need} delay={index * 100}>
-            {need}
-          </RevealOnScroll>
-        ))}
-      </ul>
-    </RevealOnScroll>
-
-    <RevealOnScroll as="section" className="mb-12 md:mb-16">
-      <RevealOnScroll
-        as="h2"
-        className="mb-2 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
-      >
-        Менторска програма
-      </RevealOnScroll>
-      <RevealOnScroll
-        as="h3"
-        className="mx-auto mb-6 max-w-2xl text-center font-rocaTwoRegular text-lg leading-7"
-      >
-        6 индивидуални срещи
-        <br /> в рамките на 6 до 8 седмици
-      </RevealOnScroll>
-      <div className="mx-auto max-w-4xl overflow-hidden rounded-[32px] border border-t-8 border-fourth/10 border-t-secondary bg-white p-5 shadow-lg md:p-10">
-        <RevealOnScroll
-          as="p"
-          className="mb-6 font-rocaTwoThin text-lg leading-6"
-          delay={120}
-        >
-          Цялостна програма, разработена и фокусирана върху аспекти като:
-        </RevealOnScroll>
-        <ul className="mt-4 grid gap-3 md:grid-cols-2">
-          {programTopics.map((topic, index) => (
+            “
+          </span>
+          <div className="mx-auto w-full max-w-3xl text-center">
             <RevealOnScroll
-              as="li"
-              key={topic}
-              delay={index * 80}
-              className="rounded-2xl bg-primary/70 px-4 py-3 text-center font-rocaTwoThin text-lg leading-6"
+              as="h2"
+              className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
+              delay={240}
             >
-              {topic}
+              Не е нужно да вървиш по този път сама
             </RevealOnScroll>
-          ))}
-        </ul>
-        <RevealOnScroll
-          as="p"
-          className="mb-2 mt-6 font-rocaTwoThin text-lg leading-6"
-          delay={120}
-        >
-          Подбор на темите според твоите индивидуални нужди и цели за тази
-          програма.
-        </RevealOnScroll>
-      </div>
-    </RevealOnScroll>
-
-    <RevealOnScroll as="section" className="mb-12 md:mb-16">
-      <div className="grid motion-safe:-mb-[max(0px,calc(100svh-max(11rem,(100svh-17rem)/2-6rem)-23.25rem))] md:mb-0">
-        <div className="relative z-20 motion-safe:pointer-events-none motion-safe:sticky motion-safe:top-24 motion-safe:col-start-1 motion-safe:row-start-1 motion-safe:h-[calc(100svh-6rem)] motion-safe:self-start md:static md:col-auto md:row-auto md:h-auto">
-          <h2 className="mb-6 text-center font-rocaTwoBold text-2xl font-bold motion-safe:absolute motion-safe:inset-x-0 motion-safe:top-0 sm:text-3xl md:static">
-            Програма
-          </h2>
-        </div>
-        <ol className="grid gap-6 motion-safe:col-start-1 motion-safe:row-start-1 motion-safe:gap-0 md:col-auto md:row-auto md:grid-cols-2 md:gap-6">
-          {sessions.map(({ title, description }, index) => (
-            <li
-              key={title}
-              className="motion-safe:sticky motion-safe:top-0 motion-safe:flex motion-safe:min-h-[100svh] motion-safe:items-start motion-safe:pt-[calc(max(11rem,(100svh-17rem)/2-6rem)+var(--stack-offset)/2)] md:static md:block md:min-h-0 md:pt-0"
-              style={{ "--stack-offset": `${index * 24}px`, zIndex: index + 1 }}
+            <RevealOnScroll
+              as="p"
+              className="mx-auto max-w-3xl text-center font-rocaTwoThin text-lg leading-7"
+              delay={120}
             >
-              <div className="relative w-full">
+              Можеш да го извървиш с някого, който вече го е вървял не само за
+              себе си, но и за други майки и има опита и перспективата да те
+              придружи по този път.
+            </RevealOnScroll>
+          </div>
+          <span
+            aria-hidden="true"
+            className="pointer-events-none -mt-14 block rotate-180 select-none font-rocaTwoBold text-9xl leading-none text-secondary sm:-mt-20 sm:text-[11rem]"
+          >
+            “
+          </span>
+        </RevealOnScroll>
+
+        <RevealOnScroll
+          as="section"
+          className="mb-12 rounded-[32px] bg-third/80 p-5 md:mb-16 md:p-10"
+        >
+          <RevealOnScroll
+            as="h2"
+            className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
+          >
+            Ако си майка и усещаш, че…
+          </RevealOnScroll>
+          <ul className="mx-auto grid max-w-4xl gap-3 md:grid-cols-2">
+            {openingNeeds.map((need, index) => (
+              <RevealOnScroll
+                as="li"
+                key={need}
+                delay={index * 80}
+                className="flex items-start gap-3 rounded-2xl border border-white/80 bg-white/80 p-4 font-rocaTwoThin text-lg leading-6 shadow-sm"
+              >
+                <span
+                  aria-hidden="true"
+                  className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-secondary"
+                />
+                {need}
+              </RevealOnScroll>
+            ))}
+          </ul>
+          <div className="mt-7 text-center">
+            <Button
+              type="button"
+              onClick={openContactModal}
+              className="text-7xl md:text-7xl"
+            >
+              ТОВА Е ЗА ТЕБ!
+            </Button>
+          </div>
+        </RevealOnScroll>
+
+        <RevealOnScroll
+          as="section"
+          className="mb-12 rounded-[32px] bg-primary p-5 text-[#403d5c] shadow-sm md:mb-16 md:p-10"
+        >
+          <RevealOnScroll
+            as="h2"
+            className="mb-4 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
+          >
+            Индивидуална работа с една от нас
+          </RevealOnScroll>
+          <RevealOnScroll
+            as="p"
+            className="mx-auto max-w-4xl font-rocaTwoThin text-lg leading-6"
+            delay={120}
+          >
+            Анелия или Катя – създатели на „
+            <span className="font-magnoliaScript">Прегърната</span>“ и
+            специалисти с опит в подкрепата на майки в групови и индивидуални
+            формати.
+          </RevealOnScroll>
+          <RevealOnScroll
+            as="p"
+            className="mx-auto mt-4 max-w-4xl font-rocaTwoThin text-lg leading-6"
+            delay={240}
+          >
+            Създадохме индивидуална менторска програма за майки, които имат
+            нужда от:
+          </RevealOnScroll>
+          <RevealOnScroll
+            as="h3"
+            className="mx-auto mt-6 max-w-4xl font-rocaTwoBold text-xl font-bold"
+            delay={300}
+          >
+            Какво ще получиш
+          </RevealOnScroll>
+          <ul className="mx-auto mt-4 max-w-4xl list-disc space-y-3 pl-6 font-rocaTwoThin text-lg leading-6 marker:text-secondary">
+            {programNeeds.map((need, index) => (
+              <RevealOnScroll as="li" key={need} delay={index * 100}>
+                {need}
+              </RevealOnScroll>
+            ))}
+          </ul>
+        </RevealOnScroll>
+
+        <RevealOnScroll as="section" className="mb-12 md:mb-16">
+          <RevealOnScroll
+            as="h2"
+            className="mb-2 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
+          >
+            Менторска програма
+          </RevealOnScroll>
+          <RevealOnScroll
+            as="h3"
+            className="mx-auto mb-6 max-w-2xl text-center font-rocaTwoRegular text-lg leading-7"
+          >
+            6 индивидуални срещи
+            <br /> в рамките на 6 до 8 седмици
+          </RevealOnScroll>
+          <div className="mx-auto max-w-4xl overflow-hidden rounded-[32px] border border-t-8 border-fourth/10 border-t-secondary bg-white p-5 shadow-lg md:p-10">
+            <RevealOnScroll
+              as="p"
+              className="mb-6 font-rocaTwoThin text-lg leading-6"
+              delay={120}
+            >
+              Цялостна програма, разработена и фокусирана върху аспекти като:
+            </RevealOnScroll>
+            <ul className="mt-4 grid gap-3 md:grid-cols-2">
+              {programTopics.map((topic, index) => (
                 <RevealOnScroll
-                  className={`relative flex min-h-[17rem] w-full items-center justify-center overflow-hidden rounded-[28px] border border-fourth/10 p-6 shadow-md ${
-                    index % 2 === 0 ? "bg-white" : "bg-third"
-                  }`}
+                  as="li"
+                  key={topic}
+                  delay={index * 80}
+                  className="rounded-2xl bg-primary/70 px-4 py-3 text-center font-rocaTwoThin text-lg leading-6"
                 >
-                  <span
-                    aria-hidden="true"
-                    className="absolute right-4 top-2 font-rocaTwoBold text-7xl leading-none text-secondary/60"
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <div className="relative w-full text-center">
-                    <p className="mb-2 font-rocaTwoBold text-sm uppercase tracking-widest text-[#403d5c]/70">
-                      Среща {index + 1}
-                    </p>
-                    <h3 className="mb-3 font-rocaTwoBold text-xl font-bold">
-                      {title}
-                    </h3>
-                    <p className="font-rocaTwoThin text-lg leading-6">
-                      {description}
-                    </p>
-                  </div>
+                  {topic}
                 </RevealOnScroll>
-                {index === 0 && (
-                  <div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-0 top-full mt-20 hidden justify-center text-[#403d5c] motion-safe:max-md:flex [&>svg]:h-12 [&>svg]:w-12"
-                  >
-                    <ScrollChevrons />
-                  </div>
-                )}
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </RevealOnScroll>
-
-    <RevealOnScroll as="section" className="mb-12 md:mb-16">
-      <RevealOnScroll
-        as="h2"
-        className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
-      >
-        Тази програма е за теб, ако…
-      </RevealOnScroll>
-      <div className="mx-auto max-w-4xl rounded-[32px] bg-secondary/75 p-5 md:p-10">
-        <ul className="grid gap-3 md:grid-cols-2">
-          {isForYou.map((reason, index) => (
+              ))}
+            </ul>
             <RevealOnScroll
-              as="li"
-              key={reason}
-              delay={index * 80}
-              className="text-center leading-6 rounded-2xl bg-white/90 p-4 font-rocaTwoThin text-lg shadow-sm"
+              as="p"
+              className="mb-2 mt-6 font-rocaTwoThin text-lg leading-6"
+              delay={120}
             >
-              {reason}
+              Подбор на темите според твоите индивидуални нужди и цели за тази
+              програма.
             </RevealOnScroll>
-          ))}
-        </ul>
-      </div>
-    </RevealOnScroll>
+          </div>
+        </RevealOnScroll>
 
-    <RevealOnScroll as="section" className="mb-12 md:mb-16">
-      <Journey />
-    </RevealOnScroll>
+        <RevealOnScroll as="section" className="mb-12 md:mb-16">
+          <div className="grid motion-safe:-mb-[max(0px,calc(100svh-max(11rem,(100svh-17rem)/2-6rem)-23.25rem))] md:mb-0">
+            <div className="relative z-20 motion-safe:pointer-events-none motion-safe:sticky motion-safe:top-24 motion-safe:col-start-1 motion-safe:row-start-1 motion-safe:h-[calc(100svh-6rem)] motion-safe:self-start md:static md:col-auto md:row-auto md:h-auto">
+              <h2 className="mb-6 text-center font-rocaTwoBold text-2xl font-bold motion-safe:absolute motion-safe:inset-x-0 motion-safe:top-0 sm:text-3xl md:static">
+                Програма
+              </h2>
+            </div>
+            <ol className="grid gap-6 motion-safe:col-start-1 motion-safe:row-start-1 motion-safe:gap-0 md:col-auto md:row-auto md:grid-cols-2 md:gap-6">
+              {sessions.map(({ title, description }, index) => (
+                <li
+                  key={title}
+                  className="motion-safe:sticky motion-safe:top-0 motion-safe:flex motion-safe:min-h-[100svh] motion-safe:items-start motion-safe:pt-[calc(max(11rem,(100svh-17rem)/2-6rem)+var(--stack-offset)/2)] md:static md:block md:min-h-0 md:pt-0"
+                  style={{
+                    "--stack-offset": `${index * 24}px`,
+                    zIndex: index + 1,
+                  }}
+                >
+                  <div className="relative w-full">
+                    <RevealOnScroll
+                      className={`relative flex min-h-[17rem] w-full items-center justify-center overflow-hidden rounded-[28px] border border-fourth/10 p-6 shadow-md ${
+                        index % 2 === 0 ? "bg-white" : "bg-third"
+                      }`}
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="absolute right-4 top-2 font-rocaTwoBold text-7xl leading-none text-secondary/60"
+                      >
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <div className="relative w-full text-center">
+                        <p className="mb-2 font-rocaTwoBold text-sm uppercase tracking-widest text-[#403d5c]/70">
+                          Среща {index + 1}
+                        </p>
+                        <h3 className="mb-3 font-rocaTwoBold text-xl font-bold">
+                          {title}
+                        </h3>
+                        <p className="font-rocaTwoThin text-lg leading-6">
+                          {description}
+                        </p>
+                      </div>
+                    </RevealOnScroll>
+                    {index === 0 && (
+                      <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-x-0 top-full mt-20 hidden justify-center text-[#403d5c] motion-safe:max-md:flex [&>svg]:h-12 [&>svg]:w-12"
+                      >
+                        <ScrollChevrons />
+                      </div>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </RevealOnScroll>
 
-    <RevealOnScroll
-      as="section"
-      className="rounded-[32px] bg-fourth p-5 text-center text-white shadow-xl md:p-10"
-    >
-      <RevealOnScroll
-        as="p"
-        className="mx-auto max-w-3xl font-rocaTwoThin text-lg leading-6"
-      >
-        А в края не си нова майка. Но си по-близо до себе си. По-спокойна в
-        решенията си.
-      </RevealOnScroll>
-      <RevealOnScroll
-        as="p"
-        className="mx-auto mt-4 max-w-3xl font-rocaTwoThin text-lg leading-6"
-        delay={120}
-      >
-        По-уверена в това, което усещаш.
-      </RevealOnScroll>
-      <RevealOnScroll
-        as="p"
-        className="mx-auto mt-4 max-w-3xl font-rocaTwoThin text-lg leading-6"
-        delay={240}
-      >
-        И ще знаеш как да подкрепиш себе си и след програмата.
-      </RevealOnScroll>
-      <RevealOnScroll
-        as="h3"
-        className="mx-auto mt-6 max-w-3xl font-rocaTwoBold text-xl font-bold"
-        delay={300}
-      >
-        Готова ли си за следващата стъпка?
-      </RevealOnScroll>
-      <RevealOnScroll
-        as="p"
-        className="mx-auto mb-6 mt-4 max-w-3xl font-rocaTwoThin text-lg leading-6"
-        delay={360}
-      >
-        Пиши ни, за да се запишеш за безплатен предварителен разговор.
-      </RevealOnScroll>
-      <RevealOnScroll delay={360}>
-        <Button type="button" onClick={openContactModal}>
-          СВЪРЖИ СЕ
-        </Button>
-      </RevealOnScroll>
-    </RevealOnScroll>
+        <RevealOnScroll as="section" className="mb-12 md:mb-16">
+          <RevealOnScroll
+            as="h2"
+            className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
+          >
+            Тази програма е за теб, ако…
+          </RevealOnScroll>
+          <div className="mx-auto max-w-4xl rounded-[32px] bg-secondary/75 p-5 md:p-10">
+            <ul className="grid gap-3 md:grid-cols-2">
+              {isForYou.map((reason, index) => (
+                <RevealOnScroll
+                  as="li"
+                  key={reason}
+                  delay={index * 80}
+                  className="rounded-2xl bg-white/90 p-4 text-center font-rocaTwoThin text-lg leading-6 shadow-sm"
+                >
+                  {reason}
+                </RevealOnScroll>
+              ))}
+            </ul>
+          </div>
+        </RevealOnScroll>
+
+        <RevealOnScroll as="section" className="mb-12 md:mb-16">
+          <Journey />
+        </RevealOnScroll>
+
+        <RevealOnScroll
+          as="section"
+          className="rounded-[32px] bg-fourth p-5 text-center text-white shadow-xl md:p-10"
+        >
+          <RevealOnScroll
+            as="p"
+            className="mx-auto max-w-3xl font-rocaTwoThin text-lg leading-6"
+          >
+            А в края не си нова майка. Но си по-близо до себе си. По-спокойна в
+            решенията си.
+          </RevealOnScroll>
+          <RevealOnScroll
+            as="p"
+            className="mx-auto mt-4 max-w-3xl font-rocaTwoThin text-lg leading-6"
+            delay={120}
+          >
+            По-уверена в това, което усещаш.
+          </RevealOnScroll>
+          <RevealOnScroll
+            as="p"
+            className="mx-auto mt-4 max-w-3xl font-rocaTwoThin text-lg leading-6"
+            delay={240}
+          >
+            И ще знаеш как да подкрепиш себе си и след програмата.
+          </RevealOnScroll>
+          <RevealOnScroll
+            as="h3"
+            className="mx-auto mt-6 max-w-3xl font-rocaTwoBold text-xl font-bold"
+            delay={300}
+          >
+            Готова ли си за следващата стъпка?
+          </RevealOnScroll>
+          <RevealOnScroll
+            as="p"
+            className="mx-auto mb-6 mt-4 max-w-3xl font-rocaTwoThin text-lg leading-6"
+            delay={360}
+          >
+            Пиши ни, за да се запишеш за безплатен предварителен разговор.
+          </RevealOnScroll>
+          <RevealOnScroll delay={360}>
+            <Button type="button" onClick={openContactModal}>
+              СВЪРЖИ СЕ
+            </Button>
+          </RevealOnScroll>
+        </RevealOnScroll>
       </PageShell>
 
       {isContactModalOpen &&
         createPortal(
-        <div
-          className="fixed inset-0 z-[10001] flex items-center justify-center bg-[#403d5c]/70 p-0 sm:p-4"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              setIsContactModalOpen(false);
-            }
-          }}
-        >
           <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="mentoring-contact-title"
-            className="max-h-[100dvh] w-full max-w-2xl overflow-y-auto rounded-[24px] bg-white p-6 text-[#403d5c] shadow-2xl sm:max-h-[calc(100dvh-2rem)] sm:rounded-[32px] md:p-8"
+            className="fixed inset-0 z-[10001] flex items-center justify-center bg-[#403d5c]/70 p-0 sm:p-4"
+            role="presentation"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) {
+                setIsContactModalOpen(false);
+              }
+            }}
           >
-            <div className="mb-6 flex items-start justify-between gap-4">
-              <div>
-                <h2
-                  id="mentoring-contact-title"
-                  className="font-rocaTwoBold text-2xl text-center font-bold sm:text-xl"
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="mentoring-contact-title"
+              className="max-h-[100dvh] w-full max-w-2xl overflow-y-auto rounded-[24px] bg-white p-6 text-[#403d5c] shadow-2xl sm:max-h-[calc(100dvh-2rem)] sm:rounded-[32px] md:p-8"
+            >
+              <div className="mb-6 flex items-start justify-between gap-4">
+                <div>
+                  <h2
+                    id="mentoring-contact-title"
+                    className="text-center font-rocaTwoBold text-2xl font-bold sm:text-xl"
+                  >
+                    Заявка за участие в менторската програма
+                  </h2>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsContactModalOpen(false)}
+                  aria-label="Затвори формата"
+                  className="rounded-full p-2 text-2xl leading-none hover:bg-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-fourth/60"
                 >
-                  Заявка за участие в менторската програма
-                </h2>
-                
+                  ×
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => setIsContactModalOpen(false)}
-                aria-label="Затвори формата"
-                className="rounded-full p-2 text-2xl leading-none hover:bg-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-fourth/60"
-              >
-                ×
-              </button>
-            </div>
 
-            {contactStatus.type === "success" ? (
-              <div className="rounded-2xl bg-primary p-5 text-center font-rocaTwoThin text-lg leading-6">
-                {contactStatus.message}
-              </div>
-            ) : (
-              <form onSubmit={handleContactSubmit} className="space-y-4">
-                <label className="block font-rocaTwoRegular text-base">
-                  Име
-                  <input
-                    required
-                    type="text"
-                    placeholder="Мария Иванова"
-                    value={contactForm.name}
-                    onChange={(event) =>
-                      setContactForm({
-                        ...contactForm,
-                        name: event.target.value,
-                      })
-                    }
-                    className="mt-1 w-full rounded-xl border border-fourth/30 px-4 py-3 font-rocaTwoThin focus:border-fourth focus:outline-none focus:ring-2 focus:ring-fourth/40"
-                  />
-                </label>
-                <label className="block font-rocaTwoRegular text-base">
-                  Имейл
-                  <input
-                    required
-                    type="email"
-                    placeholder="maria@example.com"
-                    value={contactForm.email}
-                    onChange={(event) =>
-                      setContactForm({
-                        ...contactForm,
-                        email: event.target.value,
-                      })
-                    }
-                    className="mt-1 w-full rounded-xl border border-fourth/30 px-4 py-3 font-rocaTwoThin focus:border-fourth focus:outline-none focus:ring-2 focus:ring-fourth/40"
-                  />
-                </label>
-                <label className="block font-rocaTwoRegular text-base">
-                  Съобщение
-                  <textarea
-                    required
-                    rows="7"
-                    value={contactForm.message}
-                    onChange={(event) =>
-                      setContactForm({
-                        ...contactForm,
-                        message: event.target.value,
-                      })
-                    }
-                    className="mt-1 min-h-48 w-full resize-y rounded-xl border border-fourth/30 px-4 py-3 font-rocaTwoThin focus:border-fourth focus:outline-none focus:ring-2 focus:ring-fourth/40"
-                  />
-                </label>
-                {contactStatus.type === "error" && (
-                  <p role="alert" className="font-rocaTwoRegular text-red-700">
-                    {contactStatus.message}
-                  </p>
-                )}
-                <Button type="submit" disabled={contactStatus.type === "submitting"} className="w-full">
-                  {contactStatus.type === "submitting"
-                    ? "Изпращане..."
-                    : "Изпрати съобщение"}
-                </Button>
-              </form>
-            )}
-          </div>
-        </div>,
-        document.body,
-      )}
+              {contactStatus.type === "success" ? (
+                <div className="rounded-2xl bg-primary p-5 text-center font-rocaTwoThin text-lg leading-6">
+                  {contactStatus.message}
+                </div>
+              ) : (
+                <form onSubmit={handleContactSubmit} className="space-y-4">
+                  <label className="block font-rocaTwoRegular text-base">
+                    Име
+                    <input
+                      required
+                      type="text"
+                      placeholder="Мария Иванова"
+                      value={contactForm.name}
+                      onChange={(event) =>
+                        setContactForm({
+                          ...contactForm,
+                          name: event.target.value,
+                        })
+                      }
+                      className="mt-1 w-full rounded-xl border border-fourth/30 px-4 py-3 font-rocaTwoThin focus:border-fourth focus:outline-none focus:ring-2 focus:ring-fourth/40"
+                    />
+                  </label>
+                  <label className="block font-rocaTwoRegular text-base">
+                    Имейл
+                    <input
+                      required
+                      type="email"
+                      placeholder="maria@example.com"
+                      value={contactForm.email}
+                      onChange={(event) =>
+                        setContactForm({
+                          ...contactForm,
+                          email: event.target.value,
+                        })
+                      }
+                      className="mt-1 w-full rounded-xl border border-fourth/30 px-4 py-3 font-rocaTwoThin focus:border-fourth focus:outline-none focus:ring-2 focus:ring-fourth/40"
+                    />
+                  </label>
+                  <label className="block font-rocaTwoRegular text-base">
+                    Съобщение
+                    <textarea
+                      required
+                      rows="7"
+                      value={contactForm.message}
+                      onChange={(event) =>
+                        setContactForm({
+                          ...contactForm,
+                          message: event.target.value,
+                        })
+                      }
+                      className="mt-1 min-h-48 w-full resize-y rounded-xl border border-fourth/30 px-4 py-3 font-rocaTwoThin focus:border-fourth focus:outline-none focus:ring-2 focus:ring-fourth/40"
+                    />
+                  </label>
+                  {contactStatus.type === "error" && (
+                    <p
+                      role="alert"
+                      className="font-rocaTwoRegular text-red-700"
+                    >
+                      {contactStatus.message}
+                    </p>
+                  )}
+                  <Button
+                    type="submit"
+                    disabled={contactStatus.type === "submitting"}
+                    className="w-full"
+                  >
+                    {contactStatus.type === "submitting"
+                      ? "Изпращане..."
+                      : "Изпрати съобщение"}
+                  </Button>
+                </form>
+              )}
+            </div>
+          </div>,
+          document.body,
+        )}
     </>
   );
 };
