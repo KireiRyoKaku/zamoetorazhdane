@@ -741,7 +741,6 @@ const Title = () => {
   const [groupHeadingRef, groupHeadingReveal] = useRevealOnView();
   const [podcastIntroRef, podcastIntroReveal] = useRevealOnView();
   const [merchIntroRef, merchIntroReveal] = useRevealOnView();
-  const [merchClosingRef, merchClosingReveal] = useRevealOnView();
   const [servicesSectionRef, servicesBannerReveal] = useRevealOnView();
   const [isVisible, setIsVisible] = useState(true);
   const [heroTextVisible, setHeroTextVisible] = useState(false);
@@ -1239,30 +1238,18 @@ const Title = () => {
           backgroundColor={bannerBgColors.merch}
           topBackgroundColor="third"
           titleClassName="text-4xl sm:text-5xl md:text-7xl"
-          subtitle="мърч, джунджурий и други"
         />
         <section
           id={HOME_SECTION_IDS.merchContent}
           aria-labelledby={`${HOME_SECTION_IDS.merch}-heading`}
-          className="relative z-10 w-full bg-white px-4 pb-[142px] pt-6 text-left md:px-6 md:pb-[198px] md:pt-8 lg:px-8"
+          className="relative z-10 w-full bg-white px-4 pb-[142px] pt-12 md:px-6 md:pb-[198px] md:pt-16 lg:px-8"
         >
-          <div className="mx-auto w-full max-w-[600px]">
-            <div ref={merchIntroRef} className={merchIntroReveal}>
-              <p className={`mx-auto mb-6 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug ${dropCapClassName}`}>
-                Повечето услуги за родители са насочени към грижата за детето.
-                Ние се грижим за майката, като ѝ помагаме да подкрепя себе си.
-                Защото и тя има нужда да бъде прегърната в уязвимите периоди от
-                майчинството.
-              </p>
-            </div>
-
-            <p
-              ref={merchClosingRef}
-              className={`mx-auto mt-6 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mt-3 md:text-lg md:leading-snug ${merchClosingReveal}`}
-            >
-              Във всичко, което създаваме, на преден план е жената с нейното
-              индивидуално преживяване в майчинството.
+          <div ref={merchIntroRef} className={`mx-auto flex max-w-md items-center justify-center gap-4 sm:gap-6 ${merchIntroReveal}`}>
+            <span aria-hidden="true" className="h-px flex-1 bg-secondary" />
+            <p className="text-center font-rocaTwoBold text-2xl text-fourth sm:text-3xl">
+              Очаквай скоро
             </p>
+            <span aria-hidden="true" className="h-px flex-1 bg-secondary" />
           </div>
         </section>
       </div>
