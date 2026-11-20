@@ -720,7 +720,7 @@ const PodcastEpisodes = () => {
   }
 
   return (
-    <div className="mx-auto grid w-full max-w-7xl gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="mx-auto grid w-full max-w-[600px] gap-6">
       {episodes.map((episode, index) => (
         <PodcastEpisodeCard key={episode.id} episode={episode} index={index} />
       ))}
@@ -773,7 +773,7 @@ const Title = () => {
   }, []);
 
   useEffect(() => {
-    const visibleDuration = wordIndex === 0 ? 4000 : 3000;
+    const visibleDuration = wordIndex === 0 ? 4000 : 2000;
     let updateTimeout;
     const transitionTimeout = window.setTimeout(() => {
       setWordVisible(false);
@@ -856,7 +856,7 @@ const Title = () => {
           />
         </div>
         <div className="relative z-10 order-1 flex flex-col px-4 pb-2 pt-[calc(4rem+16vw)] max-[420px]:pt-[100px] max-[359px]:pb-1 md:min-h-[inherit] md:px-6 md:pb-[45vw] md:pt-32 lg:px-8">
-          <div className="relative mx-auto flex w-full max-w-7xl flex-1 items-center justify-center md:mt-8 md:flex-none">
+          <div className="relative mx-auto flex w-full max-w-[600px] flex-1 items-center justify-center md:mt-8 md:flex-none">
             <div className="flex w-full flex-col items-center justify-center gap-4 py-4 max-[420px]:gap-3 max-[420px]:py-3 max-[359px]:gap-2 max-[359px]:py-0 md:gap-3 md:py-0">
               {/* Hero title — stacked on mobile, side-by-side on sm+ */}
               <h1
@@ -871,13 +871,13 @@ const Title = () => {
                   За да бъдеш
                   {/* text-[clamp(2rem,9vw,5.5rem)] */}
                 </span>
-                <span className="flex h-[calc(clamp(2.25rem,10vw,6.5rem)*1.3)] w-full items-center justify-center max-[359px]:h-9">
+                <span className="flex h-[calc(clamp(2.25rem,10vw,6.5rem)*1.3)] w-full items-center justify-center md:relative md:-top-3 md:h-20 max-[359px]:h-9">
                   <span
                     style={{
                       transition:
                         "opacity 600ms ease-in-out, transform 600ms ease-in-out",
                     }}
-                    className={`block whitespace-nowrap leading-none text-secondary max-[359px]:text-3xl ${wordIndex === 0 ? "font-magnoliaScript text-4xl font-normal tracking-normal" : "text-4xl font-black tracking-[-0.02em]"} ${wordVisible ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}
+                    className={`block w-full whitespace-nowrap text-center leading-none text-secondary md:text-7xl max-[359px]:text-3xl ${wordIndex === 0 ? "font-magnoliaScript text-4xl font-normal tracking-normal" : "text-4xl font-black tracking-[-0.02em]"} ${wordVisible ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}
                   >
                     {cycleWords[wordIndex]}
                   </span>
@@ -940,7 +940,7 @@ const Title = () => {
         aria-label="Специалисти"
         className="title-section-background relative z-10 w-full px-4 pb-6 pt-4 text-center md:px-6 md:pb-8 md:pt-2 lg:px-8"
       >
-        <div className="mx-auto w-full max-w-6xl">
+        <div className="mx-auto w-full max-w-[600px]">
           <span
             ref={specialistsHeadingRef}
             aria-hidden={!hasScrolled}
@@ -965,7 +965,7 @@ const Title = () => {
             <img
               src={katyaImage}
               alt="Катя"
-              className="pointer-events-none relative z-20 mx-auto -mt-24 h-72 w-auto object-contain md:absolute md:bottom-0 md:right-6 md:mt-0 md:h-[135%] md:w-auto md:max-w-[50%] md:object-bottom"
+              className="pointer-events-none relative z-20 mx-auto -mt-24 h-72 w-auto object-contain md:absolute md:bottom-10 md:right-0 md:left-auto md:mt-0 md:h-[145%] md:w-auto md:max-w-[50%] md:object-bottom lg:right-4"
               style={{
                 maskImage:
                   "linear-gradient(to bottom, #000 80%, transparent 100%)",
@@ -987,10 +987,9 @@ const Title = () => {
                   и вътрешна опора.
                 </p>
               </div>
-              <div className="grid grid-cols-1 gap-3 pt-2 md:grid-cols-2 md:gap-4">
+              <div className="flex justify-center pt-2 md:justify-start">
                 <Button
                   onClick={() => handleClickPage("/katya")}
-                  className="w-full"
                 >
                   ЗАПАЗИ СЕСИЯ
                 </Button>
@@ -1017,7 +1016,7 @@ const Title = () => {
             <img
               src={aneliaImage}
               alt="Anelia"
-              className="pointer-events-none relative z-20 mx-auto -mt-24 h-72 w-auto object-contain md:absolute md:bottom-0 md:left-6 md:mt-0 md:h-[135%] md:w-auto md:max-w-[45%] md:object-bottom lg:left-16"
+              className="pointer-events-none relative z-20 mx-auto -mt-24 h-72 w-auto object-contain md:absolute md:bottom-10 md:left-0 md:mt-0 md:h-[145%] md:w-auto md:max-w-[45%] md:object-bottom lg:left-4"
               style={{
                 maskImage:
                   "linear-gradient(to bottom, #000 80%, transparent 100%)",
@@ -1040,10 +1039,9 @@ const Title = () => {
                   щрих.
                 </p>
               </div>
-              <div className="grid grid-cols-1 gap-3 pt-2 md:grid-cols-2 md:gap-4">
+              <div className="flex justify-center pt-2 md:justify-start">
                 <Button
                   onClick={() => handleClickPage("/anelia")}
-                  className="w-full"
                 >
                   ЗАПАЗИ КОНСУЛТАЦИЯ
                 </Button>
@@ -1065,7 +1063,7 @@ const Title = () => {
           aria-labelledby={`${HOME_SECTION_IDS.approachContent}-heading`}
           className="relative z-10 w-full px-4 pb-6 pt-6 text-left md:px-6 md:py-8 lg:px-8"
         >
-          <div className="mx-auto w-full max-w-7xl">
+          <div className="mx-auto w-full max-w-[600px]">
             <div ref={approachContentRef} className={approachContentReveal}>
               <p className={`mx-auto mb-6 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug ${dropCapClassName}`}>
                 Повечето услуги за родители са насочени към грижата за детето.
@@ -1078,7 +1076,7 @@ const Title = () => {
               </p>
             </div>
             <div className="rounded-3xl bg-primary p-6 text-fourth md:p-8">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4">
                 {approachPrinciples.map(
                   ({ title, description, icon }, index) => (
                     <ApproachPrincipleCard
@@ -1134,11 +1132,11 @@ const Title = () => {
         <div>
           <div
             ref={individualIntroRef}
-            className={`mx-auto w-full max-w-7xl ${individualIntroReveal}`}
+            className={`mx-auto w-full max-w-[600px] ${individualIntroReveal}`}
           ></div>
           <div
             ref={individualHeadingRef}
-            className={`mx-auto w-full max-w-7xl ${individualHeadingReveal}`}
+            className={`mx-auto w-full max-w-[600px] ${individualHeadingReveal}`}
             style={{ transitionDelay: "160ms" }}
           >
             <h2
@@ -1151,8 +1149,8 @@ const Title = () => {
           <div
             className={
               SERVICE_LAYOUT === "stacked"
-                ? "mx-auto mt-10 w-full max-w-7xl rounded-[2rem] bg-fourth p-4 sm:p-8"
-                : "mx-auto mt-10 w-full max-w-7xl"
+                ? "mx-auto mt-10 w-full max-w-[600px] rounded-[2rem] bg-fourth p-4 sm:p-8"
+                : "mx-auto mt-10 w-full max-w-[600px]"
             }
           >
             <ServicePresentation
@@ -1167,7 +1165,7 @@ const Title = () => {
         aria-labelledby={`${HOME_SECTION_IDS.groupServices}-heading`}
         className="title-section-background px-4 pb-6 pt-10 text-center md:px-6 md:pb-8 md:pt-12 lg:px-8"
       >
-        <div className="mx-auto w-full max-w-7xl">
+        <div className="mx-auto w-full max-w-[600px]">
           <div ref={groupHeadingRef} className={groupHeadingReveal}>
             <h2
               id={`${HOME_SECTION_IDS.groupServices}-heading`}
@@ -1206,7 +1204,7 @@ const Title = () => {
       >
         <div
           ref={podcastIntroRef}
-          className={`mx-auto w-full max-w-3xl px-4 text-left font-rocaTwoThin text-lg text-fourth ${podcastIntroReveal}`}
+          className={`mx-auto w-full max-w-[600px] px-4 text-left font-rocaTwoThin text-lg text-fourth ${podcastIntroReveal}`}
         >
           <p className={dropCapClassName}>
             Тук ще ни чуете да говорим като специалисти, но и като майки по своя
@@ -1248,7 +1246,7 @@ const Title = () => {
           aria-labelledby={`${HOME_SECTION_IDS.merch}-heading`}
           className="relative z-10 w-full bg-white px-4 pb-[142px] pt-6 text-left md:px-6 md:pb-[198px] md:pt-8 lg:px-8"
         >
-          <div className="mx-auto w-full max-w-7xl">
+          <div className="mx-auto w-full max-w-[600px]">
             <div ref={merchIntroRef} className={merchIntroReveal}>
               <p className={`mx-auto mb-6 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug ${dropCapClassName}`}>
                 Повечето услуги за родители са насочени към грижата за детето.

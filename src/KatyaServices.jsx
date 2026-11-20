@@ -81,7 +81,7 @@ const KatyaServices = () => (
         В работата си помагам на жените
       </RevealOnScroll>
       <RevealOnScroll
-        className="mx-auto max-w-4xl rounded-[32px] bg-third/80 p-5 shadow-sm md:p-10"
+        className="mx-auto max-w-[600px] rounded-[32px] bg-third/80 p-5 shadow-sm md:p-10"
         delay={120}
       >
         <ul className="grid gap-3 md:grid-cols-2">
@@ -90,7 +90,11 @@ const KatyaServices = () => (
               as="li"
               key={area}
               delay={index * 100}
-              className="flex items-start gap-3 rounded-2xl bg-white/90 p-4 font-rocaTwoThin text-lg leading-6"
+              className={`flex items-start gap-3 rounded-2xl bg-white/90 p-4 font-rocaTwoThin text-lg leading-6 ${
+                index === supportAreas.length - 1
+                  ? "md:col-span-2 md:justify-center md:text-center"
+                  : ""
+              }`}
             >
               <span
                 aria-hidden="true"
@@ -114,7 +118,7 @@ const KatyaServices = () => (
       </RevealOnScroll>
       <RevealOnScroll
         as="p"
-        className="mx-auto max-w-4xl p-5 text-left font-rocaTwoThin text-lg leading-relaxed"
+        className="mx-auto max-w-[600px] p-5 text-left font-rocaTwoThin text-lg leading-relaxed"
         delay={120}
       >
         В индивидуалните сесии можем да навлезем в дълбочина по теми като
@@ -124,7 +128,7 @@ const KatyaServices = () => (
       </RevealOnScroll>
       <RevealOnScroll
         as="p"
-        className="mx-auto mt-4 max-w-4xl p-5 font-rocaTwoThin text-lg leading-relaxed"
+        className="mx-auto mt-4 max-w-[600px] p-5 font-rocaTwoThin text-lg leading-relaxed"
         delay={240}
       >
         Фокус в моята практика е подкрепата в различните етапи на майчинството.
@@ -139,7 +143,7 @@ const KatyaServices = () => (
       >
         Защо да се обърнеш към мен
       </RevealOnScroll>
-      <ul className="mx-auto grid max-w-4xl grid-cols-1 gap-3 rounded-[32px] bg-secondary/75 p-5 md:grid-cols-2 md:gap-4 md:p-10">
+      <ul className="mx-auto grid max-w-[600px] grid-cols-1 gap-3 rounded-[32px] bg-secondary/75 p-5 md:grid-cols-2 md:gap-4 md:p-10">
         {reasonsToChoose.map(({ text, icon: Icon }, index) => (
           <RevealOnScroll
             as="li"
@@ -163,7 +167,7 @@ const KatyaServices = () => (
       >
         Избери подходящата за теб подкрепа
       </RevealOnScroll>
-      <div className="grid items-stretch gap-6 md:grid-cols-3">
+      <div className="grid items-stretch gap-6">
         <RevealOnScroll>
           <InfoCard
             title="Индивидуална психологическа консултация"

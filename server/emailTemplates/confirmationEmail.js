@@ -12,7 +12,6 @@ export function getConfirmationEmailHTML(data) {
     eventLocation,
     phone,
     source,
-    isMember,
     finalPrice,
     participantCount,
     participantNames,
@@ -140,8 +139,6 @@ export function getConfirmationEmailHTML(data) {
         <br>в <strong>${eventLocation}</strong>.</p>
       </div>
 
-${isMember ? "✓ Поздравления! Разпознахме те като член на общността и получаваш отстъпка." : "Към момента нямаш активно членнство в общността. За членове на Прегърната има намаление за всяко събитие на живо."}
-
       <p>За да бъде регистрацията ти завършена, а мястото ти - резервирано, заплати таксата от <strong>${finalPrice}</strong> като използваш следните банкови данни:</p>
       
       <div class="bank-details">
@@ -151,7 +148,7 @@ ${isMember ? "✓ Поздравления! Разпознахме те като
         <p><strong>Сума:</strong> ${finalPrice}</p>
       </div>
       
-      ${data.paymentDeadline && data.lateFee ? `<p><strong>⚠️ Важно:</strong> Ако преводът не бъде направен до ${data.paymentDeadline}, дължимата сума е ${data.lateFee} лв.</p>` : ""}
+      ${data.paymentDeadline && data.lateFee ? `<p><strong>⚠️ Важно:</strong> Ако преводът не бъде направен до ${data.paymentDeadline}, дължимата сума е ${data.lateFee}.</p>` : ""}
       
       <p class="important">Моля, имай предвид, че регистрацията ти ще бъде валидна само след постъпило плащане.</p>
       
@@ -219,7 +216,6 @@ export function getAdminNotificationHTML(data) {
     eventLocation,
     phone,
     source,
-    isMember,
     finalPrice,
     participantCount,
     participantNames,
@@ -250,13 +246,6 @@ export function getAdminNotificationHTML(data) {
   } else {
     participantList = `<li><strong>Участник 1:</strong> ${name}</li>`;
   }
-
-  // Pre-calculate member status styling to avoid template literal scoping issues
-  const memberStatusBg = isMember ? "#d4edda" : "#f8d7da";
-  const memberStatusColor = isMember ? "#155724" : "#721c24";
-  const memberStatusText = isMember
-    ? "✅ ЧЛЕН НА ОБЩНОСТТА"
-    : "❌ НЕ Е ЧЛЕН НА ОБЩНОСТТА";
 
   return `<!DOCTYPE html>
 <html lang="bg">
@@ -316,15 +305,6 @@ export function getAdminNotificationHTML(data) {
       margin: 20px 0;
       border-radius: 0 4px 4px 0;
     }
-    .member-status {
-      background-color: ${memberStatusBg};
-      color: ${memberStatusColor};
-      padding: 10px;
-      border-radius: 4px;
-      text-align: center;
-      font-weight: bold;
-      margin: 15px 0;
-    }
     .price-info {
       font-size: 1.2em;
       font-weight: bold;
@@ -368,10 +348,6 @@ export function getAdminNotificationHTML(data) {
       <p><strong>Имейл:</strong> <a href="mailto:${email}">${email}</a></p>
       <p><strong>Телефон:</strong> ${phone}</p>
       <p><strong>Източник:</strong> ${source || "Неизвестен"}</p>
-    </div>
-
-    <div class="member-status">
-      ${memberStatusText}
     </div>
 
     <div class="price-info">

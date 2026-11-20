@@ -41,7 +41,6 @@ const followUpOptions = [
 ];
 
 const singleService = "Единична консултация";
-const babyService = "Пакет 'Добре дошло, бебе!'";
 
 const ConsultationPackages = () => {
   const [selectedPackage, setSelectedPackage] = useState(followUpOptions[2].value);
@@ -111,7 +110,7 @@ const ConsultationPackages = () => {
 
   return (
     <>
-      <div className="grid gap-8 md:grid-cols-3">
+      <div className="grid gap-8">
         <div className="flex flex-col rounded-[32px] bg-white p-7 shadow-xl">
           <h3 className="mb-4 text-center font-rocaTwoBold text-2xl">Единична консултация</h3>
           <p className="mb-4 font-rocaTwoThin">За родители, които искат ясни насоки и са готови да работят самостоятелно.</p>
@@ -147,20 +146,6 @@ const ConsultationPackages = () => {
           </fieldset>
           <div className="mt-auto text-center">
             <Button onClick={(event) => openForm(selectedPackage, event)}>Заяви сега</Button>
-          </div>
-        </div>
-        <div className="flex flex-col rounded-[32px] bg-white p-7 shadow-xl">
-          <h3 className="mb-4 text-center font-rocaTwoBold text-2xl">Пакет „Добре дошло, бебе!“</h3>
-          <p className="mb-4 font-rocaTwoThin">За родители в очакване или с новородено бебе.</p>
-          <ul className="mb-6 list-disc space-y-2 pl-5">
-            <li>40-минутна сесия</li>
-            <li>Аудио наръчник</li>
-            <li>1 бонус разговор от 30 минути преди 3-месечна възраст</li>
-            <li>10% отстъпка за следващи сесии</li>
-          </ul>
-          <div className="mt-auto text-center">
-            <p className="mb-4 text-xl font-bold text-fourth">110 €</p>
-            <Button onClick={(event) => openForm(babyService, event)}>Заяви сега</Button>
           </div>
         </div>
       </div>
@@ -252,7 +237,7 @@ const CalendlyBooking = ({ label = "Безплатен 15-минутен раз�
               role="dialog"
               aria-modal="true"
               aria-labelledby="anelia-calendly-title"
-              className="flex h-[90dvh] max-h-[800px] w-full max-w-4xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
+              className="flex h-[90dvh] max-h-[800px] w-full max-w-[600px] flex-col overflow-hidden rounded-3xl bg-white shadow-2xl"
               onClick={(event) => event.stopPropagation()}
             >
               <header className="flex items-center justify-between gap-4 border-b border-gray-200 px-5 py-3">
@@ -353,7 +338,7 @@ const AneliaServices = () => (
         
       </RevealOnScroll>
       <RevealOnScroll
-        className="mx-auto max-w-4xl rounded-[32px] bg-third/80 p-5 shadow-sm md:p-10"
+        className="mx-auto max-w-[600px] rounded-[32px] bg-third/80 p-5 shadow-sm md:p-10"
         delay={120}
       >
         <ul className="grid gap-3 md:grid-cols-2">
@@ -384,7 +369,7 @@ const AneliaServices = () => (
       </RevealOnScroll>
       <RevealOnScroll
         as="p"
-        className="mx-auto max-w-4xl p-2 font-rocaTwoThin text-lg leading-relaxed"
+        className="mx-auto max-w-[600px] p-2 font-rocaTwoThin text-lg leading-relaxed"
         delay={120}
       >
         Ежедневно подкрепям семейства по пътя им като родители. Искрено вярвам,
@@ -394,7 +379,7 @@ const AneliaServices = () => (
       </RevealOnScroll>
       <RevealOnScroll
         as="p"
-        className="mx-auto mt-4 max-w-4xl p-2 font-rocaTwoThin text-lg leading-relaxed"
+        className="mx-auto mt-4 max-w-[600px] p-2 font-rocaTwoThin text-lg leading-relaxed"
         delay={240}
       >
         Всяко дете идва със своя темперамент и нужди. Всяко семейство е отделна
@@ -412,7 +397,7 @@ const AneliaServices = () => (
       >
         Защо да се обърнеш към мен
       </RevealOnScroll>
-      <ul className="mx-auto grid max-w-4xl grid-cols-1 gap-3 rounded-[32px] bg-secondary/75 p-5 md:grid-cols-2 md:gap-4 md:p-10">
+      <ul className="mx-auto grid max-w-[600px] grid-cols-1 gap-3 rounded-[32px] bg-secondary/75 p-5 md:grid-cols-2 md:gap-4 md:p-10">
         {reasonsToChoose.map(({ text, icon: Icon, href }, index) => (
           <RevealOnScroll
             as="li"

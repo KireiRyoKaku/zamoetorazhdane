@@ -9,10 +9,12 @@ import { Button } from "./components/Button";
 import {
   FaCalendarAlt,
   FaClock,
+  FaDove,
   FaMapMarkerAlt,
   FaDesktop,
+  FaQuestionCircle,
 } from "react-icons/fa";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoInformationCircleOutline } from "react-icons/io5";
 
 const SubscribeAndPay = () => {
   const location = useLocation();
@@ -25,9 +27,9 @@ const SubscribeAndPay = () => {
     eventDate: "",
     eventDateLocaleString: "",
     eventTime: "",
+    eventTimeEnd: "",
     eventLocation: "",
     eventDescription: "",
-    eventType: "",
     attachmentUrl: "",
   });
 
@@ -37,9 +39,10 @@ const SubscribeAndPay = () => {
     eventDate = eventDetails.eventDate || "",
     eventDateLocaleString = eventDetails.eventDateLocaleString || "",
     eventTime = eventDetails.eventTime || "",
+    eventTimeEnd =
+      location.state?.eventTimeEnd || eventDetails.eventTimeEnd || "",
     eventLocation = eventDetails.eventLocation || "",
     eventDescription = eventDetails.eventDescription || "",
-    eventType = eventDetails.eventType || "",
     attachmentUrl = eventDetails.attachmentUrl || "",
   } = location.state || {};
 
@@ -103,9 +106,9 @@ const SubscribeAndPay = () => {
               eventDate: event.dateOfEvent || "",
               eventDateLocaleString: event.dateOfEventLocaleString || "",
               eventTime: event.timeStart || "",
+              eventTimeEnd: event.timeEnd || "",
               eventLocation: event.location || "",
               eventDescription: event.description || "",
-              eventType: event.type || "",
               attachmentUrl: event.attachmentUrl || "",
             });
 
@@ -136,40 +139,6 @@ const SubscribeAndPay = () => {
 
   const currentDate = new Date();
 
-  // Function to extract the first sentence in quotes from description
-  const getFirstQuotedSentence = (description) => {
-    if (!description) return "";
-
-    // Remove HTML tags first
-    const textOnly = description.replace(/<[^>]*>/g, "");
-
-    // Look for text between quotes (both " and ")
-    const quotedMatch =
-      textOnly.match(/[""]([^"""]+)[""]/) || textOnly.match(/"([^"]+)"/);
-
-    if (quotedMatch) {
-      return quotedMatch[1].trim();
-    }
-
-    return "";
-  };
-
-  // Function to get background color based on event location
-  const getEventTypeStyle = () => {
-    // Check for Sofia
-    if (
-      eventLocation &&
-      (eventLocation.toLowerCase().includes("софия") ||
-        eventLocation.toLowerCase().includes("sofia"))
-    ) {
-      return "bg-primary text-fourth"; // Sofia events - light green
-    }
-    // Check for Plovdiv (default for subscription events)
-    else {
-      return "bg-primary text-fourth"; // Plovdiv events
-    }
-  };
-
   // Create proper event datetime by combining eventDateLocaleString and eventTime
   const getEventDateTime = () => {
     if (eventDateLocaleString.includes("T")) {
@@ -187,98 +156,41 @@ const SubscribeAndPay = () => {
   };
 
   const priceOneTime = () => {
-    let difference = differenceInHours(getEventDateTime(), currentDate);
-    let basePrice = difference < 72 ? 40 : 35; // Late: 40 lv, On-time: 35 lv
-    let memberPrice = difference < 72 ? 30 : 25; // Late: 30 lv, On-time: 25 lv for members
+    const difference = differenceInHours(getEventDateTime(), currentDate);
+    const basePrice = difference > 72 ? 18 : 21;
     const count = formData.participantCount;
-
-    // Calculate member pricing: discount for 1 person + regular price for additional participants
-    const memberTotalPrice = memberPrice + basePrice * (count - 1);
-    const nonMemberTotalPrice = basePrice * count;
-
-    // Calculate hours until price increases (if applicable)
-    const hoursUntilIncrease = Math.max(0, difference - 72);
-    const daysUntilIncrease = Math.ceil(hoursUntilIncrease / 24);
-    const willPriceIncrease = difference > 72;
-
-    // Calculate the actual date when price will increase (72 hours before event)
-    const priceIncreaseDate = new Date(getEventDateTime());
-    priceIncreaseDate.setHours(priceIncreaseDate.getHours() - 72);
-    const priceIncreaseDateString = priceIncreaseDate.toLocaleDateString(
-      "bg-BG",
-      {
-        day: "numeric",
-        month: "numeric",
-        year: "numeric",
-      },
-    );
+    const totalPrice = basePrice * count;
+    const priceLabel = difference > 72 ? "EARLY BIRD" : "LAST MINUTE";
+    const PriceIcon = priceLabel === "EARLY BIRD" ? FaDove : FaClock;
 
     return (
       <div className="space-y-2">
-        {/* Price increase warning - only show if price will increase */}
-        {willPriceIncrease && (
-          <div className="rounded-md border border-primary bg-primary p-2">
-            <p className="text-center text-base text-fourth">
-              💡Таксата ще се увеличи в последните 3 дни преди преди събитието,
-              на{" "}
-            </p>
-            <p className="text-center">
-              <b>{priceIncreaseDateString}</b>
-            </p>
-          </div>
-        )}
-
-        <div className="space-y-1">
+        <div className="relative overflow-hidden rounded-md border border-primary bg-primary/40 p-3">
+          <PriceIcon
+            aria-hidden="true"
+            className="pointer-events-none absolute right-3 top-16 h-36 w-52 -translate-y-1/2 text-secondary opacity-15"
+          />
           <div className="font-bold text-fourth">
-            {count === 1
-              ? `Редовна такса: ${nonMemberTotalPrice} лв.`
-              : `Редовна такса: ${nonMemberTotalPrice} лв. (${basePrice} лв. x ${count})`}
-            {willPriceIncrease && (
-              <span className="ml-2 text-xs font-normal text-fourth">
-                (или {(basePrice + 5) * count} лв. при късно запсиване)
-              </span>
-            )}
-          </div>
-          <div className="font-bold text-fourth">
-            {count === 1
-              ? `С отстъпка за членове на "Прегърната": ${memberTotalPrice} лв.`
-              : `С отстъпка за членове на "Прегърната": ${memberTotalPrice} лв. (${memberPrice} лв. + ${basePrice} лв. x ${count - 1})`}
-            {willPriceIncrease && (
-              <p>
-                <span className="ml-2 text-xs font-normal text-fourth">
-                  (или{" "}
-                  {Math.max(20, basePrice + 5 - 10) +
-                    (basePrice + 5) * (count - 1)}{" "}
-                  лв. при късно запсиване)
-                </span>
-              </p>
-            )}
-            {count > 1 && (
-              <div className="mt-1 text-sm font-normal text-fourth">
-                * само първият участник може да бъде таксуван като член
-              </div>
-            )}
+            Актуална цена: {priceLabel} -{" "}
+            <span className="text-secondary">{totalPrice} €</span>
+            {count > 1 && ` (${basePrice} € x ${count})`}
           </div>
         </div>
-        <div className="text-sm text-fourth">
-          * Валидната за теб крайна сума ще бъде изчислена според членството ти
-          в потвърдителния имейл.
-        </div>
+          <div className="mt-2 space-y-1 text-sm text-fourth">
+          <p className="flex flex-nowrap items-center gap-1 whitespace-nowrap text-[11px]">
+            <FaDove aria-hidden="true" className="h-4 w-4 shrink-0 text-secondary" />
+              <strong>EARLY BIRD</strong>{" "}
+              <span className="text-[10px]">(&gt;72 часа преди събитието)</span>: 18,00 €
+            </p>
+          <p className="flex flex-nowrap items-center gap-1 whitespace-nowrap text-[11px]">
+            <FaClock aria-hidden="true" className="h-4 w-4 shrink-0 text-secondary" />
+              <strong>LAST MINUTE</strong>{" "}
+              <span className="text-[10px]">(&lt;72 часа преди събитието)</span>: 21,00 €
+            </p>
+          </div>
+        
       </div>
     );
-  };
-
-  const handlePrice = () => {
-    let difference = differenceInHours(getEventDateTime(), currentDate);
-    let basePrice = difference < 72 ? 40 : 35; // Late: 40 lv, On-time: 35 lv
-    let memberPrice = difference < 72 ? 30 : 25; // Late: 30 lv, On-time: 25 lv for members
-    const count = formData.participantCount;
-
-    // Calculate member pricing: discount for 1 person + regular price for additional participants
-    const memberTotalPrice = memberPrice + basePrice * (count - 1);
-    const nonMemberTotalPrice = basePrice * count;
-
-    return `Еднократно: Нечленове ${nonMemberTotalPrice} лв. ${count > 1 ? `(${basePrice} x ${count})` : ""} | Членове ${memberTotalPrice} лв. ${count > 1 ? `(${memberPrice} + ${basePrice} x ${count - 1})` : ""}`;
   };
 
   const handleSubmit = async (e) => {
@@ -291,7 +203,7 @@ const SubscribeAndPay = () => {
     const eventDateTime = new Date(eventDate);
     const difference = (eventDateTime - now) / (1000 * 60 * 60); // hours
 
-    let basePrice = difference < 72 ? 40 : 35; // Late: 40 lv, On-time: 35 lv
+    const basePrice = difference > 72 ? 18 : 21;
     let calculatedPrice = basePrice * formData.participantCount;
 
     const submissionData = {
@@ -431,7 +343,7 @@ const SubscribeAndPay = () => {
   return (
     createPortal(
     <div className="fixed inset-0 z-[10000] h-[100dvh] w-screen overflow-hidden bg-primary/60">
-      <div className="subscribe-and-pay-container h-full w-full overflow-x-hidden overflow-y-auto bg-white p-5 shadow-lg sm:p-6">
+      <div className="subscribe-and-pay-container mx-auto h-full w-full max-w-[600px] overflow-x-hidden overflow-y-auto bg-white p-5 shadow-lg sm:p-6">
       <button
         type="button"
         onClick={() => navigate("/events")}
@@ -470,15 +382,6 @@ const SubscribeAndPay = () => {
               {eventSummary}
             </p>
 
-            {/* Secondary Title - First quoted sentence from description */}
-            {getFirstQuotedSentence(eventDescription) && (
-              <div className="mt-1 flex min-w-0 w-full justify-center">
-                <div className="min-w-0 max-w-full break-words px-3 text-center text-base font-light italic leading-relaxed text-fourth [overflow-wrap:anywhere]">
-                  "{getFirstQuotedSentence(eventDescription)}"
-                </div>
-              </div>
-            )}
-
             {/* Event Date, Time and Location - styled like MyBirthCalendar */}
             <div className="mt-4 space-y-0 text-fourth">
               {/* Date */}
@@ -492,6 +395,7 @@ const SubscribeAndPay = () => {
                 <FaClock className="h-4 w-4 text-fourth opacity-75" />
                 <div className="EventDescriptionTime">
                   {eventTime}
+                  {eventTimeEnd && ` - ${eventTimeEnd}`}
                   <span className="ml-2 text-sm font-medium text-fourth/70">
                     (UTC+3)
                   </span>
@@ -499,7 +403,7 @@ const SubscribeAndPay = () => {
               </div>
 
               {/* Location */}
-              <div className="flex items-center gap-2 border-b pb-1">
+              <div className="flex items-center gap-2 pb-1">
                 {/* Use different icons for online vs physical events */}
                 {/^https?:\/\/.+/i.test(eventLocation) ? (
                   <FaDesktop className="h-4 w-4 text-fourth opacity-75" />
@@ -525,44 +429,63 @@ const SubscribeAndPay = () => {
                   )}
                 </div>
               </div>
-            </div>
-          </h1>
-        </>
-      )}
-      {!isLoading && (
-        <>
-          {/* Event Description at the top */}
-          {eventDescription && (
-            <section
-              className={`event-description mb-6 mt-4 min-w-0 w-full overflow-hidden rounded-lg ${getEventTypeStyle()}`}
-            >
-              <div className="p-4">
+
+              {/* Description */}
+              <div className="border-b pb-2">
                 <button
                   type="button"
-                  onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-                  className="w-full text-center text-lg font-bold transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
+                  onClick={() =>
+                    setIsDescriptionExpanded((isExpanded) => !isExpanded)
+                  }
                   aria-expanded={isDescriptionExpanded}
+                  aria-controls="event-description"
+                  className="inline-flex items-center gap-2 rounded-md border border-primary bg-primary px-3 py-2 text-sm font-medium text-fourth shadow-sm transition-colors hover:bg-primary/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary"
                 >
-                  {isDescriptionExpanded
-                    ? "Описание"
-                    : "Виж повече за събитето..."}
+                  <FaQuestionCircle className="h-4 w-4 shrink-0 text-fourth opacity-75" />
+                  <span>Описание</span>
                 </button>
-                {isDescriptionExpanded && (
+                {isDescriptionExpanded && eventDescription && (
                   <div
-                    className="event-description-content mt-3 min-w-0 max-w-full break-words text-left [overflow-wrap:anywhere]"
+                    id="event-description"
+                    className="event-description-content mt-2 min-w-0 break-words pl-6 text-left [overflow-wrap:anywhere]"
                     dangerouslySetInnerHTML={{ __html: eventDescription }}
                   />
                 )}
               </div>
-            </section>
-          )}
+            </div>
+          </h1>
+          <div className="mt-4 rounded-lg border border-primary bg-primary/40 p-4 text-left text-base leading-relaxed text-fourth">
+            <IoInformationCircleOutline
+              className="mx-auto mb-2 h-7 w-7 text-fourth"
+              aria-hidden="true"
+            />
+            <p className="text-center">
+              От тук можеш да заявиш своето участие в{" "}
+                  
+                събитие на живо на{" "}
+                <span className="font-magnoliaScript text-xl font-bold">
+                  &quot;Прегърната&quot;
+                </span>
+                  
+              .
+            </p>
+            <p className="mt-3 text-center">
+              За да бъде твоята регистрация завършена, а
+              мястото - запазено за теб, е необходимо след
+              записване да заплатиш билета за съответното събитие. 
+            </p>
+          </div>
+        </>
+      )}
+      {!isLoading && (
+        <>
           <form
             onSubmit={handleSubmit}
             className="space-y-3 text-4xl font-normal text-fourth"
           >
             {/* Email field - always show first */}
             <div>
-              <label className="block text-xl font-medium text-fourth">
+              <label className="block text-xl mt-4 font-medium text-fourth">
                 E-Mail <span className="text-red-500">*</span>
               </label>
               <div className="relative">
@@ -572,7 +495,7 @@ const SubscribeAndPay = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="mt-1 block w-full rounded-md border text-base shadow-sm focus:border-primary focus:ring-primary"
+                  className="mt-1 block h-12 w-full rounded-md border text-base shadow-sm focus:border-primary focus:ring-primary"
                 />
               </div>
             </div>
@@ -588,7 +511,7 @@ const SubscribeAndPay = () => {
                 value={formData.participantNames[0] || ""}
                 onChange={handleChange}
                 required
-                className="mt-1 block w-full rounded-md border text-base shadow-sm focus:border-primary focus:ring-primary"
+                className="mt-1 block h-12 w-full rounded-md border text-base shadow-sm focus:border-primary focus:ring-primary"
               />
             </div>
 
@@ -622,14 +545,14 @@ const SubscribeAndPay = () => {
                 }}
                 title="Въведете валиден телефонен номер за връзка"
                 required
-                className="mt-1 block w-full rounded-md border text-base shadow-sm focus:border-primary focus:ring-primary"
+                className="mt-1 block h-12 w-full rounded-md border text-base shadow-sm focus:border-primary focus:ring-primary"
               />
             </div>
 
             <div>
               <div className="mt-2 space-y-4">
                 {/* Pricing display */}
-                <div className="rounded-md border border-primary bg-primary p-3">
+                <div className="rounded-md border border-primary bg-primary/40 p-3">
                   <span className="text-base text-fourth">
                     {priceOneTime()}
                   </span>
@@ -745,7 +668,7 @@ const SubscribeAndPay = () => {
                               }
                               onChange={handleChange}
                               required={false} // Additional participants are not required
-                              className="block w-full rounded-md border-primary p-3 text-base shadow-sm focus:border-primary focus:ring-primary"
+                              className="block h-12 w-full rounded-md border-primary p-3 text-base shadow-sm focus:border-primary focus:ring-primary"
                             />
                           </div>
                         );
@@ -759,7 +682,6 @@ const SubscribeAndPay = () => {
             <div>
               <label className="block text-xl font-medium text-fourth">
                 От къде научи за &quot;Прегърната&quot;?{" "}
-                <span className="text-sm text-fourth">(до 280 символа)</span>
               </label>
               <input
                 type="text"
@@ -777,7 +699,7 @@ const SubscribeAndPay = () => {
                   handleChange(syntheticEvent);
                 }}
                 maxLength={280}
-                className="mt-1 block w-full rounded-md border text-xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                className="mt-1 block h-12 w-full rounded-md border text-xl shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
               />
               <div className="mt-1 text-right text-sm text-fourth">
                 {formData.source.length}/280 символа
@@ -813,7 +735,7 @@ const SubscribeAndPay = () => {
                 variant="secondary"
                 onClick={() => navigate("/events")}
               >
-                {"<- избери друго"}
+                {"избери друго събитие"}
               </Button>
             </div>
           </form>

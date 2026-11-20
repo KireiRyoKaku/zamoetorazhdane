@@ -452,24 +452,6 @@ try {
   console.error("❌ Failed to initialize email service:", error.message);
 }
 
-// Member check endpoint
-// Route to check if user is a member
-app.post("/check-member", async (req, res) => {
-  const { email } = req.body;
-
-  if (!email) {
-    return res.status(400).json({ error: "Email is required" });
-  }
-
-  try {
-    const isMember = await checkMemberInSheets(email);
-    res.json({ isMember });
-  } catch (error) {
-    console.error("Error checking member status:", error);
-    res.status(500).json({ error: "Failed to check member status" });
-  }
-});
-
 // Mentoring contact form endpoint
 app.post("/mentoring-contact", async (req, res) => {
   const { name, email, message } = req.body;
@@ -590,10 +572,6 @@ app.post("/submit-form", async (req, res) => {
       });
     }
 
-    // Check if user is a member first - this is needed for both sheets and email
-    const isMember = await checkMemberInSheets(email);
-    console.log(`Member check for ${email}: ${isMember}`);
-
     // Calculate pricing (needed for both sheets and email)
     const participantCount = formData.participantCount || 1;
 
@@ -613,32 +591,19 @@ app.post("/submit-form", async (req, res) => {
     const now = new Date();
     const hoursUntilEvent = (eventDateTime - now) / (1000 * 60 * 60);
 
-    let basePrice = hoursUntilEvent < 72 ? 40 : 35; // Late: 40 lv, On-time: 35 lv
+    const isEarlyBird = hoursUntilEvent > 72;
+    const basePrice = isEarlyBird ? 18 : 21;
     let finalPriceForSheets;
 
     // Calculate payment deadline (72 hours before event) and late fees
     const paymentDeadline = new Date(eventDateTime - 72 * 60 * 60 * 1000);
-    const isCurrentlyOnTime = hoursUntilEvent >= 72;
+    const isCurrentlyEarlyBird = hoursUntilEvent > 72;
 
     let paymentDeadlineMessage = null;
     let lateFeeAmount = null;
 
-    if (isCurrentlyOnTime) {
-      // Show deadline warning only if currently in on-time period
-      const lateMemberPrice = 30;
-      const lateNonMemberPrice = 40;
-
-      if (isMember) {
-        if (participantCount === 1) {
-          lateFeeAmount = `${lateMemberPrice} лв. (членска отстъпка)`;
-        } else {
-          const lateTotalPrice =
-            lateMemberPrice + lateNonMemberPrice * (participantCount - 1);
-          lateFeeAmount = `${lateTotalPrice} лв. (${lateMemberPrice} лв. членска отстъпка + ${lateNonMemberPrice} лв. x ${participantCount - 1} участника)`;
-        }
-      } else {
-        lateFeeAmount = `${lateNonMemberPrice * participantCount} лв. (${lateNonMemberPrice} лв. x ${participantCount} участника)`;
-      }
+    if (isCurrentlyEarlyBird) {
+      lateFeeAmount = `LAST MINUTE: ${21 * participantCount} € (${21} € x ${participantCount} участника)`;
 
       paymentDeadlineMessage = paymentDeadline.toLocaleDateString("bg-BG", {
         day: "2-digit",
@@ -649,18 +614,8 @@ app.post("/submit-form", async (req, res) => {
       });
     }
 
-    if (isMember) {
-      const memberPrice = hoursUntilEvent < 72 ? 30 : 25; // Late: 30 lv, On-time: 25 lv for members
-      // Member discount only applies to one person, others pay regular price
-      if (participantCount === 1) {
-        finalPriceForSheets = `${memberPrice} лв. (членска отстъпка)`;
-      } else {
-        const totalPrice = memberPrice + basePrice * (participantCount - 1);
-        finalPriceForSheets = `${totalPrice} лв. (${memberPrice} лв. членска отстъпка + ${basePrice} лв. x ${participantCount - 1} участника)`;
-      }
-    } else {
-      finalPriceForSheets = `${basePrice * participantCount} лв. (${basePrice} лв. x ${participantCount} участника)`;
-    }
+    const priceLabel = isEarlyBird ? "EARLY BIRD" : "LAST MINUTE";
+    finalPriceForSheets = `${priceLabel}: ${basePrice * participantCount} € (${basePrice} € x ${participantCount} участника)`;
 
     // Check if Google Sheets is available for saving
     // Combine all participant names into one string for the name field
@@ -689,7 +644,7 @@ app.post("/submit-form", async (req, res) => {
                 formData.source || "", // Column G: Source (moved from J to G)
                 new Date().toISOString(), // Column H: Timestamp (moved from K to H)
                 formData.eventTime || "", // Column I: Event Time (moved from L to I)
-                isMember ? "Да" : "Не", // Column J: Member status
+                "", // Column J: Reserved
                 finalPriceForSheets || "", // Column K: Final price to be paid
               ],
             ],
@@ -718,7 +673,6 @@ app.post("/submit-form", async (req, res) => {
           eventLocation: formData.eventLocation,
           phone: formData.phone,
           source: formData.source,
-          isMember: isMember,
           finalPrice: finalPriceForSheets,
           participantCount: participantCount,
           participantNames: formData.participantNames || [formData.name],
@@ -752,7 +706,6 @@ app.post("/submit-form", async (req, res) => {
           eventLocation: formData.eventLocation,
           phone: formData.phone,
           source: formData.source,
-          isMember: isMember,
           finalPrice: finalPriceForSheets,
           participantCount: participantCount,
           participantNames: formData.participantNames,
@@ -795,43 +748,6 @@ app.post("/submit-form", async (req, res) => {
     });
   }
 });
-
-// Helper function to check if email is in members sheet
-async function checkMemberInSheets(email) {
-  try {
-    if (!sheetsAvailable || !client) {
-      console.log("Google Sheets not available for member check");
-      return false;
-    }
-
-    // Authorize the client
-    await client.authorize();
-    const gsapi = google.sheets({ version: "v4", auth: client });
-
-    console.log(`Checking Members sheet for email: ${email}`);
-
-    // Get member emails from the Members sheet
-    const memberRows = await gsapi.spreadsheets.values.get({
-      spreadsheetId: process.env.SHEETS_ID,
-      range: "Members!A:A",
-    });
-
-    const memberEmails = memberRows.data.values?.flat().filter(Boolean) || [];
-    console.log(`Found ${memberEmails.length} members in Members sheet`);
-
-    // Check if the email exists in the members list
-    const isMember = memberEmails.some(
-      (memberEmail) =>
-        memberEmail.toLowerCase().trim() === email.toLowerCase().trim(),
-    );
-
-    console.log(`Member check result for ${email}: ${isMember}`);
-    return isMember;
-  } catch (error) {
-    console.error("Error checking member in sheets:", error);
-    return false;
-  }
-}
 
 // Start the server
 app.listen(port, host, () => {
