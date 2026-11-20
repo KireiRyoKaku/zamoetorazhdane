@@ -19,9 +19,9 @@ import {
 import { FaBrain } from "react-icons/fa6";
 import { PiBabyFill } from "react-icons/pi";
 import { GiHeartOrgan } from "react-icons/gi";
-import aneliaImage from "./assets/pictures/good/anelia-good-ench-edit.png";
+import aneliaImage from "./assets/pictures/good/anelia-good-ench-edit.webp";
 import detskiSunImage from "./assets/pictures/good/detskisun.png";
-import katyaImage from "./assets/pictures/good/katya-good2.png";
+import katyaImage from "./assets/pictures/good/katya-good2.webp";
 import logoSmall from "./assets/pictures/PregurnataLogoPinkNoText.png";
 import Card from "./components/Card";
 import { Button, ButtonLink } from "./components/Button";
@@ -849,7 +849,7 @@ const Title = () => {
           }`}
         >
           <img
-            src={`${import.meta.env.BASE_URL}carousel/4.png`}
+            src={`${import.meta.env.BASE_URL}carousel/4-optimized.webp`}
             alt="Прегърната подкрепа"
             className="h-full w-full object-cover object-bottom [-webkit-mask-image:linear-gradient(to_bottom,transparent_0,black_4rem)] [mask-image:linear-gradient(to_bottom,transparent_0,black_4rem)] max-[359px]:object-[center_85%] max-[359px]:[-webkit-mask-image:linear-gradient(to_bottom,transparent_0,black_1rem)] max-[359px]:[mask-image:linear-gradient(to_bottom,transparent_0,black_1rem)]"
           />
