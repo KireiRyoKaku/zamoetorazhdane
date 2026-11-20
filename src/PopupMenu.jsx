@@ -6,6 +6,8 @@ import logoSmall from "./assets/pictures/PregurnataLogoPinkNoText.png";
 // lettering's final position along the SVG track.
 const LOGO_ANIMATION_DURATION_MS = 2000;
 const LOGO_TEXT_END_OFFSET = 300;
+const HEADER_ANIMATION_DURATION_MS = 700;
+const MENU_ANIMATION_DURATION_MS = 1000;
 
 const links = [
   { label: "ЗА НАС", path: "/about" },
@@ -26,7 +28,7 @@ const links = [
   },
 ];
 
-const PopupMenu = () => {
+const PopupMenu = ({ onIntroComplete }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -39,24 +41,14 @@ const PopupMenu = () => {
     setIsOpen(false);
   }, [location.pathname]);
 
-  useEffect(() => {
-    setHomeIntroStage(0);
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setHomeIntroStage(2);
-      return;
-    }
-    const logoTimer = window.setTimeout(() => setHomeIntroStage(1), 100);
-    const menuTimer = window.setTimeout(() => setHomeIntroStage(2), 3350);
-    return () => {
-      window.clearTimeout(logoTimer);
-      window.clearTimeout(menuTimer);
-    };
-  }, []);
-
-  const startLogoAnimation = useCallback(() => {
+  const startLogoAnimation = useCallback((onComplete) => {
     const track = logoTrackRef.current;
     const textPath = logoTextPathRef.current;
-    if (!track || !textPath) return;
+    if (!track || !textPath) {
+      console.error("Unable to start logo animation: SVG elements are missing.");
+      onComplete();
+      return;
+    }
 
     if (animationFrameRef.current !== null) {
       cancelAnimationFrame(animationFrameRef.current);
@@ -65,6 +57,7 @@ const PopupMenu = () => {
     const endOffset = Math.min(LOGO_TEXT_END_OFFSET, track.getTotalLength());
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       textPath.setAttribute("startOffset", String(endOffset));
+      onComplete();
       return;
     }
 
@@ -91,6 +84,7 @@ const PopupMenu = () => {
         animationFrameRef.current = requestAnimationFrame(step);
       } else {
         animationFrameRef.current = null;
+        onComplete();
       }
     };
 
@@ -99,29 +93,68 @@ const PopupMenu = () => {
 
   useEffect(() => {
     let cancelled = false;
-    let timer;
-    // Mobile browsers render SVG text/images before the font and logo have
-    // loaded, so wait for both before animating.
-    const assetsReady = Promise.all([
+    let headerFrame;
+    let headerTimer;
+    let menuTimer;
+    let assetTimeout;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setHomeIntroStage(3);
+      startLogoAnimation(() => onIntroComplete(true));
+      return undefined;
+    }
+
+    const assetsReady = Promise.allSettled([
       document.fonts?.load('700px "Magnolia Script"') ?? Promise.resolve(),
-      new Promise((resolve) => {
+      new Promise((resolve, reject) => {
         const preload = new Image();
-        preload.onload = preload.onerror = resolve;
+        preload.onload = resolve;
+        preload.onerror = () => reject(new Error("Logo image failed to load."));
         preload.src = logoSmall;
       }),
-    ]).catch(() => undefined);
-    assetsReady.then(() => {
+    ]).then((results) => {
+      results.forEach((result) => {
+        if (result.status === "rejected") {
+          console.error("Header animation asset failed to load:", result.reason);
+        }
+      });
+    });
+    const assetDeadline = new Promise((resolve) => {
+      assetTimeout = window.setTimeout(() => {
+        console.warn("Header animation assets did not load in time.");
+        resolve();
+      }, 4000);
+    });
+    const headerReady = new Promise((resolve) => {
+      headerFrame = requestAnimationFrame(() => {
+        headerFrame = requestAnimationFrame(() => {
+          setHomeIntroStage(1);
+          headerTimer = window.setTimeout(resolve, HEADER_ANIMATION_DURATION_MS);
+        });
+      });
+    });
+
+    Promise.all([headerReady, Promise.race([assetsReady, assetDeadline])]).then(() => {
       if (cancelled) return;
-      timer = window.setTimeout(startLogoAnimation, 400);
+      window.clearTimeout(assetTimeout);
+      setHomeIntroStage(2);
+      startLogoAnimation(() => {
+        if (cancelled) return;
+        setHomeIntroStage(3);
+        menuTimer = window.setTimeout(() => onIntroComplete(true), MENU_ANIMATION_DURATION_MS);
+      });
     });
     return () => {
       cancelled = true;
-      window.clearTimeout(timer);
+      cancelAnimationFrame(headerFrame);
+      window.clearTimeout(headerTimer);
+      window.clearTimeout(menuTimer);
+      window.clearTimeout(assetTimeout);
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [startLogoAnimation]);
+  }, [onIntroComplete, startLogoAnimation]);
 
   const isActive = (link) =>
     location.pathname === link.path ||
@@ -150,6 +183,7 @@ const PopupMenu = () => {
             type="button"
             aria-haspopup="true"
             aria-expanded={isActive(link)}
+            tabIndex={homeIntroStage < 3 || (mobile && !isOpen) ? -1 : undefined}
             className={`transition-colors duration-300 ${
               mobile
                 ? "py-3 text-left text-xl"
@@ -181,6 +215,7 @@ const PopupMenu = () => {
       type="button"
       onClick={() => go(link.path)}
       disabled={isActive(link)}
+      tabIndex={homeIntroStage < 3 || (mobile && !isOpen) ? -1 : undefined}
       className={`transition-colors duration-300 ${
         mobile
           ? "py-3 text-left text-xl"
@@ -203,14 +238,14 @@ const PopupMenu = () => {
   // header classes control its fixed position/layer; bg-primary/drop-shadow-md
   // below adjust the bar background and shadow.
   return (
-    <header className="fixed inset-x-0 top-0 z-[9999] font-rocaTwoRegular font-black">
+    <header className={`fixed inset-x-0 top-0 z-[9999] font-rocaTwoRegular font-black transition-transform duration-700 ease-out motion-reduce:transition-none ${homeIntroStage >= 1 ? "translate-y-0" : "-translate-y-[calc(100%+3rem)]"}`}>
       <div className="bg-white drop-shadow-md">
         <nav className="relative mx-auto grid h-16 w-full max-w-6xl grid-cols-2 items-center gap-4 px-4 md:h-20 md:px-8 lg:grid-cols-[minmax(0,1fr)_8rem_minmax(0,1fr)]">
           {/* Desktop link spacing and text sizing are controlled by gap-6/lg:gap-8
               and the text-base/lg:text-lg classes in renderLink. */}
           <div
-            className={`col-start-1 hidden items-center justify-end gap-4 transition-opacity duration-1000 lg:flex lg:gap-6 ${
-              homeIntroStage >= 2
+            className={`col-start-1 hidden items-center justify-end gap-4 transition-opacity duration-1000 motion-reduce:transition-none lg:flex lg:gap-6 ${
+              homeIntroStage >= 3
                 ? "opacity-100"
                 : "pointer-events-none opacity-0"
             }`}
@@ -233,13 +268,7 @@ const PopupMenu = () => {
           {/* Center logo holder: w-24/md:w-32 sets its width; change the
               matching logo SVG height below to resize the artwork. Its top-0
               and h-full align the holder to the navigation bar. */}
-          <div
-            className={`absolute left-1/2 top-0 z-10 h-full w-24 -translate-x-1/2 transition-opacity duration-1000 md:w-32 ${
-              homeIntroStage >= 1
-                ? "opacity-100"
-                : "pointer-events-none opacity-0"
-            }`}
-          >
+          <div className="pointer-events-none absolute left-1/2 top-0 z-10 h-full w-24 -translate-x-1/2 md:w-32">
             {/* White tab width/height and left offset are set with w-[170%],
                 h-9/md:h-12, and -left-[35%]. The path controls its curve. */}
             <svg
@@ -250,6 +279,14 @@ const PopupMenu = () => {
             >
               <path d="M0 0 C 55 0, 55 60, 100 60 C 145 60, 145 0, 200 0 Z" />
             </svg>
+          </div>
+          <div
+            className={`absolute left-1/2 top-0 z-10 h-full w-24 -translate-x-1/2 transition-opacity duration-1000 motion-reduce:transition-none md:w-32 ${
+              homeIntroStage >= 2
+                ? "opacity-100"
+                : "pointer-events-none opacity-0"
+            }`}
+          >
             {/* Adjust top-4 to raise/lower the logo within its tab. */}
             <button
               type="button"
@@ -262,6 +299,7 @@ const PopupMenu = () => {
                 go("/");
               }}
               aria-label="Начало"
+              tabIndex={homeIntroStage < 2 ? -1 : undefined}
               className="absolute left-1/2 top-2 flex -translate-x-1/2 items-center justify-center transition-opacity hover:opacity-70"
             >
               {/* Keep the viewBox matched to the source artwork; the height
@@ -277,7 +315,7 @@ const PopupMenu = () => {
                   <path
                     ref={logoTrackRef}
                     id="menu-logo-track"
-                    d="M-990 1328.2L-600 1778.5A1393.7 1451.5 0 0 0 2150.9 1778.5L2150.9 656.6A1393.7 1451.5 0 0 0 1742.3 -370.6"
+                    d="M-990 1328.2C-860 1478 -630 1588 -600 1778.5A1393.7 1451.5 0 0 0 2150.9 1778.5L2150.9 656.6A1393.7 1451.5 0 0 0 1742.3 -370.6"
                   />
                 </defs>
                 {/* Image dimensions/coordinates align the imported logo to the
@@ -313,8 +351,8 @@ const PopupMenu = () => {
           </div>
 
           <div
-            className={`col-start-3 hidden items-center justify-start gap-4 transition-opacity duration-1000 lg:flex lg:gap-6 ${
-              homeIntroStage >= 2
+            className={`col-start-3 hidden items-center justify-start gap-4 transition-opacity duration-1000 motion-reduce:transition-none lg:flex lg:gap-6 ${
+              homeIntroStage >= 3
                 ? "opacity-100"
                 : "pointer-events-none opacity-0"
             }`}
@@ -322,8 +360,8 @@ const PopupMenu = () => {
             {links.slice(half).map((l) => renderLink(l, false))}
           </div>
           <div
-            className={`col-start-2 flex justify-end transition-opacity duration-1000 lg:hidden ${
-              homeIntroStage >= 2
+            className={`col-start-2 flex justify-end transition-opacity duration-1000 motion-reduce:transition-none lg:hidden ${
+              homeIntroStage >= 3
                 ? "opacity-100"
                 : "pointer-events-none opacity-0"
             }`}
@@ -335,6 +373,7 @@ const PopupMenu = () => {
               onClick={() => setIsOpen((v) => !v)}
               aria-label="Меню"
               aria-expanded={isOpen}
+              tabIndex={homeIntroStage < 3 ? -1 : undefined}
               className="flex h-12 w-12 items-center justify-center rounded-full hover:text-fourth/30"
             >
               <svg

@@ -92,6 +92,7 @@ const ProgramRedirect = () => {
 const Layout = () => {
   const { pathname } = useLocation();
   const isSubscriptionModal = pathname.startsWith("/subscribe-and-pay/");
+  const [headerIntroComplete, setHeaderIntroComplete] = useState(false);
 
   useEffect(() => {
     if (pathname === "/") {
@@ -117,7 +118,7 @@ const Layout = () => {
         >
           <Routes>
             {/* Main Pages */}
-            <Route path="/" element={<Title />} />
+            <Route path="/" element={<Title introReady={headerIntroComplete} />} />
             <Route path="/about" element={<About />} />
             <Route path="/program" element={<ProgramRedirect />} />
             <Route path="/events" element={<Events />} />
@@ -149,7 +150,7 @@ const Layout = () => {
       {!isSubscriptionModal && <Footer />}
 
       {/* Global Components */}
-      <PopupMenu />
+      <PopupMenu onIntroComplete={setHeaderIntroComplete} />
       <CookieConsent />
     </div>
   );

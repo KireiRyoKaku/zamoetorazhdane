@@ -728,7 +728,7 @@ const PodcastEpisodes = () => {
   );
 };
 
-const Title = () => {
+const Title = ({ introReady }) => {
   const navigate = useNavigate();
   const [specialistsHeadingRef, , specialistsHeadingInView] = useRevealOnView();
   const [katyaCardRef, katyaCardReveal] = useRevealOnView();
@@ -760,6 +760,7 @@ const Title = () => {
   }, []);
 
   useEffect(() => {
+    if (!introReady) return;
     setHeroTextVisible(true);
     setHeroImageVisible(true);
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -769,9 +770,10 @@ const Title = () => {
         "M 0 0 Q 50 100 100 0 L 100 50 L 0 50 Z",
       );
     }
-  }, []);
+  }, [introReady]);
 
   useEffect(() => {
+    if (!introReady) return undefined;
     const visibleDuration = wordIndex === 0 ? 4000 : 2000;
     let updateTimeout;
     const transitionTimeout = window.setTimeout(() => {
@@ -786,7 +788,7 @@ const Title = () => {
       window.clearTimeout(transitionTimeout);
       window.clearTimeout(updateTimeout);
     };
-  }, [wordIndex]);
+  }, [introReady, wordIndex]);
 
   useEffect(() => {
     if (!heroImageVisible) return;
@@ -835,7 +837,7 @@ const Title = () => {
 
   return (
     <main
-      className={`title-section-background overflow-x-clip text-fourth transition-all duration-100 ease-in-out ${isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
+      className={`title-section-background overflow-x-clip text-fourth transition-all duration-100 ease-in-out ${introReady ? "visible" : "invisible"} ${isVisible ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}
       style={{ "--title-bg-color": bgColor }}
     >
       <section
