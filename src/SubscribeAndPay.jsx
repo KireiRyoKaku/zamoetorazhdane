@@ -48,6 +48,7 @@ const SubscribeAndPay = () => {
 
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [registrationSaved, setRegistrationSaved] = useState(false);
   const [error, setError] = useState(null);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [showParticipantInfoPopup, setShowParticipantInfoPopup] =
@@ -197,6 +198,9 @@ const SubscribeAndPay = () => {
     e.preventDefault();
 
     setIsSubmitting(true);
+    setError(null);
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 45000);
 
     // Calculate price for submission
     const now = new Date();
@@ -214,14 +218,13 @@ const SubscribeAndPay = () => {
     };
 
     try {
-      console.log("Sending form data:", submissionData);
-
       const response = await fetch(`${API_URL}/submit-form`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(submissionData),
+        signal: controller.signal,
       });
 
       if (!response.ok) {
@@ -244,14 +247,22 @@ const SubscribeAndPay = () => {
       }
 
       const result = await response.json();
-      console.log("✅ Form submitted successfully:", result);
+      if (result.emailSent === false) {
+        setRegistrationSaved(true);
+        return;
+      }
 
       // Only navigate on success
       navigate("/events", { state: { showSuccessToast: true } });
     } catch (err) {
-      setError("Connection error: " + (err.message || "Unknown error"));
+      setError(
+        err.name === "AbortError"
+          ? "Не успяхме да потвърдим записването навреме. Моля, свържи се с нас, преди да опиташ отново."
+          : err.message || "Възникна проблем със записването. Моля, свържи се с нас.",
+      );
       console.error("Error submitting form:", err);
     } finally {
+      window.clearTimeout(timeout);
       setIsSubmitting(false);
     }
   };
@@ -707,18 +718,26 @@ const SubscribeAndPay = () => {
             </div>
             {error && (
               <div
+                role="alert"
                 className={`mb-4 rounded-md p-4 ${
                   error.includes("Вече съществува регистарция")
                     ? "border border-amber-200 bg-amber-50 text-amber-700"
                     : "border border-red-200 bg-red-50 text-red-700"
                 }`}
-                dangerouslySetInnerHTML={{ __html: error }}
-              />
+              >
+                {error}
+              </div>
+            )}
+            {registrationSaved && (
+              <div role="status" className="mb-4 rounded-md border border-amber-200 bg-amber-50 p-4 text-base text-amber-800">
+                Записването е запазено, но не успяхме да изпратим всички имейли.
+                Моля, свържи се с нас за потвърждение, без да се записваш повторно.
+              </div>
             )}
             <div className="flex justify-center">
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || registrationSaved}
               >
                 {isSubmitting ? (
                   <div className="flex items-center">

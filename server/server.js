@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { google } from "googleapis";
 import nodemailer from "nodemailer";
+import { createGmailTransport } from "./gmailTransport.js";
 import {
   getConfirmationEmailHTML,
   getAdminNotificationHTML,
@@ -27,9 +28,11 @@ try {
       "base64",
     ).toString("utf-8");
 
-    client = new google.auth.JWT(process.env.CLIENT_EMAIL, null, privateKey, [
-      "https://www.googleapis.com/auth/spreadsheets",
-    ]);
+    client = new google.auth.JWT({
+      email: process.env.CLIENT_EMAIL,
+      key: privateKey,
+      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+    });
 
     sheetsAvailable = true;
     console.log("✅ Google Sheets API initialized");
@@ -427,11 +430,26 @@ let transporter = null;
 let emailAvailable = false;
 
 try {
-  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+  if (process.env.EMAIL_PROVIDER === "gmail") {
+    const { GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN, SENDER_EMAIL } = process.env;
+    if (!GMAIL_CLIENT_ID || !GMAIL_CLIENT_SECRET || !GMAIL_REFRESH_TOKEN || !SENDER_EMAIL) {
+      throw new Error("Gmail API credentials or SENDER_EMAIL are missing");
+    }
+    const auth = new google.auth.OAuth2(GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET);
+    auth.setCredentials({ refresh_token: GMAIL_REFRESH_TOKEN });
+    transporter = createGmailTransport(google.gmail({ version: "v1", auth }));
+    emailAvailable = true;
+    console.log("✅ Gmail API email service initialized");
+  } else if (process.env.EMAIL_PROVIDER && process.env.EMAIL_PROVIDER !== "smtp") {
+    throw new Error("Unsupported EMAIL_PROVIDER");
+  } else if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
     transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: parseInt(process.env.SMTP_PORT) || 587,
       secure: false, // Use `true` for port 465, `false` for all other ports
+      connectionTimeout: 15000,
+      greetingTimeout: 15000,
+      socketTimeout: 20000,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
@@ -558,7 +576,7 @@ app.post("/anelia-contact", async (req, res) => {
 // Form submission endpoint
 app.post("/submit-form", async (req, res) => {
   try {
-    console.log("📝 Form submission received:", req.body);
+    console.log("📝 Form submission received");
 
     const formData = req.body;
     const { email, name, event, eventDate } = formData;
@@ -623,7 +641,7 @@ app.post("/submit-form", async (req, res) => {
       ? formData.participantNames.filter((name) => name.trim()).join(", ")
       : formData.name || "";
 
-    if (sheetsAvailable && client) {
+    if (sheetsAvailable && client && process.env.SHEETS_ID) {
       try {
         await client.authorize();
         const gsapi = google.sheets({ version: "v4", auth: client });
@@ -655,13 +673,21 @@ app.post("/submit-form", async (req, res) => {
         console.log("✅ Data saved to Google Sheets");
       } catch (sheetError) {
         console.error("❌ Google Sheets error:", sheetError.message);
-        // Continue with email sending even if sheets fail
+        return res.status(503).json({
+          success: false,
+          message: "Не успяхме да потвърдим записването. Моля, свържи се с нас, преди да опиташ отново.",
+        });
       }
     } else {
-      console.warn("⚠️ Google Sheets not available - skipping save to sheets");
+      console.error("❌ Google Sheets not configured - registration not saved");
+      return res.status(503).json({
+        success: false,
+        message: "Записването временно не е достъпно. Моля, свържи се с нас.",
+      });
     }
 
     // Send confirmation emails if email service is available
+    let emailSent = false;
     if (emailAvailable && transporter) {
       try {
         // Use the variables we already calculated above
@@ -720,10 +746,10 @@ app.post("/submit-form", async (req, res) => {
 
         await transporter.sendMail(userMailOptions);
         await transporter.sendMail(adminMailOptions);
+        emailSent = true;
         console.log("✅ Confirmation emails sent");
       } catch (emailError) {
         console.error("❌ Email error:", emailError.message);
-        // Don't fail the whole request if email fails
       }
     } else {
       console.warn(
@@ -734,6 +760,7 @@ app.post("/submit-form", async (req, res) => {
     res.json({
       success: true,
       message: "Form submitted successfully",
+      emailSent,
       services: {
         sheets: sheetsAvailable,
         email: emailAvailable,
@@ -749,17 +776,20 @@ app.post("/submit-form", async (req, res) => {
   }
 });
 
-// Start the server
-app.listen(port, host, () => {
-  console.log(`🚀 Server running on ${host}:${port}`);
-  console.log(`📍 Environment: ${process.env.NODE_ENV || "development"}`);
-  console.log(`🔗 Local: http://localhost:${port}`);
+export { app };
 
-  if (process.env.NODE_ENV !== "production") {
-    console.log(`🌐 Network: http://${host}:${port}`);
-  }
+if (process.argv[1] && path.resolve(process.argv[1]) === __filename) {
+  app.listen(port, host, () => {
+    console.log(`🚀 Server running on ${host}:${port}`);
+    console.log(`📍 Environment: ${process.env.NODE_ENV || "development"}`);
+    console.log(`🔗 Local: http://localhost:${port}`);
 
-  console.log(`� Services available:`);
-  console.log(`  - Google Sheets: ${sheetsAvailable ? "✅" : "❌"}`);
-  console.log(`  - Email: ${emailAvailable ? "✅" : "❌"}`);
-});
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`🌐 Network: http://${host}:${port}`);
+    }
+
+    console.log(`� Services available:`);
+    console.log(`  - Google Sheets: ${sheetsAvailable ? "✅" : "❌"}`);
+    console.log(`  - Email: ${emailAvailable ? "✅" : "❌"}`);
+  });
+}
