@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { FaGlobe, FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
+import { FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
 import { partnersAll } from "./partnerData";
 
 // Single Partner Card Component
@@ -42,18 +42,8 @@ const PartnerCard = ({
           {description}
         </p>
       )}
-      {(linkWeb || linkInsta || linkFace || linkYoutube) && (
+      {(linkInsta || linkFace || linkYoutube) && (
         <div className="flex items-center justify-center gap-3" onClick={(e) => e.stopPropagation()}>
-          {linkWeb && (
-            <a
-              href={linkWeb}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-fourth hover:text-fourth"
-            >
-              <FaGlobe className="h-6 w-6" />
-            </a>
-          )}
           {linkInsta && (
             <a
               href={linkInsta}
