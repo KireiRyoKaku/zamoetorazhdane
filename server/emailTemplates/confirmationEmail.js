@@ -1,8 +1,13 @@
-export function formatConfirmationPrice(unitPrice, participantCount, isEarlyBird) {
+export function formatConfirmationPrice(
+  unitPrice,
+  participantCount,
+  isEarlyBird,
+) {
   const tier = isEarlyBird ? "🕊️ EARLY BIRD" : "⏰ LAST MINUTE";
-  const breakdown = participantCount > 1
-    ? ` (${unitPrice} € x ${participantCount} участника)`
-    : "";
+  const breakdown =
+    participantCount > 1
+      ? ` (${unitPrice} € x ${participantCount} участника)`
+      : "";
   return `${unitPrice * participantCount} € (${tier})${breakdown}`;
 }
 
@@ -113,7 +118,7 @@ export function getConfirmationEmailHTML(data) {
             <td align="center" style="background-color: #edafb8; color: #393750; padding: 20px; border-radius: 0 0 20px 20px; font-size: 12px;">
       <p>© ${new Date().getFullYear()} Прегърната. Всички права запазени.</p>
       <p>
-        <a href="https://zamoetorazhdane.com" style="color: #393750;">zamoetorazhdane.com</a> |
+        <a href="https://www.embraced-mothersclub.com" style="color: #393750;">embraced-mothersclub.com</a> |
         <a href="mailto:embraced.mothersclub@gmail.com" style="color: #393750;">embraced.mothersclub@gmail.com</a>
       </p>
             </td>
