@@ -38,7 +38,7 @@ const About = ({ onClose = () => {} }) => {
               майчинство.
             </RevealOnScroll>
           </div>
-          <RevealOnScroll as="div" className="mb-8 flex justify-center">
+          <RevealOnScroll as="div" className="mb-16 flex justify-center">
             <Button variant="secondary" onClick={handleClickEventProgram}>
               ВКЛЮЧИ СЕ
             </Button>
@@ -46,7 +46,7 @@ const About = ({ onClose = () => {} }) => {
           <RevealOnScroll
             as="section"
             aria-label="Нашият подход"
-            className="relative mb-4 overflow-hidden rounded-3xl bg-primary p-5 text-fourth md:mb-16 md:p-10"
+            className="relative mb-16 overflow-hidden rounded-3xl bg-primary p-5 text-fourth md:p-10"
           >
             <img
               src={logoSmall}

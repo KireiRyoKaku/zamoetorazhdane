@@ -189,7 +189,7 @@ export const PageShell = ({
 export const ServiceQuote = ({ children }) => (
   <RevealOnScroll
     as="section"
-    className="relative z-10 -mt-6 mb-12 rounded-[32px] bg-fourth px-6 py-5 text-center text-white shadow-xl"
+    className="relative z-10 -mt-6 mb-16 rounded-[32px] bg-fourth px-6 py-5 text-center text-white shadow-xl"
   >
     <span
       aria-hidden="true"

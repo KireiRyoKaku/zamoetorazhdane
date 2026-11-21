@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { PageShell, RevealOnScroll } from "./components/PageShell";
 import { Button } from "./components/Button";
 import mentoringImage from "./assets/pictures/good/mentoring2.png";
+import programLogo from "./assets/pictures/PregurnataLogoPinkNoText.png";
 import { API_URL } from "../utils/apiConfig";
 
 const currentDate = new Date();
@@ -231,6 +232,7 @@ const Journey = () => {
 };
 
 const Mentoring = () => {
+  const [activeProgramCard, setActiveProgramCard] = useState(0);
   const defaultContactMessage =
     "Здравейте, имам желание да участвам в менторската програма. Бих искала да се свържа с Вас за предварителна консултация на следната дата:";
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -380,7 +382,7 @@ const Mentoring = () => {
 
         <RevealOnScroll
           as="section"
-          className="mb-12 rounded-[32px] bg-third/80 p-5 md:mb-16 md:p-10"
+          className="mb-16 rounded-[32px] bg-third/80 p-5 md:p-10"
         >
           <RevealOnScroll
             as="h2"
@@ -388,7 +390,7 @@ const Mentoring = () => {
           >
             Ако си майка и усещаш, че…
           </RevealOnScroll>
-          <ul className="mx-auto grid max-w-4xl gap-3 md:grid-cols-2">
+          <ul className="mx-auto grid max-w-4xl grid-cols-1 gap-3">
             {openingNeeds.map((need, index) => (
               <RevealOnScroll
                 as="li"
@@ -417,7 +419,7 @@ const Mentoring = () => {
 
         <RevealOnScroll
           as="section"
-          className="mb-12 rounded-[32px] bg-primary p-5 text-[#403d5c] shadow-sm md:mb-16 md:p-10"
+          className="mb-16 rounded-[32px] bg-primary p-5 text-[#403d5c] shadow-sm md:p-10"
         >
           <RevealOnScroll
             as="h2"
@@ -459,16 +461,16 @@ const Mentoring = () => {
           </ul>
         </RevealOnScroll>
 
-        <RevealOnScroll as="section" className="mb-12 md:mb-16">
+        <RevealOnScroll as="section" className="mb-16">
           <RevealOnScroll
             as="h2"
-            className="mb-2 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
+            className="mb-2 text-center font-rocaTwoBold text-2xl font-bold text-[#403d5c] sm:text-3xl"
           >
             Менторска програма
           </RevealOnScroll>
           <RevealOnScroll
             as="h3"
-            className="mx-auto mb-6 max-w-2xl text-center font-rocaTwoRegular text-lg leading-7"
+            className="mx-auto mb-6 max-w-2xl text-center font-rocaTwoRegular text-lg leading-7 text-[#403d5c]"
           >
             6 индивидуални срещи
             <br /> в рамките на 6 до 8 седмици
@@ -504,36 +506,63 @@ const Mentoring = () => {
           </div>
         </RevealOnScroll>
 
-        <RevealOnScroll as="section" className="mb-12 md:mb-16">
-          <div className="grid motion-safe:-mb-[max(0px,calc(100svh-max(11rem,(100svh-17rem)/2-6rem)-23.25rem))] md:mb-0">
+        <RevealOnScroll
+          as="section"
+          className="mb-16 md:relative md:left-1/2 md:w-[calc(100vw-2rem)] md:max-w-[96rem] md:-translate-x-1/2"
+        >
+          <div className="grid motion-safe:-mb-[max(0px,calc(100svh-max(11rem,(100svh-25rem)/2-6rem)-31.25rem))] md:mb-0">
             <div className="relative z-20 motion-safe:pointer-events-none motion-safe:sticky motion-safe:top-24 motion-safe:col-start-1 motion-safe:row-start-1 motion-safe:h-[calc(100svh-6rem)] motion-safe:self-start md:static md:col-auto md:row-auto md:h-auto">
               <h2 className="mb-6 text-center font-rocaTwoBold text-2xl font-bold motion-safe:absolute motion-safe:inset-x-0 motion-safe:top-0 sm:text-3xl md:static">
                 Програма
               </h2>
             </div>
-            <ol className="grid gap-6 motion-safe:col-start-1 motion-safe:row-start-1 motion-safe:gap-0 md:col-auto md:row-auto md:grid-cols-2 md:gap-6">
+            <ol
+              id="mentoring-program-cards"
+              aria-label="Срещи от програмата"
+              className="grid gap-6 motion-safe:col-start-1 motion-safe:row-start-1 motion-safe:gap-0 md:col-auto md:row-auto md:flex md:justify-center md:gap-0 md:px-5 md:py-8"
+              style={{
+                // Distribute the remaining width between the overlapping cards.
+                "--card-overlap": `min(-4rem, calc(${100 / (sessions.length - 1)}% - ${16 + 16 / (sessions.length - 1)}rem))`,
+              }}
+            >
               {sessions.map(({ title, description }, index) => (
                 <li
                   key={title}
-                  className="motion-safe:sticky motion-safe:top-0 motion-safe:flex motion-safe:min-h-[100svh] motion-safe:items-start motion-safe:pt-[calc(max(11rem,(100svh-17rem)/2-6rem)+var(--stack-offset)/2)] md:static md:block md:min-h-0 md:pt-0"
+                  className="z-[var(--stack-order)] motion-safe:sticky motion-safe:top-0 motion-safe:flex motion-safe:min-h-[100svh] motion-safe:items-start motion-safe:pt-[calc(max(11rem,(100svh-25rem)/2-6rem)+var(--stack-offset)/2)] md:static md:z-[var(--desktop-stack-order)] md:block md:min-h-0 md:w-64 md:shrink-0 md:pt-0 md:[&:not(:first-child)]:ml-[var(--card-overlap)]"
                   style={{
                     "--stack-offset": `${index * 24}px`,
-                    zIndex: index + 1,
+                    "--stack-order": index + 1,
+                    "--desktop-stack-order":
+                      index === activeProgramCard
+                        ? sessions.length + 1
+                        : sessions.length - Math.abs(index - activeProgramCard),
                   }}
                 >
-                  <div className="relative w-full">
+                  <div
+                    className={`relative mx-auto w-full max-w-[16rem] md:max-w-none md:transition-transform md:duration-300 motion-reduce:transition-none ${
+                      index === activeProgramCard
+                        ? "md:scale-110"
+                        : "md:hover:-translate-y-3 md:hover:rotate-3"
+                    }`}
+                  >
                     <RevealOnScroll
-                      className={`relative flex min-h-[17rem] w-full items-center justify-center overflow-hidden rounded-[28px] border border-fourth/10 p-6 shadow-md ${
+                      className={`relative flex min-h-[25rem] w-full items-center justify-center overflow-hidden rounded-[24px] border border-fourth/10 px-8 py-6 shadow-md before:pointer-events-none before:absolute before:inset-3 before:rounded-[16px] before:border before:border-fourth/25 before:content-[''] ${
                         index % 2 === 0 ? "bg-white" : "bg-third"
                       }`}
                     >
                       <span
                         aria-hidden="true"
-                        className="absolute right-4 top-2 font-rocaTwoBold text-7xl leading-none text-secondary/60"
+                        className={`absolute right-4 top-2 font-rocaTwoBold text-7xl leading-none text-secondary/60 ${
+                          index !== activeProgramCard ? "md:hidden" : ""
+                        }`}
                       >
                         {String(index + 1).padStart(2, "0")}
                       </span>
-                      <div className="relative w-full text-center">
+                      <div
+                        className={`relative w-full text-center ${
+                          index !== activeProgramCard ? "md:hidden" : ""
+                        }`}
+                      >
                         <p className="mb-2 font-rocaTwoBold text-sm uppercase tracking-widest text-[#403d5c]/70">
                           Среща {index + 1}
                         </p>
@@ -544,7 +573,29 @@ const Mentoring = () => {
                           {description}
                         </p>
                       </div>
+                      <div
+                        aria-hidden="true"
+                        className={`hidden flex-col items-center gap-6 text-center ${
+                          index !== activeProgramCard ? "md:flex" : ""
+                        }`}
+                      >
+                        <img
+                          src={programLogo}
+                          alt=""
+                          className="h-48 w-36 object-contain"
+                        />
+                        <p className="font-rocaTwoBold text-xl font-bold text-fourth">
+                          Среща {index + 1}
+                        </p>
+                      </div>
                     </RevealOnScroll>
+                    <button
+                      type="button"
+                      aria-label={`Покажи среща ${index + 1}: ${title}`}
+                      aria-pressed={activeProgramCard === index}
+                      onClick={() => setActiveProgramCard(index)}
+                      className="absolute inset-0 hidden w-full rounded-[24px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fourth md:block"
+                    />
                     {index === 0 && (
                       <div
                         aria-hidden="true"
@@ -560,7 +611,7 @@ const Mentoring = () => {
           </div>
         </RevealOnScroll>
 
-        <RevealOnScroll as="section" className="mb-12 md:mb-16">
+        <RevealOnScroll as="section" className="mb-16">
           <RevealOnScroll
             as="h2"
             className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
@@ -583,7 +634,7 @@ const Mentoring = () => {
           </div>
         </RevealOnScroll>
 
-        <RevealOnScroll as="section" className="mb-12 md:mb-16">
+        <RevealOnScroll as="section" className="mb-16">
           <Journey />
         </RevealOnScroll>
 

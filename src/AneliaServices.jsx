@@ -329,7 +329,7 @@ const AneliaServices = () => (
       </RevealOnScroll>
     </ServiceQuote>
 
-    <RevealOnScroll as="section" className="mb-12 md:mb-16">
+    <RevealOnScroll as="section" className="mb-16">
       <RevealOnScroll
         as="h2"
         className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
@@ -359,7 +359,7 @@ const AneliaServices = () => (
 
     <RevealOnScroll
       as="section"
-      className="mb-12 rounded-[32px] border-t-8 border-secondary bg-white p-5 shadow-sm md:mb-16 md:p-10"
+      className="mb-16 rounded-[32px] border-t-8 border-secondary bg-white p-5 shadow-sm md:p-10"
     >
       <RevealOnScroll
         as="h2"
@@ -390,7 +390,7 @@ const AneliaServices = () => (
       </RevealOnScroll>
     </RevealOnScroll>
 
-    <RevealOnScroll as="section" className="mb-12 md:mb-16">
+    <RevealOnScroll as="section" className="mb-16">
       <RevealOnScroll
         as="h2"
         className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
@@ -428,7 +428,7 @@ const AneliaServices = () => (
       </ul>
     </RevealOnScroll>
 
-    <RevealOnScroll as="section" className="mb-12 md:mb-16">
+    <RevealOnScroll as="section" className="mb-16">
       <RevealOnScroll
         as="h2"
         className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
@@ -438,7 +438,7 @@ const AneliaServices = () => (
       <ConsultationPackages />
     </RevealOnScroll>
 
-    <RevealOnScroll as="section" className="mb-12 rounded-[32px] bg-third p-6 md:mb-16 md:p-10">
+    <RevealOnScroll as="section" className="mb-16 rounded-[32px] bg-third p-6 md:p-10">
       <h2 className="mb-2 text-center font-rocaTwoBold text-2xl sm:text-3xl">Допълнителни консултации</h2>
       <p className="mb-6 text-center font-rocaTwoThin text-lg">За семейства, с които сме работили заедно в последните 30 дни</p>
       <div className="grid gap-4 md:grid-cols-2">
@@ -451,7 +451,7 @@ const AneliaServices = () => (
       </div>
     </RevealOnScroll>
 
-    <RevealOnScroll as="section" className="mb-12 md:mb-16">
+    <RevealOnScroll as="section" className="mb-16">
       <h2 className="mb-6 text-center font-rocaTwoBold text-2xl sm:text-3xl">Отстъпки</h2>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-[32px] border-2 border-fourth/20 bg-white/60 p-6 text-center">

@@ -5,7 +5,7 @@ const TermsOfService = () => {
     <div className="container mx-auto max-w-[600px] px-4 py-8">
       <h1 className="mb-8 text-center text-3xl font-bold">Общи условия</h1>
 
-      <div className="space-y-6 leading-relaxed text-fourth">
+      <div className="space-y-16 leading-relaxed text-fourth">
         <section>
           <h2 className="mb-3 text-xl font-semibold text-fourth">
             1. Общи разпоредби

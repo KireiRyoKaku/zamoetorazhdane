@@ -7,7 +7,7 @@ const PrivacyPolicy = () => {
         Политика за поверителност
       </h1>
 
-      <div className="space-y-6 leading-relaxed text-fourth">
+      <div className="space-y-16 leading-relaxed text-fourth">
         <section>
           <h2 className="mb-3 text-xl font-semibold text-fourth">
             1. Идентичност на администратора на данни

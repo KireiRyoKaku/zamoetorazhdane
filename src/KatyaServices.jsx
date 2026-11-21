@@ -73,7 +73,7 @@ const KatyaServices = () => (
         </RevealOnScroll>
       </div>
     </ServiceQuote>
-    <RevealOnScroll as="section" className="mb-12 md:mb-16">
+    <RevealOnScroll as="section" className="mb-16">
       <RevealOnScroll
         as="h2"
         className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
@@ -108,7 +108,7 @@ const KatyaServices = () => (
     </RevealOnScroll>
     <RevealOnScroll
       as="section"
-      className="mb-12 rounded-[32px] border-t-8 border-secondary bg-white p-5 shadow-sm md:mb-16 md:p-10"
+      className="mb-16 rounded-[32px] border-t-8 border-secondary bg-white p-5 shadow-sm md:p-10"
     >
       <RevealOnScroll
         as="h2"
@@ -136,7 +136,7 @@ const KatyaServices = () => (
         ми. Ще се радвам да те придружа в твоето пътуване навътре към себе си.
       </RevealOnScroll>
     </RevealOnScroll>
-    <RevealOnScroll as="section" className="mb-12 md:mb-16">
+    <RevealOnScroll as="section" className="mb-16">
       <RevealOnScroll
         as="h2"
         className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"
@@ -160,7 +160,7 @@ const KatyaServices = () => (
         ))}
       </ul>
     </RevealOnScroll>
-    <RevealOnScroll as="section" className="mb-12 md:mb-16">
+    <RevealOnScroll as="section" className="mb-16">
       <RevealOnScroll
         as="h2"
         className="mb-6 text-center font-rocaTwoBold text-2xl font-bold sm:text-3xl"

@@ -939,7 +939,7 @@ const Title = ({ introReady }) => {
       <section
         id={HOME_SECTION_IDS.specialists}
         aria-label="Специалисти"
-        className="title-section-background relative z-10 w-full px-4 pb-6 pt-4 text-center md:px-6 md:pb-8 md:pt-2 lg:px-8"
+        className="title-section-background relative z-10 w-full px-4 pb-16 pt-2 text-center md:px-6 lg:px-8"
       >
         <div className="mx-auto w-full max-w-[600px]">
           <span
@@ -998,7 +998,7 @@ const Title = ({ introReady }) => {
           <div
             ref={profileDividerRef}
             aria-hidden="true"
-            className={`flex justify-center py-0 md:py-2 ${profileDividerReveal}`}
+            className={`flex justify-center pb-0 pt-3 md:py-2 ${profileDividerReveal}`}
             style={{ transitionDelay: "440ms" }}
           >
             <span className="font-rocaTwoRegular text-[5rem] leading-none text-secondary md:text-[7rem]">
@@ -1008,7 +1008,7 @@ const Title = ({ introReady }) => {
           {/* Anelia profile */}
           <div
             ref={aneliaCardRef}
-            className={`relative mt-2 flex w-full flex-col rounded-[2.5rem] border bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] md:mt-4 md:h-[380px] md:flex-row md:items-center lg:h-[420px] ${aneliaCardReveal}`}
+            className={`relative mt-20 flex w-full flex-col rounded-[2.5rem] border bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] md:mt-4 md:h-[380px] md:flex-row md:items-center lg:h-[420px] ${aneliaCardReveal}`}
             style={{ transitionDelay: "650ms" }}
           >
             {/* The source PNG has empty space on top, so crop it from the bottom with the aspect ratio. */}
@@ -1038,7 +1038,7 @@ const Title = ({ introReady }) => {
                   щрих.
                 </p>
               </div>
-              <div className="flex justify-center pt-2 md:justify-start">
+              <div className="flex justify-center pb-4 md:justify-start">
                 <Button onClick={() => handleClickPage("/anelia")}>
                   ЗАПАЗИ КОНСУЛТАЦИЯ
                 </Button>
@@ -1058,18 +1058,18 @@ const Title = ({ introReady }) => {
         <section
           id={HOME_SECTION_IDS.approachContent}
           aria-labelledby={`${HOME_SECTION_IDS.approachContent}-heading`}
-          className="relative z-10 w-full px-4 pb-6 pt-6 text-left md:px-6 md:py-8 lg:px-8"
+          className="relative z-10 w-full px-4 pb-16 pt-6 text-left md:px-6 md:pt-8 lg:px-8"
         >
           <div className="mx-auto w-full max-w-[600px]">
             <div ref={approachContentRef} className={approachContentReveal}>
               <p
-                className={`mx-auto mb-6 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug ${dropCapClassName}`}
+                className={`mx-auto mb-6 mt-10 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug ${dropCapClassName}`}
               >
                 Повечето услуги за родители са насочени към грижата за детето.
                 Ние се грижим за майката, като ѝ помагаме да подкрепя себе
                 си.{" "}
               </p>
-              <p className="mx-auto mb-6 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug">
+              <p className="mx-auto mb-20 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug">
                 Защото и тя има нужда да бъде прегърната в уязвимите периоди от
                 майчинството.
               </p>
@@ -1092,10 +1092,11 @@ const Title = ({ introReady }) => {
             </div>
             <p
               ref={approachClosingRef}
-              className={`mx-auto mt-6 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mt-3 md:text-lg md:leading-snug ${approachClosingReveal}`}
+              className={`mx-auto mt-16 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mt-3 md:text-lg md:leading-snug ${approachClosingReveal}`}
             >
-              Във всичко, което създаваме, на преден план е жената с нейното
-              индивидуално преживяване в майчинството.
+              Във всичко, което създаваме, на преден план е{" "}
+              <strong>жената</strong> с нейното индивидуално преживяване в
+              майчинството.
             </p>
           </div>
         </section>
@@ -1113,7 +1114,7 @@ const Title = ({ introReady }) => {
         >
           <h2
             id={`${HOME_SECTION_IDS.services}-heading`}
-            className="relative z-10 w-full px-4 text-center font-magnoliaScript text-4xl leading-tight text-white sm:text-6xl md:text-8xl"
+            className="relative z-10 w-full px-4 text-center font-magnoliaScript text-7xl leading-tight text-white sm:text-6xl md:text-8xl"
           >
             Услуги
           </h2>
@@ -1126,7 +1127,7 @@ const Title = ({ introReady }) => {
       <section
         id={HOME_SECTION_IDS.individualServices}
         aria-labelledby={`${HOME_SECTION_IDS.individualServices}-heading`}
-        className="title-section-background relative z-0 scroll-mt-24 px-4 pb-10 pt-6 text-center md:px-6 md:pb-12 md:pt-8 lg:px-8"
+        className="title-section-background relative z-0 scroll-mt-24 px-4 pb-10 pt-16 text-center md:px-6 md:pb-12 lg:px-8"
       >
         <div>
           <div
@@ -1162,7 +1163,7 @@ const Title = ({ introReady }) => {
       <section
         id={HOME_SECTION_IDS.groupServices}
         aria-labelledby={`${HOME_SECTION_IDS.groupServices}-heading`}
-        className="title-section-background px-4 pb-6 pt-10 text-center md:px-6 md:pb-8 md:pt-12 lg:px-8"
+        className="title-section-background px-4 pb-16 pt-10 text-center md:px-6 md:pt-12 lg:px-8"
       >
         <div className="mx-auto w-full max-w-[600px]">
           <div ref={groupHeadingRef} className={groupHeadingReveal}>
@@ -1199,28 +1200,22 @@ const Title = ({ introReady }) => {
       />
       <section
         aria-labelledby={`${HOME_SECTION_IDS.podcast}-episodes-heading`}
-        className="title-section-background px-4 pb-6 pt-6 md:px-6 md:py-8 lg:px-8"
+        className="title-section-background px-4 pb-16 pt-6 md:px-6 md:pt-8 lg:px-8"
       >
         <div
           ref={podcastIntroRef}
           className={`mx-auto w-full max-w-[600px] px-4 text-left font-rocaTwoThin text-lg text-fourth ${podcastIntroReveal}`}
         >
-          <p className={dropCapClassName}>
+          <p
+            className={dropCapClassName}
+            style={{ marginTop: "3rem", marginBottom: "3rem" }}
+          >
             Тук ще ни чуете да говорим като специалисти, но и като майки по своя
             личен път. Независимо от това на кой етап от твоя път се намираш ти
             в момента, тук си на правилното място. Този подкаст е за жената. В и
             извън ролята й на майка.
           </p>
         </div>
-        <br />
-
-        <h2
-          id={`${HOME_SECTION_IDS.podcast}-episodes-heading`}
-          className="sr-only"
-        >
-          Последни епизоди
-        </h2>
-        <PodcastEpisodes />
         <div className="mt-10 flex justify-center">
           <ButtonLink
             href="https://open.spotify.com/show/1RFiM8DDswRJohQiczd4R7"
@@ -1230,6 +1225,13 @@ const Title = ({ introReady }) => {
             Абонирай се и чуй всички епизоди в Spotify
           </ButtonLink>
         </div>
+        <h2
+          id={`${HOME_SECTION_IDS.podcast}-episodes-heading`}
+          className="mx-auto mb-6 mt-12 max-w-[600px] text-center font-rocaTwoBold text-2xl text-fourth"
+        >
+          Последни епизоди
+        </h2>
+        <PodcastEpisodes />
       </section>
       <div className="flow-root bg-white">
         <SectionBanner
@@ -1246,11 +1248,11 @@ const Title = ({ introReady }) => {
         >
           <div
             ref={merchIntroRef}
-            className={`mx-auto flex max-w-md items-center justify-center gap-4 sm:gap-6 ${merchIntroReveal}`}
+            className={`mx-auto mt-10 flex max-w-md items-center justify-center gap-4 sm:gap-6 ${merchIntroReveal}`}
           >
             <span aria-hidden="true" className="h-px flex-1 bg-secondary" />
-            <p className="text-center font-rocaTwoBold text-2xl text-fourth sm:text-3xl">
-              Очаквай скоро
+            <p className="items-center text-center font-rocaTwoBold text-3xl text-fourth sm:text-3xl">
+              Очаквай скоро!
             </p>
             <span aria-hidden="true" className="h-px flex-1 bg-secondary" />
           </div>

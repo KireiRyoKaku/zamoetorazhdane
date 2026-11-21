@@ -106,7 +106,7 @@ const Layout = () => {
     <div
       className={`relative flex min-h-screen flex-col ${
         pathname === "/" ? "" : "pt-16 md:pt-20"
-      } ${pathname === "/about" ? "bg-white" : ""}`}
+      } ${pathname === "/" || pathname === "/about" ? "bg-white" : ""}`}
     >
       <ScrollToTop />
       <div
