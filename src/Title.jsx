@@ -872,13 +872,13 @@ const Title = ({ introReady }) => {
                   За да бъдеш
                   {/* text-[clamp(2rem,9vw,5.5rem)] */}
                 </span>
-                <span className="flex h-[calc(clamp(2.25rem,10vw,6.5rem)*1.3)] w-full items-center justify-center md:relative md:-top-3 md:h-20 max-[359px]:h-9">
+                <span className="flex h-[calc(clamp(2.25rem,10vw,6.5rem)*1.3)] w-full items-center justify-center max-[359px]:h-9 md:relative md:-top-3 md:h-20">
                   <span
                     style={{
                       transition:
                         "opacity 600ms ease-in-out, transform 600ms ease-in-out",
                     }}
-                    className={`block w-full whitespace-nowrap text-center leading-none text-secondary md:text-7xl max-[359px]:text-3xl ${wordIndex === 0 ? "font-magnoliaScript text-4xl font-normal tracking-normal" : "text-4xl font-black tracking-[-0.02em]"} ${wordVisible ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}
+                    className={`block w-full whitespace-nowrap text-center leading-none text-secondary max-[359px]:text-3xl md:text-7xl ${wordIndex === 0 ? "font-magnoliaScript text-4xl font-normal tracking-normal" : "text-4xl font-black tracking-[-0.02em]"} ${wordVisible ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}
                   >
                     {cycleWords[wordIndex]}
                   </span>
@@ -966,7 +966,7 @@ const Title = ({ introReady }) => {
             <img
               src={katyaImage}
               alt="Катя"
-              className="pointer-events-none relative z-20 mx-auto -mt-24 h-72 w-auto object-contain md:absolute md:bottom-10 md:right-0 md:left-auto md:mt-0 md:h-[145%] md:w-auto md:max-w-[50%] md:object-bottom lg:right-4"
+              className="pointer-events-none relative z-20 mx-auto -mt-24 h-72 w-auto object-contain md:absolute md:bottom-10 md:left-auto md:right-0 md:mt-0 md:h-[145%] md:w-auto md:max-w-[50%] md:object-bottom lg:right-4"
               style={{
                 maskImage:
                   "linear-gradient(to bottom, #000 80%, transparent 100%)",
@@ -974,12 +974,12 @@ const Title = ({ introReady }) => {
                   "linear-gradient(to bottom, #000 80%, transparent 100%)",
               }}
             />
-            <div className="relative z-10 w-full space-y-3 p-6 text-center md:w-[55%] md:space-y-4 md:p-12 md:text-left">
+            <div className="relative z-10 w-full space-y-3 p-6 text-center md:w-[55%] md:space-y-4 md:p-8 md:text-left lg:p-10">
               <div className="space-y-1 text-left">
                 <h2 className="font-rocaTwoBold text-4xl font-black text-fourth md:text-6xl lg:text-7xl">
                   Катя
                 </h2>
-                <h3 className="mb-8 font-rocaTwoBold text-base font-black text-secondary md:text-xs">
+                <h3 className="mb-3 font-rocaTwoBold text-base font-black text-secondary md:mb-4 md:text-base">
                   психолог, емоционален ментор и психотерапевт в обучение
                 </h3>
                 <p className="mt-3 font-rocaTwoThin text-lg leading-relaxed text-fourth md:mt-4 md:text-base md:leading-relaxed">
@@ -989,9 +989,7 @@ const Title = ({ introReady }) => {
                 </p>
               </div>
               <div className="flex justify-center pt-2 md:justify-start">
-                <Button
-                  onClick={() => handleClickPage("/katya")}
-                >
+                <Button onClick={() => handleClickPage("/katya")}>
                   ЗАПАЗИ СЕСИЯ
                 </Button>
               </div>
@@ -1000,17 +998,17 @@ const Title = ({ introReady }) => {
           <div
             ref={profileDividerRef}
             aria-hidden="true"
-            className={`flex justify-center py-2 md:py-4 ${profileDividerReveal}`}
+            className={`flex justify-center py-0 md:py-2 ${profileDividerReveal}`}
             style={{ transitionDelay: "440ms" }}
           >
-            <span className="font-rocaTwoRegular text-[9rem] leading-none text-secondary md:text-[12rem]">
+            <span className="font-rocaTwoRegular text-[5rem] leading-none text-secondary md:text-[7rem]">
               &amp;
             </span>
           </div>
           {/* Anelia profile */}
           <div
             ref={aneliaCardRef}
-            className={`relative mt-8 flex w-full flex-col rounded-[2.5rem] border bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] md:mt-12 md:h-[380px] md:flex-row md:items-center lg:h-[420px] ${aneliaCardReveal}`}
+            className={`relative mt-2 flex w-full flex-col rounded-[2.5rem] border bg-white shadow-[0_20px_50px_rgba(0,0,0,0.06)] md:mt-4 md:h-[380px] md:flex-row md:items-center lg:h-[420px] ${aneliaCardReveal}`}
             style={{ transitionDelay: "650ms" }}
           >
             {/* The source PNG has empty space on top, so crop it from the bottom with the aspect ratio. */}
@@ -1025,12 +1023,12 @@ const Title = ({ introReady }) => {
                   "linear-gradient(to bottom, #000 80%, transparent 100%)",
               }}
             />
-            <div className="relative z-10 w-full space-y-3 p-6 text-center md:ml-auto md:w-[55%] md:space-y-4 md:p-12 md:p-8 md:text-left">
+            <div className="relative z-10 w-full space-y-3 p-6 text-center md:ml-auto md:w-[55%] md:space-y-4 md:p-8 md:text-left lg:p-10">
               <div className="space-y-1 text-left">
-                <h2 className="font-rocaTwoBold text-4xl font-black text-fourth md:text-5xl md:text-6xl lg:text-7xl">
+                <h2 className="font-rocaTwoBold text-4xl font-black text-fourth md:text-6xl lg:text-7xl">
                   Анелия
                 </h2>
-                <h3 className="mb-8 font-rocaTwoBold text-base font-black text-secondary md:text-xs">
+                <h3 className="mb-3 font-rocaTwoBold text-base font-black text-secondary md:mb-4 md:text-base">
                   консултант по детски сън и психолог в обучение
                 </h3>
                 <p className="mt-3 font-rocaTwoThin text-lg leading-relaxed text-fourth md:mt-8 md:text-base">
@@ -1041,9 +1039,7 @@ const Title = ({ introReady }) => {
                 </p>
               </div>
               <div className="flex justify-center pt-2 md:justify-start">
-                <Button
-                  onClick={() => handleClickPage("/anelia")}
-                >
+                <Button onClick={() => handleClickPage("/anelia")}>
                   ЗАПАЗИ КОНСУЛТАЦИЯ
                 </Button>
               </div>
@@ -1066,7 +1062,9 @@ const Title = ({ introReady }) => {
         >
           <div className="mx-auto w-full max-w-[600px]">
             <div ref={approachContentRef} className={approachContentReveal}>
-              <p className={`mx-auto mb-6 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug ${dropCapClassName}`}>
+              <p
+                className={`mx-auto mb-6 mt-3 block w-11/12 px-4 text-left font-rocaTwoThin text-lg md:mb-3 md:text-lg md:leading-snug ${dropCapClassName}`}
+              >
                 Повечето услуги за родители са насочени към грижата за детето.
                 Ние се грижим за майката, като ѝ помагаме да подкрепя себе
                 си.{" "}
@@ -1209,8 +1207,8 @@ const Title = ({ introReady }) => {
         >
           <p className={dropCapClassName}>
             Тук ще ни чуете да говорим като специалисти, но и като майки по своя
-            личен път. Независимо от това на кой етап от твоя път се намираш ти в
-            момента, тук си на правилното място. Този подкаст е за жената. В и
+            личен път. Независимо от това на кой етап от твоя път се намираш ти
+            в момента, тук си на правилното място. Този подкаст е за жената. В и
             извън ролята й на майка.
           </p>
         </div>
@@ -1246,7 +1244,10 @@ const Title = ({ introReady }) => {
           aria-labelledby={`${HOME_SECTION_IDS.merch}-heading`}
           className="relative z-10 w-full bg-white px-4 pb-[142px] pt-12 md:px-6 md:pb-[198px] md:pt-16 lg:px-8"
         >
-          <div ref={merchIntroRef} className={`mx-auto flex max-w-md items-center justify-center gap-4 sm:gap-6 ${merchIntroReveal}`}>
+          <div
+            ref={merchIntroRef}
+            className={`mx-auto flex max-w-md items-center justify-center gap-4 sm:gap-6 ${merchIntroReveal}`}
+          >
             <span aria-hidden="true" className="h-px flex-1 bg-secondary" />
             <p className="text-center font-rocaTwoBold text-2xl text-fourth sm:text-3xl">
               Очаквай скоро

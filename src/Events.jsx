@@ -516,7 +516,9 @@ const Events = () => {
 
   // Apply the active location filter to events in both the list and calendar.
   const getFilteredEvents = () => {
-    let filteredEvents = events;
+    let filteredEvents = events.filter(
+      (event) => !/HIDE/i.test(event.summary ?? ""),
+    );
 
     // Apply location filter if set
     if (locationFilter === "na-zhivo") {
